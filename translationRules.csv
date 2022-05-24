@@ -1,0 +1,31 @@
+Wildtrax,Atlas data,output
+location,"InstitutionCode, QCATLAS_NORTH_PC, SamplingEventIdentifier, SurveyAreaIdentifier ",
+latitude,DecimalLatitude,
+longitude,DecimalLongitude,
+bufferRadiusMeters,NA,
+elevationMeters,NA,
+isHidden,NA,
+trueCoordinates,NA,
+comments,NA,
+internal_wildtrax_id,NA,
+internal_update_ts,NA,
+visitDate,"YearCollected, MonthCollected, DayCollected",2010-06-08
+snowDepthMeters,NA,
+waterDepthMeters,NA,
+landFeatures,NA,
+crew,NA,
+bait,NA,
+accessMethod,NA,
+comments,NA,
+wildtrax_internal_update_ts,NA,
+wildtrax_internal_lv_id,NA,
+surveyDateTime,"YearCollected, MonthCollected, DayCollected, TimeCollected",2010-06-08 5:16
+observer,NA,
+distanceMethod,SurveyAreaShape,0m-INF
+durationMethod,EffortMeasurement1,0-5min
+species,"ScientificName, SpeciesCode, CommonName",
+isHeard,Yes,
+isSeen,No,
+abundance,"ObservationCount, ObservationCount2, ObservationCount3",
+distanceband,0m-INF,
+durationinterval,"ObservationDescriptor, ObservationDescriptor2, ObservationDescriptor3",

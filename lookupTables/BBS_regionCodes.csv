@@ -1,0 +1,98 @@
+CountryNum,StateNum,State/Prov/TerrName,Acronym
+484,1,Aguascalientes,AG
+840,2,Alabama,AL
+840,3,Alaska,AK
+124,4,Alberta,AB
+840,6,Arizona,AZ
+840,7,Arkansas,AR
+484,2,Baja California,BA
+484,3,Baja California Sur,BS
+124,11,British Columbia,BC
+840,14,California,CA
+484,4,Campeche,CM
+484,5,Chiapas,CS
+484,6,Chihuahua,CH
+484,7,Coahuila,CU
+484,8,Colima,CL
+840,17,Colorado,CO
+840,18,Connecticut,CT
+840,21,Delaware,DE
+840,22,District of Columbia,DC
+484,9,Distrito Federal,EM
+484,10,Durango,DG
+840,25,Florida,FL
+840,27,Georgia,GA
+484,11,Guanajuato,GT
+484,12,Guerrero,GR
+484,13,Hidalgo,HG
+840,33,Idaho,ID
+840,34,Illinois,IL
+840,35,Indiana,IN
+840,36,Iowa,IA
+484,14,Jalisco,JA
+840,38,Kansas,KS
+840,39,Kentucky,KY
+840,42,Louisiana,LA
+840,44,Maine,ME
+124,45,Manitoba,MB
+840,46,Maryland,MD
+840,47,Massachusetts,MA
+484,15,Mexico,EM
+484,48,Mexico Country,MX
+840,49,Michigan,MI
+484,16,Michoacan,MC
+840,50,Minnesota,MN
+840,51,Mississippi,MS
+840,52,Missouri,MO
+840,53,Montana,MT
+484,17,Morelos,MR
+484,18,Nayarit,NA
+840,54,Nebraska,NE
+840,55,Nevada,NV
+124,56,New Brunswick,NB
+840,58,New Hampshire,NH
+840,59,New Jersey,NJ
+840,60,New Mexico,NM
+840,61,New York,NY
+124,57,Newfoundland and Labrador,NL
+840,63,North Carolina,NC
+840,64,North Dakota,ND
+124,43,Northwest Territories,NT
+124,65,Nova Scotia,NS
+484,19,Nuevo Le¢n,NO
+124,62,Nunavut,NU
+484,20,Oaxaca,OA
+840,66,Ohio,OH
+840,67,Oklahoma,OK
+124,68,Ontario,ON
+840,69,Oregon,OR
+840,72,Pennsylvania,PA
+124,75,Prince Edward Island,PE
+484,21,Puebla,PU
+840,74,Puerto Rico,PR
+124,76,Quebec,QC
+484,22,Queretaro,QT
+484,23,Quintana Roo,QR
+840,77,Rhode Island,RI
+484,24,San Luis Potos¡,SL
+124,79,Saskatchewan,SK
+484,25,Sinaloa,SI
+484,26,Sonora,SO
+840,80,South Carolina,SC
+840,81,South Dakota,SD
+484,27,Tabasco,TB
+484,28,Tamaulipas,TM
+840,82,Tennessee,TN
+840,83,Texas,TX
+484,29,Tlaxcala,TL
+840,85,Utah,UT
+484,30,Veracruz,VE
+840,87,Vermont,VT
+840,88,Virginia,VA
+840,89,Washington,WA
+840,90,West Virginia,WV
+840,91,Wisconsin,WI
+840,92,Wyoming,WY
+484,31,Yucatan,YU
+124,93,Yukon,YK
+484,32,Zacatecas,ZA

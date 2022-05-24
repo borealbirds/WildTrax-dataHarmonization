@@ -1,0 +1,1007 @@
+"","species_id","sci_name","common_name","species_code"
+"1",12140,"Empidonax virescens","Acadian Flycatcher","ACFL"
+"2",42264,"Acanthis/Spinus sp.","Acanthis/Spinus sp.",NA
+"3",3150,"Accipiter sp.","Accipiter sp.","UNAC"
+"4",10070,"Melanerpes formicivorus","Acorn Woodpecker","ACWO"
+"5",42885,"Diomedeidae sp.","albatross sp.",NA
+"6",5950,"Alcidae sp.","alcid sp.",NA
+"7",12160,"Empidonax alnorum","Alder Flycatcher","ALFL"
+"8",12150,"Empidonax alnorum/traillii","Alder/Willow Flycatcher (Traill's Flycatcher)",NA
+"9",5430,"Onychoprion aleuticus","Aleutian Tern","ALTE"
+"10",4300,"Recurvirostra americana","American Avocet","AMAV"
+"11",2490,"Botaurus lentiginosus","American Bittern","AMBI"
+"12",440,"Anas rubripes","American Black Duck","ABDU"
+"13",45419,"Fulica americana","American Coot","AMCO"
+"14",13900,"Corvus brachyrhynchos","American Crow","AMCR"
+"15",38407,"Corvus brachyrhynchos [brachyrhynchos Group]","American Crow (American)",NA
+"16",13910,"Corvus brachyrhynchos caurinus","American Crow (Northwestern)",NA
+"17",14930,"Cinclus mexicanus","American Dipper","AMDI"
+"18",2891,"Phoenicopterus ruber","American Flamingo","AMFL"
+"19",4100,"Pluvialis dominica","American Golden-Plover","AMGP"
+"20",20500,"Spinus tristis","American Goldfinch","AMGO"
+"21",3570,"Falco sparverius","American Kestrel","AMKE"
+"22",40315,"Falco sparverius [sparverius Group]","American Kestrel (Northern)",NA
+"23",4260,"Haematopus palliatus","American Oystercatcher","AMOY"
+"24",16290,"Anthus rubescens","American Pipit","AMPI"
+"25",16890,"Setophaga ruticilla","American Redstart","AMRE"
+"26",15770,"Turdus migratorius","American Robin","AMRO"
+"27",10360,"Picoides dorsalis","American Three-toed Woodpecker","ATTW"
+"28",40555,"Picoides dorsalis bacatus","American Three-toed Woodpecker (Eastern)",NA
+"29",41773,"Picoides dorsalis/arcticus","American Three-toed/Black-backed Woodpecker",NA
+"30",18760,"Spizelloides arborea","American Tree Sparrow","ATSP"
+"31",2350,"Pelecanus erythrorhynchos","American White Pelican","AWPE"
+"32",420,"Mareca americana","American Wigeon","AMWI"
+"33",4980,"Scolopax minor","American Woodcock","AMWO"
+"34",9070,"Lampornis amethystinus","Amethyst-throated Mountain-gem",NA
+"35",47118,"Ammospiza sp.","Ammospiza sp.",NA
+"36",620,"Anas sp.","Anas sp.",NA
+"37",5850,"Synthliboramphus antiquus","Ancient Murrelet","ANMU"
+"38",2440,"Anhinga anhinga","Anhinga","ANHI"
+"39",9310,"Calypte anna","Anna's Hummingbird","ANHU"
+"40",42744,"Anser sp.","Anser sp.",NA
+"41",41583,"Aquila sp.","Aquila sp.",NA
+"42",1540,"Gavia arctica","Arctic Loon","ARLO"
+"43",5580,"Sterna paradisaea","Arctic Tern","ARTE"
+"44",42698,"Phylloscopus borealis","Arctic Warbler","ARWA"
+"45",41539,"Ardea sp.","Ardea sp.",NA
+"46",12430,"Myiarchus cinerascens","Ash-throated Flycatcher","ATFL"
+"47",2170,"Hydrobates homochroa","Ashy Storm-Petrel","ASSP"
+"48",43370,"Asio sp.","Asio sp.",NA
+"49",5920,"Fratercula arctica","Atlantic Puffin","ATPU"
+"50",41515,"Puffinus lherminieri","Audubon's Shearwater","AUSH"
+"51",5952,"Ptychoramphus/Aethia sp.","Auklet sp.",NA
+"52",700,"Aythya sp.","Aythya sp.",NA
+"53",18680,"Peucaea aestivalis","Bachman's Sparrow","BACS"
+"54",580,"Sibirionetta formosa","Baikal Teal","BATE"
+"55",4770,"Calidris bairdii","Baird's Sandpiper","BASA"
+"56",18910,"Centronyx bairdii","Baird's Sparrow","BAIS"
+"57",3020,"Haliaeetus leucocephalus","Bald Eagle","BAEA"
+"58",19990,"Icterus galbula","Baltimore Oriole","BAOR"
+"59",41528,"Hydrobates castro","Band-rumped Storm-Petrel","BSTP"
+"60",6040,"Patagioenas fasciata","Band-tailed Pigeon","BTPI"
+"61",35407,"Riparia riparia","Bank Swallow","BANS"
+"62",142,"Anser indicus","Bar-headed Goose",NA
+"63",4610,"Limosa lapponica","Bar-tailed Godwit","BTGO"
+"64",7270,"Tyto alba","Barn Owl","BANO"
+"65",47694,"Tyto alba [tuidara Group]","Barn Owl (American)",NA
+"66",14250,"Hirundo rustica","Barn Swallow","BARS"
+"67",40667,"Hirundo rustica erythrogaster","Barn Swallow (American)",NA
+"68",210,"Branta leucopsis","Barnacle Goose","BARG"
+"69",40236,"Puffinus baroli","Barolo Shearwater","BASH"
+"70",43362,"Strix varia","Barred Owl","BADO"
+"71",840,"Bucephala islandica","Barrow's Goldeneye","BAGO"
+"72",16810,"Setophaga castanea","Bay-breasted Warbler","BBWA"
+"73",42154,"Setophaga castanea/striata","Bay-breasted/Blackpoll Warbler",NA
+"74",18861,"Artemisiospiza belli","Bell's Sparrow","BESP"
+"75",13330,"Vireo bellii","Bell's Vireo","BEVI"
+"76",9750,"Megaceryle alcyon","Belted Kingfisher","BEKI"
+"77",16010,"Toxostoma bendirei","Bendire's Thrasher","BETH"
+"78",1820,"Pterodroma cahow","Bermuda Petrel","BEPE"
+"79",14760,"Thryomanes bewickii","Bewick's Wren","BEWR"
+"80",15570,"Catharus bicknelli","Bicknell's Thrush","BITH"
+"81",21140,"Aves sp.","bird sp.",NA
+"82",16880,"Mniotilta varia","Black-and-white Warbler","BAWW"
+"83",10370,"Picoides arcticus","Black-backed Woodpecker","BBWO"
+"84",4070,"Pluvialis squatarola","Black-bellied Plover","BBPL"
+"85",40347,"Pluvialis sp.","Black-bellied Plover/golden-plover sp.",NA
+"86",80,"Dendrocygna autumnalis","Black-bellied Whistling-Duck","BBWD"
+"87",7100,"Coccyzus erythropthalmus","Black-billed Cuckoo","BBCU"
+"88",13870,"Pica hudsonia","Black-billed Magpie","BBMA"
+"89",1700,"Thalassarche melanophris","Black-browed Albatross","BBAL"
+"90",14280,"Poecile atricapillus","Black-capped Chickadee","BCCH"
+"91",1830,"Pterodroma hasitata","Black-capped Petrel","BCPE"
+"92",13340,"Vireo atricapilla","Black-capped Vireo","BCVI"
+"93",9280,"Archilochus alexandri","Black-chinned Hummingbird","BCHU"
+"94",2720,"Nycticorax nycticorax","Black-crowned Night-Heron","BCNH"
+"95",41545,"Nycticorax nycticorax/Nyctanassa violacea","Black-crowned/Yellow-crowned Night-Heron",NA
+"96",1740,"Phoebastria nigripes","Black-footed Albatross","BFAL"
+"97",19410,"Pheucticus melanocephalus","Black-headed Grosbeak","BHGR"
+"98",5070,"Chroicocephalus ridibundus","Black-headed Gull","BHGU"
+"99",5310,"Rissa tridactyla","Black-legged Kittiwake","BLKI"
+"100",4290,"Himantopus mexicanus","Black-necked Stilt","BNST"
+"101",4590,"Limosa limosa","Black-tailed Godwit","BTGD"
+"102",5130,"Larus crassirostris","Black-tailed Gull","BTGU"
+"103",16600,"Setophaga caerulescens","Black-throated Blue Warbler","BTBW"
+"104",16640,"Setophaga nigrescens","Black-throated Gray Warbler","BTYW"
+"105",16660,"Setophaga virens","Black-throated Green Warbler","BTNW"
+"106",18850,"Amphispiza bilineata","Black-throated Sparrow","BTSP"
+"107",2080,"Puffinus opisthomelas","Black-vented Shearwater","BVSH"
+"108",5770,"Cepphus grylle","Black Guillemot","BLGU"
+"109",4270,"Haematopus bachmani","Black Oystercatcher","BLOY"
+"110",12290,"Sayornis nigricans","Black Phoebe","BLPH"
+"111",3730,"Laterallus jamaicensis","Black Rail","BLRA"
+"112",791,"Melanitta americana","Black Scoter","BLSC"
+"113",5650,"Rynchops niger","Black Skimmer","BLSK"
+"114",2200,"Hydrobates melania","Black Storm-Petrel","BLSP"
+"115",7970,"Cypseloides niger","Black Swift","BLSW"
+"116",5520,"Chlidonias niger","Black Tern","BLTE"
+"117",4640,"Arenaria melanocephala","Black Turnstone","BLTU"
+"118",2840,"Coragyps atratus","Black Vulture","BLVU"
+"119",19776,"Icteridae sp.","blackbird sp.","UNBL"
+"120",16690,"Setophaga fusca","Blackburnian Warbler","BLBW"
+"121",16820,"Setophaga striata","Blackpoll Warbler","BLPW"
+"122",2300,"Sula nebouxii","Blue-footed Booby","BFBO"
+"123",15100,"Polioptila caerulea","Blue-gray Gnatcatcher","BGGN"
+"124",40715,"Polioptila caerulea caerulea","Blue-gray Gnatcatcher (caerulea)",NA
+"125",13420,"Vireo solitarius","Blue-headed Vireo","BHVI"
+"126",520,"Spatula discors","Blue-winged Teal","BWTE"
+"127",16410,"Vermivora cyanoptera","Blue-winged Warbler","BWWA"
+"128",19440,"Passerina caerulea","Blue Grosbeak","BLGR"
+"129",13640,"Cyanocitta cristata","Blue Jay","BLJA"
+"130",14931,"Monticola solitarius","Blue Rock-Thrush",NA
+"131",40720,"Sialia sp.","bluebird sp.",NA
+"132",15270,"Luscinia svecica","Bluethroat","BLUE"
+"133",19520,"Dolichonyx oryzivorus","Bobolink","BOBO"
+"134",16320,"Bombycilla garrulus","Bohemian Waxwing","BOWA"
+"135",40749,"Bombycilla garrulus/cedrorum","Bohemian/Cedar Waxwing",NA
+"136",5080,"Chroicocephalus philadelphia","Bonaparte's Gull","BOGU"
+"137",41531,"Sula sp.","booby sp.",NA
+"138",14320,"Poecile hudsonicus","Boreal Chickadee","BOCH"
+"139",7670,"Aegolius funereus","Boreal Owl","BOOW"
+"140",20110,"Fringilla montifringilla","Brambling","BRAM"
+"141",2370,"Urile penicillatus","Brandt's Cormorant","BRAC"
+"142",180,"Branta bernicla","Brant","BRAN"
+"143",191,"Branta bernicla hrota","Brant (Atlantic)",NA
+"144",41244,"Branta sp.","Branta sp.",NA
+"145",19660,"Euphagus cyanocephalus","Brewer's Blackbird","BRBL"
+"146",18790,"Spizella breweri","Brewer's Sparrow","BRSP"
+"147",16450,"Vermivora chrysoptera x cyanoptera (F1 hybrid)","Brewster's Warbler (hybrid)",NA
+"148",5420,"Onychoprion anaethetus","Bridled Tern","BRTE"
+"149",4540,"Numenius tahitiensis","Bristle-thighed Curlew","BTCU"
+"150",47647,"Cynanthus latirostris","Broad-billed Hummingbird","BBIH"
+"151",8660,"Cynanthus latirostris/doubledayi","Broad-billed/Turquoise-crowned Hummingbird",NA
+"152",9360,"Selasphorus platycercus","Broad-tailed Hummingbird","BTAH"
+"153",3300,"Buteo platypterus","Broad-winged Hawk","BWHA"
+"154",40302,"Buteo platypterus platypterus","Broad-winged Hawk (Northern)",NA
+"155",19750,"Molothrus aeneus","Bronzed Cowbird","BROC"
+"156",19760,"Molothrus ater","Brown-headed Cowbird","BHCO"
+"157",2320,"Sula leucogaster","Brown Booby","BRBO"
+"158",14450,"Certhia americana","Brown Creeper","BRCR"
+"159",44487,"Certhia americana americana/nigrescens","Brown Creeper (americana/nigrescens)",NA
+"160",2360,"Pelecanus occidentalis","Brown Pelican","BRPE"
+"161",13200,"Lanius cristatus","Brown Shrike","BROS"
+"162",31699,"Stercorarius antarcticus","Brown Skua",NA
+"163",15970,"Toxostoma rufum","Brown Thrasher","BRTH"
+"164",43337,"Bubo sp.","Bubo sp.",NA
+"165",6460,"Melopsittacus undulatus","Budgerigar","BUDG"
+"166",4870,"Calidris subruficollis","Buff-breasted Sandpiper","BBSA"
+"167",820,"Bucephala albeola","Bufflehead","BUFF"
+"168",2020,"Ardenna bulleri","Buller's Shearwater","BULS"
+"169",19920,"Icterus bullockii","Bullock's Oriole","BUOR"
+"170",7550,"Athene cunicularia","Burrowing Owl","BUOW"
+"171",14400,"Psaltriparus minimus","Bushtit","BUSH"
+"172",3410,"Buteo sp.","Buteo sp.","UNBU"
+"173",40314,"Buteo/eagle sp.","Buteo/eagle sp.",NA
+"174",220,"Branta hutchinsii","Cackling Goose","CACG"
+"175",261,"Branta hutchinsii/canadensis","Cackling/Canada Goose",NA
+"176",4845,"Calidris sp.","Calidris sp.",NA
+"177",2870,"Gymnogyps californianus","California Condor","CACO"
+"178",5160,"Larus californicus","California Gull","CAGU"
+"179",1380,"Callipepla californica","California Quail","CAQU"
+"180",40626,"Aphelocoma californica","California Scrub-Jay","CASJ"
+"181",13820,"Aphelocoma californica/woodhouseii","California/Woodhouse's Scrub-Jay",NA
+"182",9330,"Selasphorus calliope","Calliope Hummingbird","CAHU"
+"183",230,"Branta canadensis","Canada Goose","CANG"
+"184",13620,"Perisoreus canadensis","Canada Jay","CAJA"
+"185",47787,"Perisoreus canadensis [canadensis Group]","Canada Jay (Boreal)",NA
+"186",47789,"Perisoreus canadensis obscurus/griseus","Canada Jay (Pacific)",NA
+"187",47788,"Perisoreus canadensis capitalis/bicolor","Canada Jay (Rocky Mts.)",NA
+"188",17150,"Cardellina canadensis","Canada Warbler","CAWA"
+"189",630,"Aythya valisineria","Canvasback","CANV"
+"190",14570,"Catherpes mexicanus","Canyon Wren","CANW"
+"191",16590,"Setophaga tigrina","Cape May Warbler","CMWA"
+"192",41687,"Caprimulgus sp.","Caprimulgus sp.",NA
+"193",14270,"Poecile carolinensis","Carolina Chickadee","CACH"
+"194",14720,"Thryothorus ludovicianus","Carolina Wren","CARW"
+"195",40687,"Thryothorus ludovicianus [ludovicianus Group]","Carolina Wren (Northern)",NA
+"196",5500,"Hydroprogne caspia","Caspian Tern","CATE"
+"197",5860,"Ptychoramphus aleuticus","Cassin's Auklet","CAAU"
+"198",20340,"Haemorhous cassinii","Cassin's Finch","CAFI"
+"199",12690,"Tyrannus vociferans","Cassin's Kingbird","CAKI"
+"200",18670,"Peucaea cassinii","Cassin's Sparrow","CASP"
+"201",13410,"Vireo cassinii","Cassin's Vireo","CAVI"
+"202",42969,"Cathartes sp.","Cathartes sp.",NA
+"203",40730,"Catharus sp.","Catharus sp.",NA
+"204",2660,"Bubulcus ibis","Cattle Egret","CAEG"
+"205",14240,"Petrochelidon fulva","Cave Swallow","CASW"
+"206",16330,"Bombycilla cedrorum","Cedar Waxwing","CEDW"
+"207",16830,"Setophaga cerulea","Cerulean Warbler","CERW"
+"208",40495,"Chaetura sp.","Chaetura sp.",NA
+"209",14310,"Poecile rufescens","Chestnut-backed Chickadee","CBCH"
+"210",19160,"Calcarius ornatus","Chestnut-collared Longspur","CCLO"
+"211",16570,"Setophaga pensylvanica","Chestnut-sided Warbler","CSWA"
+"212",40955,"Poecile sp.","chickadee sp.",NA
+"213",14000,"Corvus cryptoleucus","Chihuahuan Raven","CHRA"
+"214",8040,"Chaetura pelagica","Chimney Swift","CHSW"
+"215",18770,"Spizella passerina","Chipping Sparrow","CHSP"
+"216",41617,"Chlidonias sp.","Chlidonias sp.",NA
+"217",7810,"Antrostomus carolinensis","Chuck-will's-widow","CWWI"
+"218",1050,"Alectoris chukar","Chukar","CHUK"
+"219",530,"Spatula cyanoptera","Cinnamon Teal","CITE"
+"220",16210,"Motacilla citreola","Citrine Wagtail","CIWA"
+"221",3751,"Rallus crepitans","Clapper Rail","CLRA"
+"222",1660,"Aechmophorus clarkii","Clark's Grebe","CLGR"
+"223",13860,"Nucifraga columbiana","Clark's Nutcracker","CLNU"
+"224",18780,"Spizella pallida","Clay-colored Sparrow","CCSP"
+"225",14230,"Petrochelidon pyrrhonota","Cliff Swallow","CLSW"
+"226",40660,"Petrochelidon pyrrhonota [pyrrhonota Group]","Cliff Swallow (pyrrhonota Group)",NA
+"227",7170,"Coccyzus sp.","Coccyzus sp.",NA
+"228",41626,"Columba sp.","Columba sp.",NA
+"229",20100,"Fringilla coelebs","Common Chaffinch","CCHA"
+"230",4020,"Grus grus","Common Crane","CCRA"
+"231",7000,"Cuculus canorus","Common Cuckoo","COCU"
+"232",740,"Somateria mollissima","Common Eider","COEI"
+"233",41203,"Gallinula galeata","Common Gallinule","COGA"
+"234",830,"Bucephala clangula","Common Goldeneye","COGO"
+"235",19670,"Quiscalus quiscula","Common Grackle","COGR"
+"236",40881,"Quiscalus quiscula versicolor","Common Grackle (Bronzed)",NA
+"237",4430,"Tringa nebularia","Common Greenshank","COMG"
+"238",6210,"Columbina passerina","Common Ground Dove",NA
+"239",47674,"Larus canus","Common Gull","COGU"
+"240",1560,"Gavia immer","Common Loon","COLO"
+"241",880,"Mergus merganser","Common Merganser","COME"
+"242",5730,"Uria aalge","Common Murre","COMU"
+"243",7720,"Chordeiles minor","Common Nighthawk","CONI"
+"244",650,"Aythya ferina","Common Pochard","COMP"
+"245",7750,"Phalaenoptilus nuttallii","Common Poorwill","COPO"
+"246",14010,"Corvus corax","Common Raven","CORA"
+"247",42261,"Acanthis flammea","Common Redpoll","CORE"
+"248",40919,"Acanthis flammea flammea","Common Redpoll (flammea)",NA
+"249",40920,"Acanthis flammea rostrata/islandica","Common Redpoll (rostrata/islandica)",NA
+"250",4480,"Tringa totanus","Common Redshank","CREH"
+"251",4170,"Charadrius hiaticula","Common Ringed Plover","CRPL"
+"252",343,"Tadorna tadorna","Common Shelduck","COMS"
+"253",4940,"Gallinago gallinago","Common Snipe","COSN"
+"254",8150,"Apus apus","Common Swift","COSW"
+"255",5570,"Sterna hirundo","Common Tern","COTE"
+"256",31751,"Columba palumbus","Common Wood-Pigeon",NA
+"257",40177,"Bucephala clangula x islandica","Common x Barrow's Goldeneye (hybrid)",NA
+"258",17000,"Geothlypis trichas","Common Yellowthroat","COYE"
+"259",40180,"Bucephala clangula/islandica","Common/Barrow's Goldeneye",NA
+"260",20405,"Acanthis flammea/hornemanni","Common/Hoary Redpoll",NA
+"261",41200,"Mergus merganser/serrator","Common/Red-breasted Merganser",NA
+"262",5140,"Larus canus/brachyrhynchus","Common/Short-billed Gull",NA
+"263",16970,"Oporornis agilis","Connecticut Warbler","CONW"
+"264",1900,"Pterodroma cookii","Cook's Petrel","COPE"
+"265",3110,"Accipiter cooperii","Cooper's Hawk","COHA"
+"266",41288,"Fulica sp.","coot sp.","UNCO"
+"267",12250,"Empidonax occidentalis","Cordilleran Flycatcher","COFL"
+"268",45379,"Phalacrocoracidae sp.","cormorant sp.","UCOR"
+"269",3740,"Crex crex","Corn Crake","CORC"
+"270",1960,"Calonectris diomedea","Cory's Shearwater","COSH"
+"271",9320,"Calypte costae","Costa's Hummingbird","COHU"
+"272",5900,"Aethia cristatella","Crested Auklet","CRAU"
+"273",43702,"Caracara plancus","Crested Caracara","CRCA"
+"274",3520,"Caracara plancus [cheriway Group]","Crested Caracara (Northern)",NA
+"275",20385,"Loxia sp.","crossbill sp.","UCRS"
+"276",14016,"Corvus sp. (crow sp.)","crow sp.","UNCR"
+"277",44364,"Corvus sp.","crow/raven sp.",NA
+"278",43302,"Cuculidae sp.","cuckoo sp. (Cuculidae sp.)",NA
+"279",4830,"Calidris ferruginea","Curlew Sandpiper","CUSA"
+"280",41206,"Numenius sp.","curlew sp.",NA
+"281",16030,"Toxostoma curvirostre","Curve-billed Thrasher","CBTH"
+"282",42218,"Junco hyemalis","Dark-eyed Junco","DEJU"
+"283",41434,"Junco hyemalis cismontanus","Dark-eyed Junco (cismontanus)",NA
+"284",47928,"Junco hyemalis [oreganus Group]","Dark-eyed Junco (Oregon)",NA
+"285",19110,"Junco hyemalis mearnsi","Dark-eyed Junco (Pink-sided)",NA
+"286",45168,"Junco hyemalis hyemalis/carolinensis","Dark-eyed Junco (Slate-colored)",NA
+"287",19510,"Spiza americana","Dickcissel","DICK"
+"288",41283,"Accipitriformes/Falconiformes sp.","diurnal raptor sp.",NA
+"289",2390,"Nannopterum auritum","Double-crested Cormorant","DCCO"
+"290",42927,"Nannopterum auritum/brasilianum","Double-crested/Neotropic Cormorant",NA
+"291",5720,"Alle alle","Dovekie","DOVE"
+"292",10290,"Dryobates pubescens","Downy Woodpecker","DOWO"
+"293",41770,"Dryobates pubescens pubescens/medianus","Downy Woodpecker (Eastern)",NA
+"294",40552,"Dryobates pubescens/villosus","Downy/Hairy Woodpecker",NA
+"295",46893,"Dryobates sp.","Dryobates sp.",NA
+"296",930,"Anatinae sp.","duck sp.","UNDU"
+"297",4820,"Calidris alpina","Dunlin","DUNL"
+"298",40372,"Calidris alpina hudsonia","Dunlin (hudsonia)",NA
+"299",12220,"Empidonax oberholseri","Dusky Flycatcher","DUFL"
+"300",1240,"Dendragapus obscurus","Dusky Grouse","DUGR"
+"301",40732,"Turdus eunomus","Dusky Thrush","DUTH"
+"302",41281,"Accipitridae sp. (eagle sp.)","eagle sp.",NA
+"303",1640,"Podiceps nigricollis","Eared Grebe","EAGR"
+"304",15330,"Sialia sialis","Eastern Bluebird","EABL"
+"305",45867,"Sialia sialis sialis/bermudensis","Eastern Bluebird (Eastern)",NA
+"306",12720,"Tyrannus tyrannus","Eastern Kingbird","EAKI"
+"307",19600,"Sturnella magna","Eastern Meadowlark","EAME"
+"308",40878,"Sturnella magna [magna Group]","Eastern Meadowlark (Eastern)",NA
+"309",12300,"Sayornis phoebe","Eastern Phoebe","EAPH"
+"310",7320,"Megascops asio","Eastern Screech-Owl","EASO"
+"311",40467,"Megascops asio [asio Group]","Eastern Screech-Owl (Northern)",NA
+"312",18570,"Pipilo erythrophthalmus","Eastern Towhee","EATO"
+"313",40825,"Pipilo erythrophthalmus erythrophthalmus/canaster","Eastern Towhee (Red-eyed)",NA
+"314",7871,"Antrostomus vociferus","Eastern Whip-poor-will","EWPW"
+"315",12070,"Contopus virens","Eastern Wood-Pewee","EAWP"
+"316",16200,"Motacilla tschutschensis","Eastern Yellow Wagtail","EYWA"
+"317",711,"Somateria sp.","Eider sp.",NA
+"318",5630,"Thalasseus elegans","Elegant Tern","ELTE"
+"319",150,"Anser canagicus","Emperor Goose","EMGO"
+"320",12285,"Empidonax sp.","Empidonax sp.",NA
+"321",4520,"Numenius borealis","Eskimo Curlew","ESCU"
+"322",45874,"Turdus merula","Eurasian Blackbird","EUBB"
+"323",6110,"Streptopelia decaocto","Eurasian Collared-Dove",NA
+"324",3930,"Fulica atra","Eurasian Coot","EUCO"
+"325",4570,"Numenius arquata","Eurasian Curlew","EUCU"
+"326",4230,"Charadrius morinellus","Eurasian Dotterel","EUDO"
+"327",3590,"Falco subbuteo","Eurasian Hobby","EHOB"
+"328",13890,"Corvus monedula","Eurasian Jackdaw","EUJA"
+"329",45341,"Falco tinnunculus","Eurasian Kestrel","EUKE"
+"330",4250,"Haematopus ostralegus","Eurasian Oystercatcher","EUOY"
+"331",20410,"Spinus spinus","Eurasian Siskin","EUSI"
+"332",14030,"Alauda arvensis","Eurasian Skylark","EUSK"
+"333",20920,"Passer montanus","Eurasian Tree Sparrow","ETSP"
+"334",410,"Mareca penelope","Eurasian Wigeon","EUWI"
+"335",4970,"Scolopax rusticola","Eurasian Woodcock","EUWO"
+"336",4080,"Pluvialis apricaria","European Golden-Plover","EUGP"
+"337",20510,"Carduelis carduelis","European Goldfinch","EUGO"
+"338",16140,"Sturnus vulgaris","European Starling","EUST"
+"339",2130,"Hydrobates pelagicus","European Storm-Petrel","EUSP"
+"340",20570,"Coccothraustes vespertinus","Evening Grosbeak","EVGR"
+"341",45274,"Coccothraustes vespertinus (type 1)","Evening Grosbeak (type 1)",NA
+"342",45276,"Coccothraustes vespertinus (type 3)","Evening Grosbeak (type 3)",NA
+"343",400,"Mareca falcata","Falcated Duck","FADU"
+"344",3660,"Falco sp.","falcon sp.","UNFA"
+"345",4550,"Numenius madagascariensis","Far Eastern Curlew","FECU"
+"346",1771,"Pterodroma feae","Fea's Petrel","FEPE"
+"347",3390,"Buteo regalis","Ferruginous Hawk","FEHA"
+"348",18800,"Spizella pusilla","Field Sparrow","FISP"
+"349",15640,"Turdus pilaris","Fieldfare","FIEL"
+"350",41447,"Fringillidae sp.","finch sp.","UNFI"
+"351",13980,"Corvus ossifragus","Fish Crow","FICR"
+"352",7290,"Psiloscops flammeolus","Flammulated Owl","FLOW"
+"353",1990,"Ardenna carneipes","Flesh-footed Shearwater","FFSH"
+"354",40958,"Tyrannidae sp.","flycatcher sp. (Tyrannidae sp.)",NA
+"355",12770,"Tyrannus savana","Fork-tailed Flycatcher","FTFL"
+"356",2150,"Hydrobates furcatus","Fork-tailed Storm-Petrel","FTSP"
+"357",5590,"Sterna forsteri","Forster's Tern","FOTE"
+"358",18980,"Passerella iliaca","Fox Sparrow","FOSP"
+"359",40845,"Passerella iliaca iliaca/zaboria","Fox Sparrow (Red)",NA
+"360",5050,"Leucophaeus pipixcan","Franklin's Gull","FRGU"
+"361",2471,"Fregata sp.","Frigatebird sp.",NA
+"362",100,"Dendrocygna bicolor","Fulvous Whistling-Duck","FUWD"
+"363",390,"Mareca strepera","Gadwall","GADW"
+"364",570,"Spatula querquedula","Garganey","GARG"
+"365",43028,"Geranoaetus/Buteo sp.","Geranoaetus/Buteo sp.",NA
+"366",5250,"Larus glaucescens","Glaucous-winged Gull","GWGU"
+"367",5270,"Larus hyperboreus","Glaucous Gull","GLGU"
+"368",2770,"Plegadis falcinellus","Glossy Ibis","GLIB"
+"369",2781,"Plegadis falcinellus/chihi","Glossy/White-faced Ibis",NA
+"370",41207,"Limosa sp.","Godwit sp.",NA
+"371",14960,"Regulus satrapa","Golden-crowned Kinglet","GCKI"
+"372",19060,"Zonotrichia atricapilla","Golden-crowned Sparrow","GCSP"
+"373",16420,"Vermivora chrysoptera","Golden-winged Warbler","GWWA"
+"374",45072,"Vermivora chrysoptera x cyanoptera","Golden-winged x Blue-winged Warbler (hybrid)",NA
+"375",16430,"Vermivora chrysoptera/cyanoptera","Golden-winged/Blue-winged Warbler",NA
+"376",3440,"Aquila chrysaetos","Golden Eagle","GOEA"
+"377",250,"Anser/Branta sp.","goose sp.","UNGO"
+"378",16710,"Setophaga graciae","Grace's Warbler","GRWA"
+"379",40884,"Quiscalus sp.","grackle sp.",NA
+"380",18900,"Ammodramus savannarum","Grasshopper Sparrow","GRSP"
+"381",15560,"Catharus minimus","Gray-cheeked Thrush","GCTH"
+"382",20280,"Leucosticte tephrocotis","Gray-crowned Rosy-Finch","GCRF"
+"383",14330,"Poecile cinctus","Gray-headed Chickadee","GHCH"
+"384",15900,"Dumetella carolinensis","Gray Catbird","GRCA"
+"385",12210,"Empidonax wrightii","Gray Flycatcher","GRFL"
+"386",2560,"Ardea cinerea","Gray Heron","GRAH"
+"387",12730,"Tyrannus dominicensis","Gray Kingbird","GRAK"
+"388",1100,"Perdix perdix","Gray Partridge","GRAP"
+"389",16220,"Motacilla cinerea","Gray Wagtail","GRAW"
+"390",141,"Anser anser","Graylag Goose","GRGO"
+"391",19690,"Quiscalus mexicanus","Great-tailed Grackle","GTGR"
+"392",5760,"Pinguinus impennis","Great Auk","GRAU"
+"393",5280,"Larus marinus","Great Black-backed Gull","GBBG"
+"394",2550,"Ardea herodias","Great Blue Heron","GBHE"
+"395",2551,"Ardea herodias [herodias Group]","Great Blue Heron (Great Blue)",NA
+"396",2400,"Phalacrocorax carbo","Great Cormorant","GRCO"
+"397",12450,"Myiarchus crinitus","Great Crested Flycatcher","GCFL"
+"398",2580,"Ardea alba","Great Egret","GREG"
+"399",7610,"Strix nebulosa","Great Gray Owl","GGOW"
+"400",7440,"Bubo virginianus","Great Horned Owl","GHOW"
+"401",32671,"Bubo virginianus [virginianus Group]","Great Horned Owl (Great Horned)",NA
+"402",12550,"Pitangus sulphuratus","Great Kiskadee","GKIS"
+"403",4660,"Calidris tenuirostris","Great Knot","GRKN"
+"404",2000,"Ardenna gravis","Great Shearwater","GRSH"
+"405",5660,"Stercorarius skua","Great Skua","GRSK"
+"406",1270,"Tympanuchus cupido","Greater Prairie-Chicken","GRPC"
+"407",1170,"Centrocercus urophasianus","Greater Sage-Grouse","GRSG"
+"408",1170,"Centrocercus urophasianus","Greater Sage-Grouse","GGSR"
+"409",680,"Aythya marila","Greater Scaup","GRSC"
+"410",130,"Anser albifrons","Greater White-fronted Goose","GWFG"
+"411",4420,"Tringa melanoleuca","Greater Yellowlegs","GRYE"
+"412",695,"Aythya marila/affinis","Greater/Lesser Scaup",NA
+"413",40356,"Tringa melanoleuca/flavipes","Greater/Lesser Yellowlegs",NA
+"414",1670,"Podicipedidae sp.","grebe sp.","UGRB"
+"415",18530,"Pipilo chlorurus","Green-tailed Towhee","GTTO"
+"416",590,"Anas crecca","Green-winged Teal","GWTE"
+"417",600,"Anas crecca carolinensis","Green-winged Teal (American)",NA
+"418",610,"Anas crecca crecca","Green-winged Teal (Eurasian)",NA
+"419",2680,"Butorides virescens","Green Heron","GRHE"
+"420",40276,"Butorides virescens virescens/bahamensis","Green Heron (virescens/bahamensis)",NA
+"421",7260,"Crotophaga sulcirostris","Groove-billed Ani","GBAN"
+"422",42881,"Tetraoninae sp.","grouse sp.","UGRS"
+"423",5831,"Synthliboramphus hypoleucus","Guadalupe Murrelet","GUMU"
+"424",5490,"Gelochelidon nilotica","Gull-billed Tern","GBTE"
+"425",5350,"Larinae sp.","gull sp.","UNGU"
+"426",5645,"Laridae sp.","gull/tern sp.",NA
+"427",3630,"Falco rusticolus","Gyrfalcon","GYRF"
+"428",45244,"Haemorhous sp.","Haemorhous sp.",NA
+"429",10300,"Dryobates villosus","Hairy Woodpecker","HAWO"
+"430",43661,"Dryobates villosus [villosus Group]","Hairy Woodpecker (Eastern)",NA
+"431",12200,"Empidonax hammondii","Hammond's Flycatcher","HAFL"
+"432",750,"Histrionicus histrionicus","Harlequin Duck","HADU"
+"433",3250,"Parabuteo unicinctus","Harris's Hawk","HASH"
+"434",19040,"Zonotrichia querula","Harris's Sparrow","HASP"
+"435",1860,"Pterodroma sandwichensis","Hawaiian Petrel","HAPE"
+"436",3670,"Accipitridae sp. (hawk sp.)","hawk sp.","UNHA"
+"437",5090,"Larus heermanni","Heermann's Gull","HEEG"
+"438",1310,"Numida meleagris","Helmeted Guineafowl","HELG"
+"439",18920,"Centronyx henslowii","Henslow's Sparrow","HESP"
+"440",17660,"Piranga flava","Hepatic Tanager","HETA"
+"441",15590,"Catharus guttatus","Hermit Thrush","HETH"
+"442",40729,"Catharus guttatus faxoni/crymophilus","Hermit Thrush (faxoni/crymophilus)",NA
+"443",16680,"Setophaga occidentalis","Hermit Warbler","HEWA"
+"444",2745,"Ardeidae sp.","heron sp.",NA
+"445",5170,"Larus argentatus","Herring Gull","HERG"
+"446",5172,"Larus argentatus smithsonianus","Herring Gull (American)",NA
+"447",40390,"Larus argentatus x marinus","Herring x Great Black-backed Gull (hybrid)",NA
+"448",20400,"Acanthis hornemanni","Hoary Redpoll","HORE"
+"449",40921,"Acanthis hornemanni exilipes","Hoary Redpoll (exilipes)",NA
+"450",40922,"Acanthis hornemanni hornemanni","Hoary Redpoll (hornemanni)",NA
+"451",870,"Lophodytes cucullatus","Hooded Merganser","HOME"
+"452",19860,"Icterus cucullatus","Hooded Oriole","HOOR"
+"453",17130,"Setophaga citrina","Hooded Warbler","HOWA"
+"454",1620,"Podiceps auritus","Horned Grebe","HOGR"
+"455",14040,"Eremophila alpestris","Horned Lark","HOLA"
+"456",40651,"Eremophila alpestris [alpestris Group]","Horned Lark (Eastern dark Group)",NA
+"457",5930,"Fratercula corniculata","Horned Puffin","HOPU"
+"458",20350,"Haemorhous mexicanus","House Finch","HOFI"
+"459",20910,"Passer domesticus","House Sparrow","HOSP"
+"460",14780,"Troglodytes aedon","House Wren","HOWR"
+"461",40695,"Troglodytes aedon [aedon Group]","House Wren (Northern)",NA
+"462",40910,"Haemorhous mexicanus/purpureus","House/Purple Finch",NA
+"463",4600,"Limosa haemastica","Hudsonian Godwit","HUGO"
+"464",9415,"Trochilidae sp.","hummingbird sp.",NA
+"465",13440,"Vireo huttoni","Hutton's Vireo","HUVI"
+"466",40245,"Hydrobates sp.","Hydrobates sp.",NA
+"467",40393,"Larus glaucoides","Iceland Gull","ICGU"
+"468",5200,"Larus glaucoides glaucoides/kumlieni","Iceland Gull (glaucoides/kumlieni)",NA
+"469",5202,"Larus glaucoides kumlieni","Iceland Gull (kumlieni)",NA
+"470",5190,"Larus glaucoides thayeri","Iceland Gull (Thayer's)",NA
+"471",6200,"Columbina inca","Inca Dove","INDO"
+"472",1150,"Pavo cristatus","Indian Peafowl","INPE"
+"473",19460,"Passerina cyanea","Indigo Bunting","INBU"
+"474",5340,"Pagophila eburnea","Ivory Gull","IVGU"
+"475",4920,"Lymnocryptes minimus","Jack Snipe","JASN"
+"476",41623,"Stercorarius sp. (jaeger sp.)","jaeger sp.","UJAE"
+"477",5710,"Stercorarius sp.","jaeger/skua sp.",NA
+"478",42699,"Phylloscopus examinandus","Kamchatka Leaf Warbler","KLWA"
+"479",5290,"Larus dominicanus","Kelp Gull","KEGU"
+"480",16960,"Geothlypis formosa","Kentucky Warbler","KEWA"
+"481",4210,"Charadrius vociferus","Killdeer","KILL"
+"482",730,"Somateria spectabilis","King Eider","KIEI"
+"483",3761,"Rallus elegans","King Rail","KIRA"
+"484",40169,"Somateria spectabilis/mollissima","King/Common Eider",NA
+"485",16770,"Setophaga kirtlandii","Kirtland's Warbler","KIWA"
+"486",5820,"Brachyramphus brevirostris","Kittlitz's Murrelet","KIMU"
+"487",760,"Camptorhynchus labradorius","Labrador Duck","LABD"
+"488",19140,"Calcarius lapponicus","Lapland Longspur","LALO"
+"489",40211,"Diomedea sp.","large albatross sp.",NA
+"490",5951,"Uria/Alca sp.","Large alcid sp.",NA
+"491",41210,"Hydroprogne/Thalasseus sp.","large tern sp.",NA
+"492",18870,"Calamospiza melanocorys","Lark Bunting","LARB"
+"493",18840,"Chondestes grammacus","Lark Sparrow","LASP"
+"494",41291,"Larus sp.","Larus sp.",NA
+"495",5040,"Leucophaeus atricilla","Laughing Gull","LAGU"
+"496",16440,"Vermivora chrysoptera x cyanoptera (F2 backcross)","Lawrence's Warbler (hybrid)",NA
+"497",1730,"Phoebastria immutabilis","Laysan Albatross","LAAL"
+"498",19450,"Passerina amoena","Lazuli Bunting","LAZB"
+"499",45376,"Hydrobates leucorhous","Leach's Storm-Petrel","LESP"
+"500",5880,"Aethia pusilla","Least Auklet","LEAU"
+"501",2510,"Ixobrychus exilis","Least Bittern","LEBI"
+"502",12190,"Empidonax minimus","Least Flycatcher","LEFL"
+"503",4750,"Calidris minutilla","Least Sandpiper","LESA"
+"504",5460,"Sternula antillarum","Least Tern","LETE"
+"505",18930,"Ammospiza leconteii","LeConte's Sparrow",NA
+"506",45075,"Leiothlypis sp.","Leiothlypis sp.",NA
+"507",5210,"Larus fuscus","Lesser Black-backed Gull","LBBG"
+"508",20480,"Spinus psaltria","Lesser Goldfinch","LEGO"
+"509",7710,"Chordeiles acutipennis","Lesser Nighthawk","LENI"
+"510",4120,"Charadrius mongolus","Lesser Sand-Plover","LSAP"
+"511",690,"Aythya affinis","Lesser Scaup","LESC"
+"512",4450,"Tringa flavipes","Lesser Yellowlegs","LEYE"
+"513",39566,"Sporophila bouvronides","Lesson's Seedeater",NA
+"514",10030,"Melanerpes lewis","Lewis's Woodpecker","LEWO"
+"515",4000,"Aramus guarauna","Limpkin","LIMP"
+"516",19000,"Melospiza lincolnii","Lincoln's Sparrow","LISP"
+"517",45186,"Melospiza lincolnii/georgiana","Lincoln's/Swamp Sparrow",NA
+"518",2630,"Egretta caerulea","Little Blue Heron","LBHE"
+"519",19180,"Emberiza pusilla","Little Bunting","LIBU"
+"520",2600,"Egretta garzetta","Little Egret","LIEG"
+"521",5060,"Hydrocoloeus minutus","Little Gull","LIGU"
+"522",4720,"Calidris minuta","Little Stint","LIST"
+"523",13210,"Lanius ludovicianus","Loggerhead Shrike","LOSH"
+"524",41955,"Lanius ludovicianus/borealis","Loggerhead/Northern Shrike",NA
+"525",4580,"Numenius americanus","Long-billed Curlew","LBCU"
+"526",4900,"Limnodromus scolopaceus","Long-billed Dowitcher","LBDO"
+"527",5810,"Brachyramphus perdix","Long-billed Murrelet","LBMU"
+"528",7620,"Asio otus","Long-eared Owl","LEOW"
+"529",43369,"Asio otus/flammeus","Long-eared/Short-eared Owl",NA
+"530",810,"Clangula hyemalis","Long-tailed Duck","LTDU"
+"531",5700,"Stercorarius longicaudus","Long-tailed Jaeger","LTJA"
+"532",41191,"Calcarius/Rhynchophanes sp.","longspur sp.","UNLN"
+"533",1580,"Gavia sp.","loon sp.","UNLO"
+"534",16950,"Parkesia motacilla","Louisiana Waterthrush","LOWA"
+"535",41413,"Parkesia motacilla/noveboracensis","Louisiana/Northern Waterthrush",NA
+"536",16510,"Leiothlypis luciae","Lucy's Warbler","LUWA"
+"537",16990,"Geothlypis tolmiei","MacGillivray's Warbler","MGWA"
+"538",2450,"Fregata magnificens","Magnificent Frigatebird","MAFR"
+"539",16580,"Setophaga magnolia","Magnolia Warbler","MAWA"
+"540",451,"Anas platyrhynchos","Mallard","MALL"
+"541",40154,"Anas platyrhynchos x rubripes","Mallard x American Black Duck (hybrid)",NA
+"542",41254,"Anas platyrhynchos/rubripes","Mallard/American Black Duck",NA
+"543",2060,"Puffinus puffinus","Manx Shearwater","MASH"
+"544",4620,"Limosa fedoa","Marbled Godwit","MAGO"
+"545",5800,"Brachyramphus marmoratus","Marbled Murrelet","MAMU"
+"546",14850,"Cistothorus palustris","Marsh Wren","MAWR"
+"547",40707,"Cistothorus palustris [palustris Group]","Marsh Wren (palustris Group)",NA
+"548",2280,"Sula dactylatra","Masked Booby","MABO"
+"549",19260,"Plectrophenax hyperboreus","McKay's Bunting","MKBU"
+"550",41767,"Melanerpes sp.","Melanerpes sp.",NA
+"551",41483,"Mergellus/Lophodytes/Mergus sp.","merganser sp.",NA
+"552",3580,"Falco columbarius","Merlin","MERL"
+"553",3581,"Falco columbarius columbarius","Merlin (Taiga)",NA
+"554",40499,"Colibri thalassinus","Mexican Violetear","MEVI"
+"555",7872,"Antrostomus arizonae","Mexican Whip-poor-will","MWPW"
+"556",44961,"Mimidae sp.","Mimidae sp.",NA
+"557",2990,"Ictinia mississippiensis","Mississippi Kite","MIKI"
+"558",36042,"Turdus viscivorus","Mistle Thrush","MITH"
+"559",41596,"Gallinula/Fulica/Porphyrio sp.","moorhen/coot/gallinule sp.",NA
+"560",480,"Anas fulvigula","Mottled Duck","MODU"
+"561",1810,"Pterodroma inexpectata","Mottled Petrel","MOPE"
+"562",15350,"Sialia currucoides","Mountain Bluebird","MOBL"
+"563",14290,"Poecile gambeli","Mountain Chickadee","MOCH"
+"564",4220,"Charadrius montanus","Mountain Plover","MOPL"
+"565",1350,"Oreortyx pictus","Mountain Quail","MOUQ"
+"566",6170,"Zenaida macroura","Mourning Dove","MODO"
+"567",16980,"Geothlypis philadelphia","Mourning Warbler","MOWA"
+"568",1800,"Pterodroma ultima","Murphy's Petrel","MUPE"
+"569",40438,"Brachyramphus/Synthliboramphus sp.","murrelet sp.",NA
+"570",270,"Cygnus olor","Mute Swan","MUSW"
+"571",40597,"Myiarchus sp.","Myiarchus sp.",NA
+"572",16480,"Leiothlypis ruficapilla","Nashville Warbler","NAWA"
+"573",40756,"Leiothlypis ruficapilla ruficapilla","Nashville Warbler (ruficapilla)",NA
+"574",2290,"Sula granti","Nazca Booby","NABO"
+"575",18940,"Ammospiza nelsoni","Nelson's Sparrow","NESP"
+"576",40837,"Ammospiza nelsoni nelsoni/altera","Nelson's Sparrow (Interior)",NA
+"577",2380,"Nannopterum brasilianum","Neotropic Cormorant","NECO"
+"578",40655,"Progne sp.","new world martin sp. (Progne sp.)",NA
+"579",40901,"Icterus sp.","new world oriole sp.",NA
+"580",2885,"Cathartidae sp.","new world vulture sp.",NA
+"581",41451,"Chordeiles sp.","nighthawk sp.",NA
+"582",7925,"Caprimulgidae sp.","nightjar sp.",NA
+"583",1410,"Colinus virginianus","Northern Bobwhite","NOBO"
+"584",19360,"Cardinalis cardinalis","Northern Cardinal","NOCA"
+"585",42226,"Cardinalis cardinalis [cardinalis Group]","Northern Cardinal (Common)",NA
+"586",10460,"Colaptes auratus","Northern Flicker","NOFL"
+"587",10470,"Colaptes auratus auratus/luteus","Northern Flicker (Yellow-shafted)",NA
+"588",1760,"Fulmarus glacialis","Northern Fulmar","NOFU"
+"589",2340,"Morus bassanus","Northern Gannet","NOGA"
+"590",3140,"Accipiter gentilis","Northern Goshawk","NOGO"
+"591",3061,"Circus hudsonius","Northern Harrier","NOHA"
+"592",7460,"Surnia ulula","Northern Hawk Owl","NHOW"
+"593",4050,"Vanellus vanellus","Northern Lapwing","NOLA"
+"594",15920,"Mimus polyglottos","Northern Mockingbird","NOMO"
+"595",16540,"Setophaga americana","Northern Parula","NOPA"
+"596",30508,"Anas acuta","Northern Pintail","NOPI"
+"597",7470,"Glaucidium gnoma","Northern Pygmy-Owl","NOPO"
+"598",14200,"Stelgidopteryx serripennis","Northern Rough-winged Swallow","NRWS"
+"599",47462,"Stelgidopteryx serripennis [serripennis Group]","Northern Rough-winged Swallow (Northern)",NA
+"600",7680,"Aegolius acadicus","Northern Saw-whet Owl","NSWO"
+"601",540,"Spatula clypeata","Northern Shoveler","NSHO"
+"602",46372,"Lanius borealis","Northern Shrike","NSHR"
+"603",16940,"Parkesia noveboracensis","Northern Waterthrush","NOWA"
+"604",42067,"Oenanthe oenanthe","Northern Wheatear","NOWH"
+"605",41391,"Sitta sp.","nuthatch sp.",NA
+"606",41521,"Oceanites sp.","Oceanites sp.",NA
+"607",12020,"Contopus cooperi","Olive-sided Flycatcher","OSFL"
+"608",16470,"Leiothlypis celata","Orange-crowned Warbler","OCWA"
+"609",45073,"Leiothlypis celata celata/orestera","Orange-crowned Warbler (Gray-headed)",NA
+"610",19850,"Icterus spurius","Orchard Oriole","OROR"
+"611",19851,"Icterus spurius spurius","Orchard Oriole (Orchard)",NA
+"612",20520,"Chloris sinica","Oriental Greenfinch","ORGR"
+"613",6080,"Streptopelia orientalis","Oriental Turtle-Dove","ORTD"
+"614",2900,"Pandion haliaetus","Osprey","OSPR"
+"615",40287,"Pandion haliaetus carolinensis","Osprey (carolinensis)",NA
+"616",16930,"Seiurus aurocapilla","Ovenbird","OVEN"
+"617",41682,"Strigiformes sp.","owl sp.","UNOW"
+"618",41602,"Haematopus sp.","oystercatcher sp.",NA
+"619",12240,"Empidonax difficilis","Pacific-slope Flycatcher","PSFL"
+"620",12231,"Empidonax difficilis/occidentalis","Pacific-slope/Cordilleran Flycatcher (Western Flycatcher)",NA
+"621",4110,"Pluvialis fulva","Pacific Golden-Plover","PAGP"
+"622",1550,"Gavia pacifica","Pacific Loon","PALO"
+"623",42291,"Troglodytes pacificus","Pacific Wren","PAWR"
+"624",14830,"Troglodytes pacificus/hiemalis","Pacific/Winter Wren",NA
+"625",19500,"Passerina ciris","Painted Bunting","PABU"
+"626",17190,"Myioborus pictus","Painted Redstart","PARE"
+"627",16800,"Setophaga palmarum","Palm Warbler","PAWA"
+"628",16801,"Setophaga palmarum palmarum","Palm Warbler (Western)",NA
+"629",16802,"Setophaga palmarum hypochrysea","Palm Warbler (Yellow)",NA
+"630",5870,"Aethia psittacula","Parakeet Auklet","PAAU"
+"631",5690,"Stercorarius parasiticus","Parasitic Jaeger","PAJA"
+"632",44468,"Parus sp.","Parus sp.",NA
+"633",6190,"Ectopistes migratorius","Passenger Pigeon","PAPI"
+"634",40875,"Passerina sp.","Passerina sp.",NA
+"635",40927,"Passeriformes sp.","passerine sp.","UNPA"
+"636",4780,"Calidris melanotos","Pectoral Sandpiper","PESA"
+"637",43118,"Calidris sp. (peep sp.)","peep sp.",NA
+"638",2420,"Urile pelagicus","Pelagic Cormorant","PECO"
+"639",42932,"Pelecanus sp.","pelican sp.",NA
+"640",45581,"Falco peregrinus","Peregrine Falcon","PEFA"
+"641",41221,"Contopus sp.","pewee sp. (Contopus sp.)",NA
+"642",16370,"Phainopepla nitens","Phainopepla","PHAI"
+"643",5015,"Phalaropus sp.","Phalarope sp.","UPHL"
+"644",42874,"Phasianidae sp. (pheasant sp.)","pheasant sp.",NA
+"645",45213,"Pheucticus sp.","Pheucticus sp.",NA
+"646",13480,"Vireo philadelphicus","Philadelphia Vireo","PHVI"
+"647",13500,"Vireo philadelphicus/olivaceus","Philadelphia/Red-eyed Vireo",NA
+"648",44245,"Vireo philadelphicus/gilvus","Philadelphia/Warbling Vireo",NA
+"649",43695,"Picus sp.","Picus sp.",NA
+"650",1600,"Podilymbus podiceps","Pied-billed Grebe","PBGR"
+"651",5780,"Cepphus columba","Pigeon Guillemot","PIGU"
+"652",40931,"Columbidae sp.","pigeon/dove sp.",NA
+"653",10540,"Dryocopus pileatus","Pileated Woodpecker","PIWO"
+"654",19170,"Emberiza leucocephalos","Pine Bunting","PIBU"
+"655",20310,"Pinicola enucleator","Pine Grosbeak","PIGR"
+"656",47106,"Pinicola enucleator leucura","Pine Grosbeak (Taiga)",NA
+"657",20420,"Spinus pinus","Pine Siskin","PISI"
+"658",16760,"Setophaga pinus","Pine Warbler","PIWA"
+"659",120,"Anser brachyrhynchus","Pink-footed Goose","PFGO"
+"660",1980,"Ardenna creatopus","Pink-footed Shearwater","PFSH"
+"661",13850,"Gymnorhinus cyanocephalus","Pinyon Jay","PIJA"
+"662",4190,"Charadrius melodus","Piping Plover","PIPL"
+"663",41190,"Anthus sp.","pipit sp.",NA
+"664",4240,"Charadriidae sp.","Plover sp.",NA
+"665",13400,"Vireo plumbeus","Plumbeous Vireo","PLVI"
+"666",41498,"Podiceps sp.","Podiceps sp.",NA
+"667",5680,"Stercorarius pomarinus","Pomarine Jaeger","POJA"
+"668",3650,"Falco mexicanus","Prairie Falcon","PRFA"
+"669",16780,"Setophaga discolor","Prairie Warbler","PRAW"
+"670",40224,"Procellaria sp.","Procellaria sp.",NA
+"671",40239,"Procellariidae sp.","Procellariid sp.",NA
+"672",16900,"Protonotaria citrea","Prothonotary Warbler","PROW"
+"673",41265,"Lagopus sp.","ptarmigan sp.",NA
+"674",40223,"Pterodroma sp.","Pterodroma sp.",NA
+"675",20330,"Haemorhous purpureus","Purple Finch","PUFI"
+"676",40908,"Haemorhous purpureus purpureus","Purple Finch (Eastern)",NA
+"677",3900,"Porphyrio martinica","Purple Gallinule","PUGA"
+"678",14050,"Progne subis","Purple Martin","PUMA"
+"679",40653,"Progne subis subis/arboricola","Purple Martin (subis/arboricola)",NA
+"680",4800,"Calidris maritima","Purple Sandpiper","PUSA"
+"681",14430,"Sitta pygmaea","Pygmy Nuthatch","PYNU"
+"682",19370,"Cardinalis sinuatus","Pyrrhuloxia","PYRR"
+"683",41202,"Rallidae sp. (rail/crake sp.)","rail/crake sp.",NA
+"684",41589,"Rallus sp.","Rallus sp.",NA
+"685",5750,"Alca torda","Razorbill","RAZO"
+"686",38096,"Lanius collurio","Red-backed Shrike",NA
+"687",10190,"Melanerpes carolinus","Red-bellied Woodpecker","RBWO"
+"688",2260,"Phaethon aethereus","Red-billed Tropicbird","RBTR"
+"689",890,"Mergus serrator","Red-breasted Merganser","RBME"
+"690",14410,"Sitta canadensis","Red-breasted Nuthatch","RBNU"
+"691",10240,"Sphyrapicus ruber","Red-breasted Sapsucker","RBSA"
+"692",41384,"Vireo olivaceus","Red-eyed Vireo","REVI"
+"693",2410,"Urile urile","Red-faced Cormorant","RFCO"
+"694",46623,"Tarsiger cyanurus","Red-flanked Bluetail","RFBL"
+"695",2330,"Sula sula","Red-footed Booby","RFBO"
+"696",10060,"Melanerpes erythrocephalus","Red-headed Woodpecker","RHWO"
+"697",5320,"Rissa brevirostris","Red-legged Kittiwake","RLKI"
+"698",10230,"Sphyrapicus nuchalis","Red-naped Sapsucker","RNSA"
+"699",1630,"Podiceps grisegena","Red-necked Grebe","RNGR"
+"700",5000,"Phalaropus lobatus","Red-necked Phalarope","RNPH"
+"701",4710,"Calidris ruficollis","Red-necked Stint","RNST"
+"702",3280,"Buteo lineatus","Red-shouldered Hawk","RSHA"
+"703",43010,"Buteo lineatus [lineatus Group]","Red-shouldered Hawk (lineatus Group)",NA
+"704",3370,"Buteo jamaicensis","Red-tailed Hawk","RTHA"
+"705",41576,"Buteo jamaicensis abieticola","Red-tailed Hawk (abieticola)",NA
+"706",40307,"Buteo jamaicensis borealis","Red-tailed Hawk (borealis)",NA
+"707",47692,"Buteo jamaicensis calurus/abieticola","Red-tailed Hawk (calurus/abieticola)",NA
+"708",3380,"Buteo jamaicensis harlani","Red-tailed Hawk (Harlan's)",NA
+"709",2270,"Phaethon rubricauda","Red-tailed Tropicbird","RTTR"
+"710",1530,"Gavia stellata","Red-throated Loon","RTLO"
+"711",16280,"Anthus cervinus","Red-throated Pipit","RTPI"
+"712",19530,"Agelaius phoeniceus","Red-winged Blackbird","RWBL"
+"713",40876,"Agelaius phoeniceus [phoeniceus Group]","Red-winged Blackbird (Red-winged)",NA
+"714",46767,"Loxia curvirostra","Red Crossbill","RECR"
+"715",40911,"Loxia curvirostra (type 1)","Red Crossbill (Appalachian or type 1)",NA
+"716",40912,"Loxia curvirostra (type 2)","Red Crossbill (Ponderosa Pine or type 2)",NA
+"717",42258,"Loxia curvirostra (type 10)","Red Crossbill (Sitka Spruce or type 10)",NA
+"718",40913,"Loxia curvirostra (type 3)","Red Crossbill (Western Hemlock or type 3)",NA
+"719",4670,"Calidris canutus","Red Knot","REKN"
+"720",5010,"Phalaropus fulicarius","Red Phalarope","REPH"
+"721",137860,"Tamiasciurus hudsonicus","Red Squirrel","RESQ"
+"722",2650,"Egretta rufescens","Reddish Egret","REEG"
+"723",640,"Aythya americana","Redhead","REDH"
+"724",45264,"Acanthis sp.","redpoll sp.","UNRE"
+"725",15650,"Turdus iliacus","Redwing","REDW"
+"726",5910,"Cerorhinca monocerata","Rhinoceros Auklet","RHAU"
+"727",5150,"Larus delawarensis","Ring-billed Gull","RBGU"
+"728",660,"Aythya collaris","Ring-necked Duck","RNDU"
+"729",1140,"Phasianus colchicus","Ring-necked Pheasant","RNEP"
+"730",44425,"Riparia sp.","Riparia sp.",NA
+"731",40523,"Eugenes fulgens","Rivoli's Hummingbird","RIHU"
+"732",5970,"Columba livia (Feral Pigeon)","Rock Pigeon (Feral Pigeon)",NA
+"733",1210,"Lagopus muta","Rock Ptarmigan","ROPT"
+"734",4810,"Calidris ptilocnemis","Rock Sandpiper","ROSA"
+"735",14560,"Salpinctes obsoletus","Rock Wren","ROWR"
+"736",19400,"Pheucticus ludovicianus","Rose-breasted Grosbeak","RBGR"
+"737",2810,"Platalea ajaja","Roseate Spoonbill","ROSP"
+"738",5560,"Sterna dougallii","Roseate Tern","ROST"
+"739",20355,"Carpodacus sp.","rosefinch sp.",NA
+"740",170,"Anser rossii","Ross's Goose","ROGO"
+"741",5330,"Rhodostethia rosea","Ross's Gull","ROGU"
+"742",3400,"Buteo lagopus","Rough-legged Hawk","RLHA"
+"743",41621,"Thalasseus maximus","Royal Tern","ROYT"
+"744",5600,"Thalasseus maximus/albididorsalis","Royal/West African Crested Tern",NA
+"745",14970,"Corthylio calendula","Ruby-crowned Kinglet","RCKI"
+"746",9270,"Archilochus colubris","Ruby-throated Hummingbird","RTHU"
+"747",46804,"Oxyura jamaicensis","Ruddy Duck","RUDU"
+"748",342,"Tadorna ferruginea","Ruddy Shelduck","RUSH"
+"749",4630,"Arenaria interpres","Ruddy Turnstone","RUTU"
+"750",4880,"Calidris pugnax","Ruff","RUFF"
+"751",1160,"Bonasa umbellus","Ruffed Grouse","RUGR"
+"752",9370,"Selasphorus rufus","Rufous Hummingbird","RUHU"
+"753",19190,"Emberiza rustica","Rustic Bunting","RUBU"
+"754",19650,"Euphagus carolinus","Rusty Blackbird","RUBL"
+"755",41235,"Euphagus carolinus/cyanocephalus","Rusty/Brewer's Blackbird",NA
+"756",5300,"Xema sabini","Sabine's Gull","SAGU"
+"757",15960,"Oreoscoptes montanus","Sage Thrasher","SATH"
+"758",18862,"Artemisiospiza nevadensis","Sagebrush Sparrow","SABS"
+"759",18860,"Artemisiospiza nevadensis/belli","Sagebrush/Bell's Sparrow (Sage Sparrow)",NA
+"760",4680,"Calidris alba","Sanderling","SAND"
+"761",4010,"Antigone canadensis","Sandhill Crane","SACR"
+"762",5620,"Thalasseus sandvicensis","Sandwich Tern","SATE"
+"763",10245,"Sphyrapicus sp.","sapsucker sp.","UNSA"
+"764",18880,"Passerculus sandwichensis","Savannah Sparrow","SAVS"
+"765",18890,"Passerculus sandwichensis princeps","Savannah Sparrow (Ipswich)",NA
+"766",45176,"Passerculus sandwichensis [sandwichensis Group]","Savannah Sparrow (Savannah)",NA
+"767",12310,"Sayornis saya","Say's Phoebe","SAPH"
+"768",17680,"Piranga olivacea","Scarlet Tanager","SCTA"
+"769",12760,"Tyrannus forficatus","Scissor-tailed Flycatcher","STFL"
+"770",5020,"Scolopacidae sp.","Scolopacidae sp.",NA
+"771",800,"Melanitta sp.","scoter sp.","USCT"
+"772",20010,"Icterus parisorum","Scott's Oriole","SCOR"
+"773",7405,"Megascops sp.","screech-owl sp.",NA
+"774",5832,"Synthliboramphus scrippsi","Scripps's Murrelet","SCMU"
+"775",5830,"Synthliboramphus scrippsi/hypoleucus","Scripps's/Guadalupe Murrelet (Xantus's Murrelet)",NA
+"776",18960,"Ammospiza maritima","Seaside Sparrow","SESP"
+"777",40703,"Cistothorus stellaris","Sedge Wren","SEWR"
+"778",40532,"Selasphorus sp.","Selasphorus sp.",NA
+"779",4180,"Charadrius semipalmatus","Semipalmated Plover","SEPL"
+"780",4690,"Calidris pusilla","Semipalmated Sandpiper","SESA"
+"781",47130,"Setophaga sp.","Setophaga sp.",NA
+"782",3100,"Accipiter striatus","Sharp-shinned Hawk","SSHA"
+"783",41564,"Accipiter striatus [velox Group]","Sharp-shinned Hawk (Northern)",NA
+"784",41566,"Accipiter striatus/cooperii","Sharp-shinned/Cooper's Hawk",NA
+"785",1260,"Tympanuchus phasianellus","Sharp-tailed Grouse","STGR"
+"786",4790,"Calidris acuminata","Sharp-tailed Sandpiper","SPTS"
+"787",41519,"Procellariidae sp. (shearwater sp.)","shearwater sp.",NA
+"788",19740,"Molothrus bonariensis","Shiny Cowbird","SHCO"
+"789",41209,"Charadriiformes sp.","Shorebird sp.","UNSH"
+"790",4890,"Limnodromus griseus","Short-billed Dowitcher","SBDO"
+"791",40374,"Limnodromus griseus griseus","Short-billed Dowitcher (griseus)",NA
+"792",40375,"Limnodromus griseus hendersoni","Short-billed Dowitcher (hendersoni)",NA
+"793",5142,"Larus brachyrhynchus","Short-billed Gull","SBIG"
+"794",40377,"Limnodromus griseus/scolopaceus","Short-billed/Long-billed Dowitcher",NA
+"795",7640,"Asio flammeus","Short-eared Owl","SEOW"
+"796",1750,"Phoebastria albatrus","Short-tailed Albatross","STAL"
+"797",2040,"Ardenna tenuirostris","Short-tailed Shearwater","SRTS"
+"798",40605,"Lanius sp.","shrike sp.",NA
+"799",16180,"Prunella montanella","Siberian Accentor","SIAC"
+"800",15280,"Larvivora cyane","Siberian Blue Robin","SBRO"
+"801",15260,"Calliope calliope","Siberian Rubythroat","SIRU"
+"802",47896,"Saxicola maurus","Siberian Stonechat",NA
+"803",15322,"Saxicola maurus/stejnegeri","Siberian/Amur Stonechat",NA
+"804",31128,"Lophura nycthemera","Silver Pheasant",NA
+"805",5220,"Larus schistisagus","Slaty-backed Gull","SBGU"
+"806",4560,"Numenius tenuirostris","Slender-billed Curlew","SBCU"
+"807",34881,"Elaenia parvirostris","Small-billed Elaenia",NA
+"808",42936,"Ixobrychus sp.","small bittern sp.",NA
+"809",41204,"Charadrius sp.","small plover sp.",NA
+"810",860,"Mergellus albellus","Smew","SMEW"
+"811",19150,"Calcarius pictus","Smith's Longspur","SMLO"
+"812",40379,"Gallinago sp.","snipe sp.",NA
+"813",19250,"Plectrophenax nivalis","Snow Bunting","SNBU"
+"814",160,"Anser caerulescens","Snow Goose","SNGO"
+"815",40134,"Anser caerulescens x rossii","Snow x Ross's Goose (hybrid)",NA
+"816",40135,"Anser caerulescens/rossii","Snow/Ross's Goose",NA
+"817",2620,"Egretta thula","Snowy Egret","SNEG"
+"818",7450,"Bubo scandiacus","Snowy Owl","SNOW"
+"819",41600,"Charadrius nivosus","Snowy Plover","SNPL"
+"820",4370,"Tringa solitaria","Solitary Sandpiper","SOSA"
+"821",40351,"Tringa solitaria solitaria","Solitary Sandpiper (solitaria)",NA
+"822",18990,"Melospiza melodia","Song Sparrow","SOSP"
+"823",45177,"Melospiza melodia melodia/atlantica","Song Sparrow (melodia/atlantica)",NA
+"824",15651,"Turdus philomelos","Song Thrush","SOTH"
+"825",1250,"Dendragapus fuliginosus","Sooty Grouse","SOGR"
+"826",2030,"Ardenna grisea","Sooty Shearwater","SOSH"
+"827",5400,"Onychoprion fuscatus","Sooty Tern","SOTE"
+"828",3830,"Porzana carolina","Sora","SORA"
+"829",5670,"Stercorarius maccormicki","South Polar Skua","SPSK"
+"830",40865,"Passerellidae sp. (sparrow sp.)","sparrow sp.","UNSP"
+"831",720,"Somateria fischeri","Spectacled Eider","SPEI"
+"832",42263,"Spinus sp.","Spinus sp.",NA
+"833",45167,"Spizella sp.","Spizella sp.",NA
+"834",40830,"Spizella/Spizelloides sp.","Spizella sp./American Tree Sparrow",NA
+"835",4850,"Calidris pygmaea","Spoon-billed Sandpiper","SBSA"
+"836",7580,"Strix occidentalis","Spotted Owl","SPOW"
+"837",3890,"Pardirallus maculatus","Spotted Rail","SPRA"
+"838",4410,"Tringa erythropus","Spotted Redshank","SPRE"
+"839",4350,"Actitis macularius","Spotted Sandpiper","SPSA"
+"840",18550,"Pipilo maculatus","Spotted Towhee","SPTO"
+"841",47930,"Pipilo maculatus [maculatus Group]","Spotted Towhee (maculatus Group)",NA
+"842",40824,"Pipilo maculatus x erythrophthalmus","Spotted x Eastern Towhee (hybrid)",NA
+"843",16300,"Anthus spragueii","Sprague's Pipit","SPPI"
+"844",1190,"Canachites canadensis","Spruce Grouse","SPGR"
+"845",710,"Polysticta stelleri","Steller's Eider","STEI"
+"846",13630,"Cyanocitta stelleri","Steller's Jay","STJA"
+"847",41457,"Sterna sp.","Sterna sp.",NA
+"848",4840,"Calidris himantopus","Stilt Sandpiper","STSA"
+"849",40246,"Oceanitidae/Hydrobatidae sp.","storm-petrel sp.",NA
+"850",1950,"Calonectris leucomelas","Streaked Shearwater","STRS"
+"851",41630,"Streptopelia sp.","Streptopelia sp.",NA
+"852",40258,"Sulidae sp.","sulid sp.",NA
+"853",12640,"Myiodynastes luteiventris","Sulphur-bellied Flycatcher","SBFL"
+"854",17670,"Piranga rubra","Summer Tanager","SUTA"
+"855",770,"Melanitta perspicillata","Surf Scoter","SUSC"
+"856",4650,"Calidris virgata","Surfbird","SURF"
+"857",3330,"Buteo swainsoni","Swainson's Hawk","SWHA"
+"858",15580,"Catharus ustulatus","Swainson's Thrush","SWTH"
+"859",40726,"Catharus ustulatus [swainsoni Group]","Swainson's Thrush (Olive-backed)",NA
+"860",16920,"Limnothlypis swainsonii","Swainson's Warbler","SWWA"
+"861",2930,"Elanoides forficatus","Swallow-tailed Kite","STKI"
+"862",14265,"Hirundinidae sp.","swallow sp.","UNSW"
+"863",19010,"Melospiza georgiana","Swamp Sparrow","SWSP"
+"864",320,"Cygnus sp.","swan sp.","USWN"
+"865",41700,"Apodidae sp.","swift sp.",NA
+"866",44421,"Tachycineta sp.","Tachycineta sp.",NA
+"867",111,"Anser fabalis","Taiga Bean-Goose","TABG"
+"868",40957,"Piranga sp.","tanager sp. (Piranga sp.)",NA
+"869",4730,"Calidris temminckii","Temminck's Stint","TEST"
+"870",16460,"Leiothlypis peregrina","Tennessee Warbler","TEWA"
+"871",4330,"Xenus cinereus","Terek Sandpiper","TESA"
+"872",5640,"Sterninae sp.","tern sp.","UNTE"
+"873",12700,"Tyrannus crassirostris","Thick-billed Kingbird","TBKI"
+"874",19130,"Rhynchophanes mccownii","Thick-billed Longspur",NA
+"875",5740,"Uria lomvia","Thick-billed Murre","TBMU"
+"876",41408,"Turdidae sp.","thrush sp.","UNTH"
+"877",18615,"Melozone/Pipilo sp.","towhee sp.","UNTW"
+"878",15360,"Myadestes townsendi","Townsend's Solitaire","TOSO"
+"879",16670,"Setophaga townsendi","Townsend's Warbler","TOWA"
+"880",14120,"Tachycineta bicolor","Tree Swallow","TRES"
+"881",2640,"Egretta tricolor","Tricolored Heron","TRHE"
+"882",41289,"Tringa sp.","Tringa sp.",NA
+"883",12670,"Tyrannus melancholicus","Tropical Kingbird","TRKI"
+"884",280,"Cygnus buccinator","Trumpeter Swan","TRUS"
+"885",40150,"Cygnus buccinator/columbianus","Trumpeter/Tundra Swan",NA
+"886",670,"Aythya fuligula","Tufted Duck","TUDU"
+"887",5940,"Fratercula cirrhata","Tufted Puffin","TUPU"
+"888",14370,"Baeolophus bicolor","Tufted Titmouse","TUTI"
+"889",112,"Anser serrirostris","Tundra Bean-Goose","TUBG"
+"890",290,"Cygnus columbianus","Tundra Swan","TUSW"
+"891",291,"Cygnus columbianus columbianus","Tundra Swan (Whistling)",NA
+"892",40737,"Turdus sp.","Turdus sp.",NA
+"893",2850,"Cathartes aura","Turkey Vulture","TUVU"
+"894",4500,"Bartramia longicauda","Upland Sandpiper","UPSA"
+"895",19490,"Passerina versicolor","Varied Bunting","VABU"
+"896",15830,"Ixoreus naevius","Varied Thrush","VATH"
+"897",12660,"Empidonomus varius","Variegated Flycatcher","VAFL"
+"898",47638,"Chaetura vauxi","Vaux's Swift","VASW"
+"899",15550,"Catharus fuscescens","Veery","VEER"
+"900",40170,"Melanitta fusca","Velvet Scoter","VESC"
+"901",47764,"Pyrocephalus rubinus","Vermilion Flycatcher","VEFL"
+"902",18830,"Pooecetes gramineus","Vesper Sparrow","VESP"
+"903",14150,"Tachycineta thalassina","Violet-green Swallow","VGSW"
+"904",43426,"Colibri sp.","violetear sp.",NA
+"905",40944,"Vireo sp.","vireo sp.","UNVI"
+"906",16490,"Leiothlypis virginiae","Virginia's Warbler","VIWA"
+"907",3770,"Rallus limicola","Virginia Rail","VIRA"
+"908",42145,"Motacilla sp.","wagtail sp.",NA
+"909",4390,"Tringa incana","Wandering Tattler","WATA"
+"910",40790,"Parulidae sp.","warbler sp. (Parulidae sp.)",NA
+"911",13460,"Vireo gilvus","Warbling Vireo","WAVI"
+"912",40615,"Vireo gilvus gilvus","Warbling Vireo (Eastern)",NA
+"913",41264,"Anatidae sp.","waterfowl sp.","UNWT"
+"914",2010,"Ardenna pacifica","Wedge-tailed Shearwater","WTSH"
+"915",15340,"Sialia mexicana","Western Bluebird","WEBL"
+"916",1650,"Aechmophorus occidentalis","Western Grebe","WEGR"
+"917",5240,"Larus occidentalis","Western Gull","WEGU"
+"918",12710,"Tyrannus verticalis","Western Kingbird","WEKI"
+"919",19610,"Sturnella neglecta","Western Meadowlark","WEME"
+"920",2610,"Egretta gularis","Western Reef-Heron","WERH"
+"921",4700,"Calidris mauri","Western Sandpiper","WESA"
+"922",7310,"Megascops kennicottii","Western Screech-Owl","WESO"
+"923",17690,"Piranga ludoviciana","Western Tanager","WETA"
+"924",12060,"Contopus sordidulus","Western Wood-Pewee","WEWP"
+"925",5260,"Larus occidentalis x glaucescens","Western x Glaucous-winged Gull (hybrid)",NA
+"926",19615,"Sturnella neglecta/magna","Western/Eastern Meadowlark",NA
+"927",4530,"Numenius phaeopus","Whimbrel","WHIM"
+"928",47665,"Numenius phaeopus phaeopus","Whimbrel (European)",NA
+"929",4531,"Numenius phaeopus phaeopus/alboaxillaris/variegatus","Whimbrel (White-rumped)",NA
+"930",5890,"Aethia pygmaea","Whiskered Auklet","WHAU"
+"931",41243,"Dendrocygna sp.","whistling-duck sp.",NA
+"932",14420,"Sitta carolinensis","White-breasted Nuthatch","WBNU"
+"933",40678,"Sitta carolinensis carolinensis","White-breasted Nuthatch (Eastern)",NA
+"934",550,"Anas bahamensis","White-cheeked Pintail","WCHP"
+"935",8020,"Streptoprocne zonaris","White-collared Swift","WCSW"
+"936",6010,"Patagioenas leucocephala","White-crowned Pigeon","WCPI"
+"937",19050,"Zonotrichia leucophrys","White-crowned Sparrow","WCSP"
+"938",42216,"Zonotrichia leucophrys leucophrys/oriantha","White-crowned Sparrow (Dark-lored)",NA
+"939",40853,"Zonotrichia leucophrys gambelii","White-crowned Sparrow (Gambel's)",NA
+"940",13240,"Vireo griseus","White-eyed Vireo","WEVI"
+"941",2780,"Plegadis chihi","White-faced Ibis","WFIB"
+"942",2120,"Pelagodroma marina","White-faced Storm-Petrel","WFSP"
+"943",10340,"Dryobates albolarvatus","White-headed Woodpecker","WHWO"
+"944",4760,"Calidris fuscicollis","White-rumped Sandpiper","WRSA"
+"945",2950,"Elanus leucurus","White-tailed Kite","WTKI"
+"946",1220,"Lagopus leucura","White-tailed Ptarmigan","WTPT"
+"947",2250,"Phaethon lepturus","White-tailed Tropicbird","WTTR"
+"948",19030,"Zonotrichia albicollis","White-throated Sparrow","WTSP"
+"949",8180,"Aeronautes saxatalis","White-throated Swift","WTSW"
+"950",20380,"Loxia leucoptera","White-winged Crossbill","WWCR"
+"951",31856,"Zenaida asiatica","White-winged Dove","WWDO"
+"952",43160,"Larus sp. (white-winged gull sp.)","white-winged gull sp.",NA
+"953",45994,"Melanitta deglandi","White-winged Scoter","WWSC"
+"954",5530,"Chlidonias leucopterus","White-winged Tern","WWTE"
+"955",41276,"Ardea/Egretta/Bubulcus sp.","white egret sp.",NA
+"956",2750,"Eudocimus albus","White Ibis","WHIB"
+"957",42141,"Motacilla alba","White Wagtail","WHWA"
+"958",310,"Cygnus cygnus","Whooper Swan","WHOS"
+"959",4030,"Grus americana","Whooping Crane","WHCR"
+"960",1290,"Meleagris gallopavo","Wild Turkey","WITU"
+"961",4380,"Tringa semipalmata","Willet","WILL"
+"962",40355,"Tringa semipalmata inornata","Willet (Western)",NA
+"963",10210,"Sphyrapicus thyroideus","Williamson's Sapsucker","WISA"
+"964",12170,"Empidonax traillii","Willow Flycatcher","WIFL"
+"965",41903,"Empidonax traillii traillii","Willow Flycatcher (Eastern)",NA
+"966",1200,"Lagopus lagopus","Willow Ptarmigan","WIPT"
+"967",4990,"Phalaropus tricolor","Wilson's Phalarope","WIPH"
+"968",4160,"Charadrius wilsonia","Wilson's Plover","WIPL"
+"969",4950,"Gallinago delicata","Wilson's Snipe","WISN"
+"970",2110,"Oceanites oceanicus","Wilson's Storm-Petrel","WISP"
+"971",17140,"Cardellina pusilla","Wilson's Warbler","WIWA"
+"972",40781,"Cardellina pusilla pusilla","Wilson's Warbler (pusilla)",NA
+"973",40702,"Troglodytes hiemalis","Winter Wren","WIWR"
+"974",360,"Aix sponsa","Wood Duck","WODU"
+"975",4470,"Tringa glareola","Wood Sandpiper","WOSA"
+"976",2830,"Mycteria americana","Wood Stork","WOST"
+"977",15600,"Hylocichla mustelina","Wood Thrush","WOTH"
+"978",45722,"Aphelocoma woodhouseii","Woodhouse's Scrub-Jay","WOSJ"
+"979",10595,"Picidae sp.","woodpecker sp.","UNWO"
+"980",16910,"Helmitheros vermivorum","Worm-eating Warbler","WEWA"
+"981",40956,"Troglodytidae sp.","wren sp.","UNWR"
+"982",8770,"Basilinna xantusii","Xantus's Hummingbird","XAHU"
+"983",12130,"Empidonax flaviventris","Yellow-bellied Flycatcher","YBFL"
+"984",10220,"Sphyrapicus varius","Yellow-bellied Sapsucker","YBSA"
+"985",7060,"Coccyzus americanus","Yellow-billed Cuckoo","YBCU"
+"986",1570,"Gavia adamsii","Yellow-billed Loon","YBLO"
+"987",41662,"Coccyzus americanus/erythropthalmus","Yellow-billed/Black-billed Cuckoo",NA
+"988",19210,"Emberiza aureola","Yellow-breasted Bunting","YBSB"
+"989",17310,"Icteria virens","Yellow-breasted Chat","YBCH"
+"990",40788,"Icteria virens virens","Yellow-breasted Chat (virens)",NA
+"991",15050,"Phylloscopus inornatus","Yellow-browed Warbler","YBWA"
+"992",2730,"Nyctanassa violacea","Yellow-crowned Night-Heron","YCNH"
+"993",13510,"Vireo flavoviridis","Yellow-green Vireo","YGVI"
+"994",19620,"Xanthocephalus xanthocephalus","Yellow-headed Blackbird","YHBL"
+"995",31623,"Larus michahellis","Yellow-legged Gull","YLGU"
+"996",1680,"Thalassarche chlororhynchos","Yellow-nosed Albatross","YNAL"
+"997",16610,"Setophaga coronata","Yellow-rumped Warbler","YRWA"
+"998",16630,"Setophaga coronata auduboni","Yellow-rumped Warbler (Audubon's)",NA
+"999",16620,"Setophaga coronata coronata","Yellow-rumped Warbler (Myrtle)",NA
+"1000",13380,"Vireo flavifrons","Yellow-throated Vireo","YTVI"
+"1001",16700,"Setophaga dominica","Yellow-throated Warbler","YTWA"
+"1002",3680,"Coturnicops noveboracensis","Yellow Rail","YERA"
+"1003",16560,"Setophaga petechia","Yellow Warbler","YEWA"
+"1004",16563,"Setophaga petechia [aestiva Group]","Yellow Warbler (Northern)",NA
+"1005",3350,"Buteo albonotatus","Zone-tailed Hawk","ZTHA"
+"1006",40858,"Zonotrichia sp.","Zonotrichia sp.",NA
