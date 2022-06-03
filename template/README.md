@@ -60,3 +60,42 @@ The **SURVEY** attribute identifies protocols, species, abundance, and time of t
 | isHeard     | Text | Was / were the bird(s) detected using a visual method (Yes, No or DNC). If no behaviour data, fill in as DNC except for NONE = null |
 | isSeen     | Text | Was / were the bird(s) detected using an auditory method (Yes, No or DNC). If no behaviour data, fill in as DNC except for NONE = null |
 | comments     | Text | Any comments related to survey. As needed |
+
+
+### EXTENDED TABLE
+
+The **EXTENDED** attribute are information BAM wants to keep but are not implemented in WildTrax
+
+| Values   | Format   | Description   |
+| :------- | :-------------- | :-------------- |
+| site     | Text | Site is any part of the location name that groups the stations, if they are multiple parts, separate by hyphens (dashes) |
+| station     | Text | Individual survey location, if there are multiple parts, separate by hyphens (dashes) |
+| utm_zone     | Text | Include if the source coordinates were not using NAD83  |
+| easting     | Text |  Source X if coordinates were transposed   |
+| northing     | Text | Source Y if coordinates were transposed |
+| missinginlocations     | Text | Information on missing locations  |
+| time_zone     | Text | Include if in source data, use three letter codes, e.g. MDT, MST   |
+| data_origin     | Text | Source of the data if differ from the organization  |
+| missinginvisit     | Numeric | Information missing from the visit |
+| pkey_dt     | Text | Concatenatation of  location:visitDate_survey_time:observer; separated by colons |
+| survey_year     | Text | Year the data were collected |
+| survey_time     | Text | HH:MM, 24 hour format |
+| rawObserver     | Text | Which ever format the raw observer data came in |
+| original_species     | Text | Species code provided in the source data if it differ from  WildTrax code, field is null where source data  match WildTrax species list |
+| scientificname     | Text | Binomial classification (Genus, species) of the species |
+| rawDistanceCode     | Text |  Original distance band used in source file or source protocol |
+| rawDurationCode     | Text | Original duration interval used in source file or source protocol |
+| originalBehaviourData     | Text | Any original behaviour codes at end of file |
+| missingindetections     | Text | Comments on missing information |
+| pc_vt     | Text | Vocalization type, same options as for ARU vocalization type, fill in if available. Refer to lookup table |
+| pc_vt_detail     | Text | further detail on vocalization type, E.g Drumming, Counter Singing, fill in if available |
+| age     | Text | Age related information. Refer to lookup table |
+| fm     | Text | Sex related information. Refer to lookup table |
+| group     | Text | Group related information. Refer to lookup table |
+| flyover     | Text | Yes/No field for flyover. Refer to lookup table |
+| displaytype     | Text | any display related information. Refer to lookup table |
+| nestevidence     | Text | Nest related information. Refer to lookup table |
+| behaviourother     | Text | Any behaviour that does not fit in the other columns |
+| atlas_breeding_code     | Text | Fill in atlas code letters if these are part of original data |
+
+
