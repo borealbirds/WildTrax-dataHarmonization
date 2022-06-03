@@ -17,7 +17,7 @@ This repo aimed to share scripts and lookup tables needed to translation point c
 ./template                              Example of output table structure, communication, ...
 </pre>
 
-# Directory Structure
+# Introduction
 
 The Data intake process involve five main steps:
 
@@ -47,19 +47,18 @@ A template of Sharing agreement should be found in Template. In WT, sharing can 
 You need to make sure the communication reflect these options.
 
 
-# Acquire source data and related documentation to allow reformatting
+# Source data and related documentation to allow reformatting
 
 All data acquired should be logged in the [project_Integration file](https://github.com/MelinaHoule/WT-Integration/blob/345282009ddcbd465f07789eca1cc0b8ba78e13a/project_Integration.xlsx). 
 
-* Make sure the Organization exists. If not, 
-* Acquire sharing agreement
-* Acquire source data and related documentation to allow reformatting.
-* Reformat the data.
-* Upload data to WildTrax.
+* Make sure the Organization exists. If not, create an entry.
+* Create a new project entry. Marked it as NS (Not Started). 
+* Add PartnerContactInfo for the project
 
-# Reformat the data.
+# Reformatting
 
-# Upload data to WildTrax
+
+# Upload to WildTrax
 
 # Citation
 
