@@ -15,9 +15,9 @@ This repo aimed to share scripts and lookup tables needed to translation point c
 ./script                                R scripts to summarize WT output for validation checks
 
 ./template                              Example of output table structure, communication, ...
+<pre>
 
-
-# Introduction
+# Directory Structure
 
 The Data intake process involve five main steps:
 
