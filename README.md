@@ -15,7 +15,7 @@ This repo aimed to share scripts and lookup tables needed to translation point c
 ./script                                R scripts to summarize WT output for validation checks
 
 ./template                              Example of output table structure, communication, ...
-<pre>
+</pre>
 
 # Directory Structure
 
