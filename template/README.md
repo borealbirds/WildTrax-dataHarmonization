@@ -6,13 +6,13 @@ WildTrax upload is a 3 steps process.
 
 
 
-
+<a name=Location_tbl></a>
 ### LOCATION TABLE
 
 The **OWNER_NAME** attribute identifies who owns the land covered by the inventory.
 
 | Values   | Format   | Description   |
-| :------- | :-------------- |
+| :------- | :-------------- | :-------------- |
 | location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified |
 | latitude     | Decimal degrees | NAD83, convert if otherwise |
 | longitude     | Decimal degrees | NAD83, convert if otherwise |
