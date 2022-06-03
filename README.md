@@ -1,6 +1,6 @@
 # WT-Integration
 
-This repo aimed to share scripts and lookup tables needed to translation point counts data into WT upload format
+This repo aimed to share scripts, lookup tables and templates needed to translated point counts data into WT upload format. The documentation is in progress. Feel free to add section. 
 
 # Directory Structure
 <pre>
@@ -56,6 +56,7 @@ All data acquired should be logged in the [project_Integration file](https://git
 * Add PartnerContactInfo for the project
 
 # Reformatting
+
 
 
 # Upload to WildTrax
