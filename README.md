@@ -1,6 +1,6 @@
 # WT-Integration
 
-This repo aimed to share scripts, lookup tables and templates needed to translated point counts data into WT upload format. The documentation is in progress. Feel free to add section. 
+This repo aimed to share scripts, lookup tables and templates needed to translate point counts data into WT upload format. The documentation is in progress. Feel free to add sections. 
 
 # Directory Structure
 <pre>
