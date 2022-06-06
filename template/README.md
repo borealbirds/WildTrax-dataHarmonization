@@ -9,7 +9,7 @@ blabla
 <a name=Location_tbl></a>
 ### LOCATION TABLE
 
-The **LOCATION** attribute identifies the geographic extent of the site.
+The **LOCATION** attributes identify the geographic extent of the site.
 
 | Values   | Format   | Description   |
 | :------- | :-------------- | :-------------- |
@@ -27,7 +27,7 @@ The **LOCATION** attribute identifies the geographic extent of the site.
 
 ### VISIT TABLE
 
-The **VISIT** attribute identifies the date the survey was performed.
+The **VISIT** attributes identify the date the survey was performed.
 | Values   | Format   | Description   |
 | :------- | :-------------- | :-------------- |
 | location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified |
@@ -44,7 +44,7 @@ The **VISIT** attribute identifies the date the survey was performed.
 
 ### SURVEY TABLE
 
-The **SURVEY** attribute identifies protocols, species, abundance, and time of the observations
+The **SURVEY** attributes identify protocols, species, abundance, and time of the observations
 
 | Values   | Format   | Description   |
 | :------- | :-------------- | :-------------- |
@@ -64,7 +64,7 @@ The **SURVEY** attribute identifies protocols, species, abundance, and time of t
 
 ### EXTENDED TABLE
 
-The **EXTENDED** attribute are information BAM wants to keep but are not implemented in WildTrax
+The **EXTENDED** attributes are information BAM wants to keep but are not implemented in WildTrax
 
 | Values   | Format   | Description   |
 | :------- | :-------------- | :-------------- |
