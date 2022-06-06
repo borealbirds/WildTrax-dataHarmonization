@@ -5,3 +5,7 @@
 # ignore ALL files in ANY directory named temp
 project/
 out/
+config.R
+archived/
+
+.Rproj.user
