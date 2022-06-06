@@ -53,25 +53,23 @@ All data acquired should be logged in the [template](https://github.com/MelinaHo
 
 * Make sure the Organization exists. If not, create an entry.
 * Create a new project entry. Marked it as NS (Not Started). 
-* Create a new PartnerContactInf entry for the project
+* Create a new PartnerContactInfo entry for the project
 
-If you don't intend to process the data straight away, make sure you overview the data to document some attributes, have all tables that define attributes and values used. Some definition will be answered by emails, make sure you sotre them by converting the email as a PDF. 
+If you don't intend to process the data straight away, make sure you overview the data to document some attributes, have all tables that define attributes and values used. Some informations will be answered by emails. Make sure you keep a copy by converting the email as a PDF and make it available in the respective project folder. 
 
 Overviewing the data includes:
 * Observations have XY coordinates.
 * Reference system of the coordinates is known.
-* Protocol is documented (can be found in a report or in the db itself)
-* Species code definition is present. We cannot assume the species code used is the same as found on WildTrax. We need to check
-* If behaviour data are present, make sure we have the meaning of the code.
+* Protocol is documented (can be a report, email exchange, or found in the db itself)
+* Species code definition is present. We cannot assume the species code used is the same as the one used by WildTrax. We need to check.
+* If behaviour data are present, make sure we have the meaning of the values.
 * Date and time is present.
 * Abundance is present
 
 # Reformatting
-Reformating will be unique per project. Some projects will use rules that are similar. Chunk of codes can be reuse. 
+Reformating will be unique per project. Some projects will use rules that are similar. scripts are all available to allow reusing chunk of codes. 
 
-Output format is found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
-
-the WildTrax field specification document the WildTrax attributes used by the database for Point Counts.  
+Example of the expected upload format for the Point Count and definition of attributes are found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
 
 
 # Upload to WildTrax
