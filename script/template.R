@@ -1,5 +1,5 @@
 # ---
-# title: "Translate data to make them ready for WT upload"
+# title: "Template translation script"
 # author: "Melina Houle"
 # date: "March 8, 2022"
 # ---
@@ -12,236 +12,166 @@ library(reshape2) # melt
 library(readxl)
 
 ## Initialize variables
-wd <- "E:/MelinaStuff/BAM/dataImport"
+wd <- "E:/MelinaStuff/BAM/WildTrax/WT-Integration"
 setwd(wd)
-template <-"./template/BAM-WT_Transfer_flat.csv"
-s_folder <- "./project/Atlas/data"
+
+lu <- "./lookupTables"
+WT_spTbl <- "./WT_PointCount_Codes/species_codes.csv"
+
+dataset_code <- "xxxxxxxx"
+project <- file.path("./project", dataset_code)
+out_dir <- file.path("./out", dataset_code)    # where output dataframe will be exported
+if (!dir.exists(out_dir)) {
+  dir.create(out_dir)
+}
+
 WT_spTbl <- "./lookupTables/species_codes.csv"
-ATLAS_spTbl <- "./lookupTables/AtlasSpeciesList.xlsx"
-#ATLAS_spTbl <- "./lookupTables/XWalk_Atlas-WT.xlsx"
-
-#Load df template####
-df <-read.csv(template)
-
-##Load source data if txt are found locally
-#fl = list.files(s_folder, pattern = "*.txt")
-#s_data = lapply(fl, function(x) read.delim(file.path(s_folder,x), sep="\t", header=TRUE, fill = TRUE)) 
 
 
-#Load source data 
-dataList <- c("")
-
-# username: teegand, password: BAMProject
-s_data <- 
-
-
-#subset columns needed only
-NameList  <- c("")
-
-data_flat<- s_data[names(s_data) %in% NameList]
-
-# Translate df with species only (absence of species or scientifqueName ==N/A always equal survey site with no Observations)
-data_flat <-data_flat[!is.na(data_flat$species_id),]
-data_flat <-data_flat[!is.na(data_flat$ObservationCount),]
-
-
+s_location <-read_excel(file.path(project, "xxxxxxxxx.xlsx"))
 
 #--------------------------------------------------------------
 #
 #       TRANSLATE
 #
 #--------------------------------------------------------------
-#### SET  COLUMN ####
-## organization
-data_flat$organization <- sapply(data_flat$collection, switch, 
-                                 NFATLAS1PC = "NF-ATLAS (BAM)", 
-                                 ONATLAS3PC = "ON-ATLAS (BAM)",
-                                 QCATLAS_NORTH_PC = "QC-ATLAS (BAM)",
-                                 QCATLAS2PC = "QC-ATLAS (BAM)",
-                                 SKATLAS1PC = "SK-ATLAS (BAM)")
-## dataset code
-data_flat$dataset_code <-data_flat$
-## location
-data_flat$site <- 
-data_flat$station <- 
-data_flat$station <- 
-data_flat$location <- 
-## UTM zone, Easting, Northing
-data_flat$utm_zone <- data_flat$UTMZone 
-data_flat$easting <- data_flat$UTMEasting
-data_flat$northing <- data_flat$UTMNorthing 
-## latitude, longitude
-data_flat$latitude <- data_flat$latitude
-data_flat$longitude <- data_flat$longitude
-## bufferRadiusMeters, elevationMeters, isHidden, trueCoordinates, comments, internal_wildtrax_id, internal_update_ts
-data_flat$bufferRadiusMeters <- NA
-data_flat$elevationMeters <- NA
-data_flat$isHidden <- NA
-data_flat$trueCoordinates <- NA
-data_flat$comments_location <- NA
-data_flat$internal_wildtrax_id <- NA
-data_flat$internal_update_ts <- NA
+############################
+#### LOCATION TABLE ####
+############################
+s_location <-read_excel(file.path(project, "xxxxxxxxx.xlsx"))
+
+s_location$site <- 
+s_location$station <- 
+s_location$location <- paste(dataset_code,s_location$site, s_location$station, sep=":")
+s_location$latitude <- 
+s_location$longitude <- 
+s_location$elevationMeters <- NA #derived from location
+s_location$bufferRadiusMeters <- NA
+s_location$isHidden <- NA
+s_location$trueCoordinates <- NA
+s_location$comments <- 
+s_location$internal_wildtrax_id <- NA  #created during the upload
+s_location$internal_update_ts <- NA #created during the upload
+
+# If exists in source data
+s_location$utmZone	<- NA
+s_location$easting	<- NA
+s_location$northing	<- NA
+s_location$missinginlocations <- NA
+
+#---LOCATION
+WTlocation <- c("location", "latitude", "longitude", "bufferRadiusMeters", "elevationMeters", "isHidden", "trueCoordinates", "comments")
+location_tbl <- s_location[!duplicated(s_location[,WTlocation]), WTlocation] # 
+
+############################
+#### VISIT TABLE ####
+############################
+s_data <- read_excel(file.path(project, "zzzzzzzz.xlsx"))
+
+#Right join (keep only point location that has actual detection)
+data_flat <- merge(s_data, s_location, by = "JOIN_FIELD", all.x = TRUE)
+
+# Translate df with species and abundance only. 
+data_flat <-data_flat[!is.na(data_flat$species),]
+data_flat <-data_flat[!(data_flat$abundance==0),]
+
 ## visitDate
-data_flat$visitDate <- as.Date(with(data_flat, paste(survey_year, survey_month, survey_day, sep = "-")),format = "%Y-%m-%d")
+data_flat$visitDate <- format(data_flat$Date, format = "%Y-%m-%d")
 ## snowDepthMeters, waterDepthMeters, landFeatures, crew, bait, accessMethod, comments_visit,wildtrax_internal_update_ts, wildtrax_internal_lv_id
-data_flat$snowDepthMeters <- NA
-data_flat$waterDepthMeters <- NA
-data_flat$landFeatures <- NA
-data_flat$crew <- NA
-data_flat$bait <- NA
-data_flat$accessMethod <- NA
-data_flat$comments_visit <- NA
-data_flat$wildtrax_internal_update_ts <- NA
-data_flat$wildtrax_internal_lv_id <- NA
+data_flat$snowDepthMeters <- NA  #derived from location at upload
+data_flat$waterDepthMeters <- NA  #derived from location at upload
+data_flat$landFeatures <- NA  #ARUs attributes
+data_flat$crew <- NA   #ARUs attributes
+data_flat$bait <- "None"
+data_flat$accessMethod <- NA  #ARUs attributes
+data_flat$comments <- NA
+data_flat$wildtrax_internal_update_ts <- NA  #created during the upload
+data_flat$wildtrax_internal_lv_id <- NA #created during the upload
 # surveyDateTime, survey_time
-DateTime_f <- paste(data_flat$visitDate, '00:00:00')
-data_flat$POSIXdatetime <- as.POSIXlt(DateTime_f, format = "%Y-%m-%d %H:%M:%S") 
-data_flat$addTime <- data_flat$POSIXdatetime 
-data_flat$addTime[!is.na(data_flat$TimeCollected)] <- data_flat$POSIXdatetime[!is.na(data_flat$TimeCollected)] + 3600*as.numeric(data_flat$TimeCollected[(!is.na(data_flat$TimeCollected))])
-data_flat$surveyDateTime <-strftime(data_flat$addTime)
-data_flat$survey_time <- format(data_flat$addTime, format = "%H:%M:%S")
-## pkey_dt -- Note: Atlas don't have observer id. Left it out of pkey_dt 
-data_flat$pkey_dt<- paste(data_flat$location, paste0(as.character(data_flat$visitDate),"_", data_flat$survey_time), sep=":")
-#-----------------------------                                                     
-#Delete extra field to avoid error using melt later
-data_flat$POSIXdatetime <- NULL
-data_flat$addTime <- NULL
-#------------------------------
-
+data_flat$time_zone <- NA
+data_flat$data_origin <- NA
+data_flat$missinginvisit <- NA
+data_flat$survey_time <- format(data_flat$Start_Time, format = "%H:%M:%S")
+data_flat$survey_year <- sub("\\-.*", "", data_flat$visitDate)
 ## observer, observer_raw
-data_flat$observer <- NA
-data_flat$observer_raw <- NA
+data_flat$observer <- data_flat$local_ObsID
+data_flat$rawObserver <- data_flat$Researcher
 
+## pkey_dt -- Concatenate, separated by colons: [location]:[visitDate]_[survey_time]:[localobservercode]; can also use raw observer or observer ID if needed
+data_flat$pkey_dt<- paste(data_flat$location, paste0(gsub("-", "", as.character(data_flat$visitDate)),"_", gsub(":", "", data_flat$survey_time)), data_flat$observer, sep=":")
+
+WTvisit <- c("location", "visitDate", "snowDepthMeters", "waterDepthMeters", "crew", "bait", "accessMethod", "landFeatures", "comments", 
+             "wildtrax_internal_update_ts", "wildtrax_internal_lv_id")
+
+#Delete duplicated based on WildtTrax attributes (double observer on the same site, same day). 
+visit_tbl <- data_flat[!duplicated(data_flat[,WTvisit]), WTvisit] 
+
+############################
+#### SURVEY TABLE ####
+############################
+# Extract observer
+data_flat$surveyDateTime <- paste(data_flat$visitDate, data_flat$survey_time)
 ## Distance and duration Methods
-data_flat$distanceMethod <- "0m-INF"
-data_flat$durationMethod <- "0-5min"
-
+data_flat$distanceMethod <- "0m-50m-INF"
+data_flat$durationMethod <- "0-5-10min"
 ## Species, species_old, comments, scientificname
-#Read and merge Atlas species list and species code
-ATLAS_spId <- as.data.frame(read_excel(ATLAS_spTbl, sheet = "species_name", col_names = TRUE))
-#Hard coded fix code not found in Species Table
-data_flat[data_flat$SpeciesCode==40182, "species_id"] <- 880
-#Merge ATLAS_spId df
-data_flat <-merge(data_flat, ATLAS_spId[,c("species_id", "species_code")], by ="species_id", all.x = TRUE)
+data_flat <- merge(data_flat, lu_species[,c(1:2)], by.x ="Common_Name", by.y = "species_common_name" , all.x = TRUE)
 data_flat$species <- data_flat$species_code
-#Fill comments with species name that don't have WT translation
-data_flat$comments[data_flat$species_code=="NA"] <- data_flat$CommonName[data_flat$species_code=="NA"]
-data_flat$Species_Old <- data_flat$species_id
-data_flat$scientificname <- data_flat$ScientificName
+data_flat$comments <- 
+data_flat$original_species <- data_flat$Spp
+data_flat$scientificname <- data_flat$Scientific_Name
 
 ## isHeard isSeen
-data_flat$isHeard <- "Yes"
-data_flat$isSeen <- "No"
+data_flat$isHeard <- data_flat$heard
+data_flat$isSeen <- data_flat$seen
 
 ## abundance
-#Split  according to protocol. 
-#-- Point Count
-data_flat_pc <- data_flat[data_flat$ProtocolCode =="PointCount",]
-data_flat_pc$abundance <- data_flat_pc$ObservationCount   
-data_flat_pc$durationinterval <- "UNKNOWN"
-data_flat_pc$distanceband <-"0m-INF"
-data_flat_pc$raw_distance_code <- data_flat_pc$ProtocolCode
-data_flat_pc$raw_duration_code <- data_flat_pc$ProtocolCode
+data_flat$abundance <- data_flat$Count
 
-#--NORAC
-data_flat_norac <- data_flat[data_flat$ProtocolCode =="NORAC",]
-data_flat_norac$sum_count <- as.numeric(data_flat_norac$ObservationCount2) + as.numeric(data_flat_norac$ObservationCount3)
+# distance and duration interval
+data_flat$distanceband <-  
+data_flat$durationinterval <- 
+data_flat$raw_distance_code <- 
+data_flat$raw_duration_code <- 
+data_flat$missingindetections <- NA
+# Behaviour
+data_flat$originalBehaviourData <- 
+data_flat$pc_vt <- 
+data_flat$pc_vt_detail <- 
+data_flat$age <- 
+data_flat$fm <- 
+data_flat$group <- 
+data_flat$flyover <- 
+data_flat$displaytype <- 
+data_flat$nestevidence <- 
+data_flat$behaviourother <- 
 
-data_flat_norac_in <- data_flat_norac[as.numeric(data_flat_norac$ObservationCount)==data_flat_norac$sum_count,]
-norac_expanded <- melt(data_flat_norac_in, measure.vars = c("ObservationCount2","ObservationCount3"), value.name = "abundance")
-norac_expanded$durationinterval[norac_expanded$variable == "ObservationCount2" & norac_expanded$abundance >= 1] <- "0-3min"
-norac_expanded$durationinterval[norac_expanded$variable == "ObservationCount3" & norac_expanded$abundance >= 1] <- "4-5min"
-norac_expanded$distanceband <-"0m-INF"
-norac_expanded$raw_distance_code <- "0m-INF"
-norac_expanded$raw_duration_code <- norac_expanded$variable
-
-data_flat_norac_out <- data_flat_norac[as.numeric(data_flat_norac$ObservationCount)!=data_flat_norac$sum_count,]
-data_flat_norac_out$ObservationIncidental <- as.numeric(data_flat_norac_out$ObservationCount) - data_flat_norac_out$sum_count
-norac_incidental <- melt(data_flat_norac_out, measure.vars = c("ObservationCount2","ObservationCount3", "ObservationIncidental"), value.name = "abundance")
-norac_incidental$durationinterval[norac_incidental$variable == "ObservationCount2" & norac_incidental$abundance >= 1] <- "0-3min"
-norac_incidental$durationinterval[norac_incidental$variable == "ObservationCount3" & norac_incidental$abundance >= 1] <- "4-5min"
-norac_incidental$durationinterval[norac_incidental$variable == "ObservationIncidental" & norac_incidental$abundance >= 1] <- NA
-norac_incidental$distanceband <-"0m-INF"
-norac_incidental$raw_distance_code <- "0m-INF"
-norac_incidental$raw_duration_code <- norac_incidental$variable
-
-#-- Point Count 6 Interval
-data_flat_pc6 <- data_flat[data_flat$ProtocolCode =="Point Count 6 Interval",]
-
-pc6_expanded <- melt(data_flat_pc6, measure.vars = c("ObservationCount2","ObservationCount3","ObservationCount4","ObservationCount5","ObservationCount6","ObservationCount7"), value.name = "abundance")
-pc6_expanded$durationinterval[pc6_expanded$variable == "ObservationCount2" & pc6_expanded$abundance >= 1] <- "0-3min"
-pc6_expanded$distanceband[pc6_expanded$variable == "ObservationCount2" & pc6_expanded$abundance >= 1] <- "0m-50m"
-pc6_expanded$durationinterval[pc6_expanded$variable == "ObservationCount3" & pc6_expanded$abundance >= 1] <- "0-3min"
-pc6_expanded$distanceband[pc6_expanded$variable == "ObservationCount3" & pc6_expanded$abundance >= 1] <- "50m-100m"
-pc6_expanded$durationinterval[pc6_expanded$variable == "ObservationCount4" & pc6_expanded$abundance >= 1] <- "0-3min"
-pc6_expanded$distanceband[pc6_expanded$variable == "ObservationCount4" & pc6_expanded$abundance >= 1] <- "100m-INF"
-pc6_expanded$durationinterval[pc6_expanded$variable == "ObservationCount5" & pc6_expanded$abundance >= 1] <- "4-5min"
-pc6_expanded$distanceband[pc6_expanded$variable == "ObservationCount5" & pc6_expanded$abundance >= 1] <- "0m-50m"
-pc6_expanded$durationinterval[pc6_expanded$variable == "ObservationCount6" & pc6_expanded$abundance >= 1] <- "4-5min"
-pc6_expanded$distanceband[pc6_expanded$variable == "ObservationCount6" & pc6_expanded$abundance >= 1] <- "50m-100m"
-pc6_expanded$durationinterval[pc6_expanded$variable == "ObservationCount7" & pc6_expanded$abundance >= 1] <- "4-5min"
-pc6_expanded$distanceband[pc6_expanded$variable == "ObservationCount7" & pc6_expanded$abundance >= 1] <- "100m-INF"
-pc6_expanded$raw_distance_code <- pc6_expanded$variable
-pc6_expanded$raw_duration_code <- pc6_expanded$variable
-
-data_translated <- rbind.fill(data_flat_pc,norac_expanded, norac_incidental, pc6_expanded)
-#delete abundance = 0 created by melt and durationinterval is na representing incidental observation. Not yet implemented in WildTrax
-atlas_translated <- data_translated[data_translated$abundance != 0 | !is.na(data_translated$durationinterval), ]
 
 #--------------------------------------------------------------
 #
 #       EXPORT
 #
 #--------------------------------------------------------------
+write.csv(visit_tbl, file= file.path(out_dir, paste0(dataset_code,"_visit.csv")), row.names = FALSE)
 
-#subset columns 
-outputName  <- c("organization", "dataset_code", "location", "site", "station", "utm_zone", "easting", "northing", "latitude", "longitude",
-                 "bufferRadiusMeters", "elevationMeters", "isHidden", "trueCoordinates", "comments_location", "internal_wildtrax_id", "internal_update_ts",
-                 "visitDate", "snowDepthMeters", "waterDepthMeters", "landFeatures", "crew", "bait", "accessMethod", "comments_visit", "wildtrax_internal_update_ts",
-                 "wildtrax_internal_lv_id", "pkey_dt", "surveyDateTime", "survey_time", "observer", "observer_raw", "distanceMethod", "durationMethod", 
-                 "species", "Species_Old", "scientificname", "isHeard", "isSeen", "abundance", "distanceband", "raw_distance_code", "durationinterval",
-                 "raw_duration_code", "comments") 
-
-#outputName  <- c("location", "latitude", "longitude", "bufferRadiusMeters", "elevationMeters",
-#                 "isHidden", "trueCoordinates", "comments", "internal_wildtrax_id", "internal_update_ts",
-#                 "visitDate", "snowDepthMeters", "waterDepthMeters", "landFeatures", "crew", "bait", "accessMethod",
-#                 "comments", "wildtrax_internal_update_ts", "wildtrax_internal_lv_id", "surveyDateTime", "observer",
-#                 "distanceMethod", "durationMethod", "species", "isHeard", "isSeen", "abundance", "distanceband",
-#                 "durationinterval")
+WTsurvey <- c("location", "surveyDateTime", "durationMethod", "distanceMethod", "observer", "species", "distanceband",
+              "durationinterval", "abundance", "isHeard", "isSeen", "comments")
+survey_tbl <- data_flat[!duplicated(data_flat[,WTsurvey]), WTsurvey] 
+write.csv(survey_tbl, file= file.path(out_dir, paste0(dataset_code,"_survey.csv")), row.names = FALSE)
 
 
-out <- match(outputName, names(atlas_translated))
-out_translated <- atlas_translated[,out]
+#Only select location with observation
+location_tbl <- subset(location_tbl,location_tbl$location %in% survey_tbl$location)
+write.csv(location_tbl, file= file.path(out_dir, paste0(dataset_code,"_location.csv")), row.names = FALSE)
 
-write.csv(out_translated, "E:/MelinaStuff/BAM/dataImport/out/WT_ATLAScombined_20220211.csv")
+#---EXTENDED
+Extended <- c("location", "surveyDateTime", "species", "utmZone", "easting", "northing", "missinginlocations", "time_zone", 
+              "data_origin", "missinginvisit", "pkey_dt", "survey_time", "survey_year", "rawObserver", "original_species", 
+              "scientificname", "raw_distance_code", "raw_duration_code", "originalBehaviourData", "missingindetections", 
+              "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", "displaytype", "nestevidence", "behaviourother")
+extended_tbl <- data_flat[!duplicated(data_flat[,Extended]), Extended] 
+write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_extended.csv")), row.names = FALSE)
 
 
 
-
-#--------------------------------------------------------------
-#--------------------------------------------------------------
-## TEST
-
-apply(out_translated, 2, function(x) any(is.na(x))) #NAs present in count columns
-apply(out_translated, 2, function(x) any(x=="")) #blanks present in species and locality (square) columns
-
-data[out_translated$CommonName=="",]
-
-
-data_flat[is.na(data_flat$latitude),]
-data[out_translated$CommonName=="",]
-
-## some data has no XY coordinates (1400 or something)
-out_translated[is.na(out_translated$latitude),]
-data_flat[is.na(data_flat$latitude),]
-
-## one has no vistiDate and surveyDateTime
-out_translated[is.na(out_translated$visitDate),]
-data_flat[is.na(data_flat$visitDate),]
-
-## 30 has an abundance of 0 but has a species identified
-length(out_translated[is.na(out_translated$abundance),])
-data_flat[is.na(data_flat$abundance),]
-
-## In surveyDateTime, when time is unknown, it is filled by 00:00:00
 
