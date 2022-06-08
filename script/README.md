@@ -2,17 +2,17 @@ Scripts should all have a header that mention the PCODE, Project name, authors o
 Pending tasks should be put on top with github issues number stated until resolved. 
 
 Example
-# --- PENDING: Duplicates are found in source data: Bird Data. We delete it for now. Waiting to hear back from our partner (Issue #1)
-# ---
-# ---
-# PCODE: NEFBMP2012-19
-# Title: "Translate New England Forest Bird Monitoring Program 2012-2019"
-# Source dataset is an Excel spreadsheet using 2 sheet: Site Data, Bird Data
-# Author: "Melina Houle"
-# Date: "March 11, 2022"
-# Note on translation:
-# -- Download manually source data locally prior to process
-# -- Species code used are not equivalent to WildTrax species_code. Species codes need to be derived by using species common name
-# -- 3 stations use concatenation of transect name + number instead of a numeric Point_Count (ADAMSCAMP, BAKERBUSH, CRAFTBURYOU). Fix is hardcoded. 
-# -- 
-# ---
+ --- PENDING: Duplicates are found in source data: Bird Data. We delete it for now. Waiting to hear back from our partner (Issue #1)
+ ---
+ ---
+ PCODE: NEFBMP2012-19
+ Title: "Translate New England Forest Bird Monitoring Program 2012-2019"
+ Source dataset is an Excel spreadsheet using 2 sheet: Site Data, Bird Data
+ Author: "Melina Houle"
+ Date: "March 11, 2022"
+ Note on translation:
+ -- Download manually source data locally prior to process
+ -- Species code used are not equivalent to WildTrax species_code. Species codes need to be derived by using species common name
+ -- 3 stations use concatenation of transect name + number instead of a numeric Point_Count (ADAMSCAMP, BAKERBUSH, CRAFTBURYOU). Fix is hardcoded. 
+ -- 
+ ---
