@@ -1,6 +1,7 @@
 # WT-Integration
+**** The documentation is in progress. Feel free to add sections. 
 
-This repo aimed to share scripts, lookup tables and templates needed to translate point counts data into WT upload format. The documentation is in progress. Feel free to add sections. 
+This repo aimed to share scripts, lookup tables and templates needed to translate point counts data into WT upload format. The Directory folder of the working directory is presented below. Sub-folder "project" and "out" aren't shared because they are often too large.  
 
 # Directory Structure
 <pre>
