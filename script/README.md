@@ -2,7 +2,8 @@ Scripts should all have a header that mention the PCODE, Project name, authors o
 
 Pending tasks should be put on top with github issues number stated until resolved. 
 
-Example
+Example  
+--------------------------------------------------------------------------------------------------------------------------------------  
 #--PENDING: Duplicates are found in source data at the sruvey level: Bird Data. We delete them for now. Waiting t hear back from our partner (issue #1)  
 #-    
 #- PCODE: NEFBMP2012-19  
