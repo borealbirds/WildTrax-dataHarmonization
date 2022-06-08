@@ -6,7 +6,7 @@
 # Note on translation:
 # -- Download manually source data locally prior to process
 # -- Species code used are not equivalent to WildTrax species_code. Species codes need to be derived by using species common name
-# -- 
+# -- 3 stations use concatenation of transect name + number instead of a numeric Point_Count (ADAMSCAMP, BAKERBUSH, CRAFTBURYOU). Fix is hardcoded. 
 # -- 
 # -- 
 # ---
@@ -54,10 +54,10 @@ crs_WT <- st_crs(4386)
 ############################
 #### LOCATION TABLE ####
 ############################
-s_location <-read_excel(file.path(project, "NEFBMP2012-19.xlsx"), sheet = "Site Data")
+s_location <-read_excel(file.path(project, "NEFBMP2012-19.xlsx"), sheet = "Site Data", col_types = c("text") )
 names(s_location)<-str_replace_all(names(s_location), c(" " = "_"))
 
-s_location$site <- s_location$Transect 
+s_location$site <- s_location$Short_Name 
 s_location$station <- s_location$Point_Number
 s_location$location <- paste(dataset_code,s_location$site, s_location$station, sep=":")
 s_location$latitude <- s_location$Latitude
@@ -66,7 +66,7 @@ s_location$elevationMeters <- NA
 s_location$bufferRadiusMeters <- NA
 s_location$isHidden <- NA
 s_location$trueCoordinates <- NA
-s_location$comments <- s_location$Short_Name
+s_location$comments <- s_location$Name
 s_location$internal_wildtrax_id <- NA
 s_location$internal_update_ts <- NA
 
@@ -83,25 +83,42 @@ location_tbl <- s_location[!duplicated(s_location[,WTlocation]), WTlocation] #
 ############################
 #### VISIT TABLE ####
 ############################
-s_data <- read_excel(file.path(project, "NEFBMP2012-19.xlsx"), sheet = "Bird Data")
+s_data <- read_excel(file.path(project, "NEFBMP2012-19.xlsx"), sheet = "Bird Data",  col_types = c("text", "text", "text", "text", "text", "date", "guess", "guess", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text"))
 #Fix column names that have space
 names(s_data)<-str_replace_all(names(s_data), c(" " = "_"))
 
-#Right join (keep only point location that has actual detection)
-data_flat <- merge(s_data, s_location, by = "Point_Number", all.x = TRUE)
+# Hardcoded fix on Point_Count 
+s_data[s_data$Point_Number=="BAKERBUSHPT1", "Point_Number"] <- "11801"
+s_data[s_data$Point_Number=="BAKERBUSHPT2", "Point_Number"] <- "11802"
+s_data[s_data$Point_Number=="BAKERBUSHPT3", "Point_Number"] <- "11803"
+s_data[s_data$Point_Number=="BAKERBUSHPT4", "Point_Number"] <- "11804"
+s_data[s_data$Point_Number=="BAKERBUSHPT5", "Point_Number"] <- "11805"
+s_data[s_data$Point_Number=="ADAMSCAMPPT1", "Point_Number"] <- "11901"
+s_data[s_data$Point_Number=="ADAMSCAMPPT2", "Point_Number"] <- "11902"
+s_data[s_data$Point_Number=="ADAMSCAMPPT3", "Point_Number"] <- "11903"
+s_data[s_data$Point_Number=="ADAMSCAMPPT4", "Point_Number"] <- "11904"
+s_data[s_data$Point_Number=="ADAMSCAMPPT5", "Point_Number"] <- "11905"
+s_data[s_data$Point_Number=="CRAFTSBUYPT1", "Point_Number"] <- "12001"
+s_data[s_data$Point_Number=="CRAFTSBUYPT2", "Point_Number"] <- "12002"
+s_data[s_data$Point_Number=="CRAFTSBUYPT3", "Point_Number"] <- "12003"
+s_data[s_data$Point_Number=="CRAFTSBUYPT4", "Point_Number"] <- "12004"
+s_data[s_data$Point_Number=="CRAFTSBUYPT5", "Point_Number"] <- "12005"
+
+#Join (keep only point location that has actual detection)
+data_flat <- merge(s_data, s_location, by = "Point_Number")
 
 # Translate df with species and abundance only. 
 data_flat <-data_flat[!is.na(data_flat$Spp),]
 data_flat <-data_flat[!(data_flat$Count==0),]
 
 ## visitDate
-data_flat$visitDate <- format(data_flat$Date, format = "%Y-%m-%d")
+data_flat$visitDate <- as.character(format(data_flat$Date, format = "%Y-%m-%d"))
 ## snowDepthMeters, waterDepthMeters, landFeatures, crew, bait, accessMethod, comments_visit,wildtrax_internal_update_ts, wildtrax_internal_lv_id
 data_flat$snowDepthMeters <- NA
 data_flat$waterDepthMeters <- NA
 data_flat$landFeatures <- NA
 data_flat$crew <- NA
-data_flat$bait <- NA
+data_flat$bait <- "None"
 data_flat$accessMethod <- NA
 data_flat$comments <- NA
 data_flat$wildtrax_internal_update_ts <- NA
@@ -118,7 +135,7 @@ data_flat$FName <- sub(".*,", "", data_flat$Researcher)
 data_flat$FName <- gsub(" ", "", data_flat$FName, fixed = TRUE)
 
 # Determine the ones not in lookuptable and add them
-new_observer <-unique(subset(data_flat$Researcher, !(data_flat$LName %in% lu_observer$LName) & !(data_flat$FName %in% lu_observer$FName)))
+new_observer <-unique(subset(data_flat$Researcher, !(data_flat$LName %in% lu_observer$LName & data_flat$FName %in% lu_observer$FName)))
 new_obs <- data.frame(local_ObsID=max(lu_observer$local_ObsID) + seq.int(length(new_observer)),
                       LName=sub("\\,.*", "", new_observer),
                       FName=sub(".*,", "", new_observer))
@@ -149,12 +166,12 @@ data_flat$durationMethod <- "0-5-10min"
 data_flat <- merge(data_flat, lu_species[,c(1:2)], by.x ="Common_Name", by.y = "species_common_name" , all.x = TRUE)
 data_flat$species <- data_flat$species_code
 #Hard coded fix code not found in Species Table
-data_flat[data_flat$Common_Name=="Chipmunk", "species_code"] <- "UNMA"
-data_flat[data_flat$Common_Name=="Unknown sp.", "species_code"] <- "UNBI"
-data_flat[data_flat$Common_Name=="Unid. Woodpecker", "species_code"] <- "UNWO"
-data_flat[data_flat$Common_Name=="Slate-colored Junco", "species_code"] <- "DEJU"
-data_flat[data_flat$Common_Name=="Ground Squirrels", "species_code"] <- "UNMA"
-data_flat[data_flat$Common_Name=="Solitary Vireo", "species_code"] <- "SOVI"
+data_flat[data_flat$Common_Name=="Chipmunk", "species"] <- "UNMA"
+data_flat[data_flat$Common_Name=="Unknown sp.", "species"] <- "UNBI"
+data_flat[data_flat$Common_Name=="Unid. Woodpecker", "species"] <- "UNWO"
+data_flat[data_flat$Common_Name=="Slate-colored Junco", "species"] <- "DEJU"
+data_flat[data_flat$Common_Name=="Ground Squirrels", "species"] <- "UNMA"
+data_flat[data_flat$Common_Name=="Solitary Vireo", "species"] <- "SOVI"
 
 
 data_flat$comments <- data_flat$Point_Note
@@ -201,17 +218,20 @@ data_flat$behaviourother <- data_flat$otherbehaviour
 #       EXPORT
 #
 #--------------------------------------------------------------
-write.csv(visit_tbl, file= file.path(out_dir, paste0(dataset_code,"_visit.csv")), row.names = FALSE)
+#---VISIT
+write.csv(visit_tbl, file= file.path(out_dir, paste0(dataset_code,"_visit.csv")), quote = FALSE, row.names = FALSE)
 
 WTsurvey <- c("location", "surveyDateTime", "durationMethod", "distanceMethod", "observer", "species", "distanceband",
               "durationinterval", "abundance", "isHeard", "isSeen", "comments")
 survey_tbl <- data_flat[!duplicated(data_flat[,WTsurvey]), WTsurvey] 
-write.csv(survey_tbl, file= file.path(out_dir, paste0(dataset_code,"_survey.csv")), row.names = FALSE)
+#---SURVEY
+write.csv(survey_tbl, file= file.path(out_dir, paste0(dataset_code,"_survey.csv")), quote = FALSE, row.names = FALSE)
 
 
 #Only select location with observation
 location_tbl <- subset(location_tbl,location_tbl$location %in% survey_tbl$location)
-write.csv(location_tbl, file= file.path(out_dir, paste0(dataset_code,"_location.csv")), row.names = FALSE)
+#---LOCATION
+write.csv(location_tbl, file= file.path(out_dir, paste0(dataset_code,"_location.csv")), quote = FALSE, row.names = FALSE)
 
 #---EXTENDED
 Extended <- c("location", "surveyDateTime", "species", "utmZone", "easting", "northing", "missinginlocations", "time_zone", 
@@ -219,7 +239,8 @@ Extended <- c("location", "surveyDateTime", "species", "utmZone", "easting", "no
               "scientificname", "raw_distance_code", "raw_duration_code", "originalBehaviourData", "missingindetections", 
               "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", "displaytype", "nestevidence", "behaviourother")
 extended_tbl <- data_flat[!duplicated(data_flat[,Extended]), Extended] 
-write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_extended.csv")), row.names = FALSE)
+write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_extended.csv")), quote = FALSE, row.names = FALSE)
 
-
+#---lu_oberver
+write.csv(lu_observer_updated, file.path(lu, paste0("lu_NEFBMP_observer_updated.csv")), quote = FALSE, row.names = FALSE)
 
