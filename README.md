@@ -12,6 +12,10 @@ This repo aimed to share scripts, lookup tables and templates needed to translat
 
 ./lookupTables                          Project specific lookup tables created to allow translation from source data to WildTrax format
 
+./project                               Master folder where all source data are found within thei respective subfolder (Not shared)
+
+./out                                   Location of the resulting output (location, visit, survey, extended)  (Not shared)
+
 ./script                                R scripts to summarize WT output for validation checks
 
 ./template                              Example of output table structure, communication, ...
