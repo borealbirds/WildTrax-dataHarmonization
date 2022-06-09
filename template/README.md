@@ -68,6 +68,11 @@ The **EXTENDED** attributes are information BAM wants to keep but are not implem
 
 | Values   | Format   | Description   |
 | :------- | :-------------- | :-------------- |
+| location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified |
+| surveyDateTime     | Text | YYYY-MM-DD HH:MM:SS, Concatenation of  visitDate  survey_time; separated by space |
+| species     | Text | AOU code used by WildTrax. See species codes table  |
+| distanceband     | Text | The distance band the species was detected in. Refer to distance_band_codes table   |
+| durationinterval     | Text | The duration interval the species was detected in. Refer to duration_interval_codes table  |
 | site     | Text | Site is any part of the location name that groups the stations, if they are multiple parts, separate by hyphens (dashes) |
 | station     | Text | Individual survey location, if there are multiple parts, separate by hyphens (dashes) |
 | utm_zone     | Text | Include if the source coordinates were not using NAD83  |

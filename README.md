@@ -1,6 +1,7 @@
 # WT-Integration
+**** The documentation is in progress. Feel free to add sections. 
 
-This repo aimed to share scripts, lookup tables and templates needed to translate point counts data into WT upload format. The documentation is in progress. Feel free to add sections. 
+This repo aimed to share scripts, lookup tables and templates needed to translate point counts data into WT upload format. The Directory folder of the working directory is presented below. Sub-folder "project" and "out" aren't shared because they are often too large.  
 
 # Directory Structure
 <pre>
@@ -11,6 +12,10 @@ This repo aimed to share scripts, lookup tables and templates needed to translat
 ./archived                              Old versions of scripts 
 
 ./lookupTables                          Project specific lookup tables created to allow translation from source data to WildTrax format
+
+./out                                   Location of the resulting output (location, visit, survey, extended)  (Not shared)
+
+./project                               Master folder where all source data are found within thei respective subfolder (Not shared)
 
 ./script                                R scripts to summarize WT output for validation checks
 
