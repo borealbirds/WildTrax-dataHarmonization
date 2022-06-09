@@ -1,13 +1,14 @@
+# --- PENDING: Duplicates are found in source data: Bird Data. We delete it for now. Waiting to hear back from our partner (issue #1)
 # ---
-# title: "Translate New England data to make them ready for WT upload"
-# Source dataset is an Excel spreadsheet
-# author: "Melina Houle"
-# date: "March 11, 2022"
+# ---
+# Title: "Translate New England Forest Bird Monitoring Program 2012-2019"
+# Source dataset is an Excel spreadsheet using 2 sheet: Site Data, Bird Data
+# Author: "Melina Houle"
+# Date: "March 11, 2022"
 # Note on translation:
 # -- Download manually source data locally prior to process
 # -- Species code used are not equivalent to WildTrax species_code. Species codes need to be derived by using species common name
 # -- 3 stations use concatenation of transect name + number instead of a numeric Point_Count (ADAMSCAMP, BAKERBUSH, CRAFTBURYOU). Fix is hardcoded. 
-# -- 
 # -- 
 # ---
 
@@ -42,9 +43,6 @@ if (!dir.exists(out_dir)) {
 lu_detection <- fread(file.path(lu,detection_raw))
 lu_observer <- read_excel(file.path(wd,"lookupTables", observer_raw))
 lu_species <- fread(WT_spTbl)
-
-# WildTrax CRS (EPSG: 4386)
-crs_WT <- st_crs(4386)
 
 #--------------------------------------------------------------
 #
@@ -234,10 +232,11 @@ location_tbl <- subset(location_tbl,location_tbl$location %in% survey_tbl$locati
 write.csv(location_tbl, file= file.path(out_dir, paste0(dataset_code,"_location.csv")), quote = FALSE, row.names = FALSE)
 
 #---EXTENDED
-Extended <- c("location", "surveyDateTime", "species", "utmZone", "easting", "northing", "missinginlocations", "time_zone", 
-              "data_origin", "missinginvisit", "pkey_dt", "survey_time", "survey_year", "rawObserver", "original_species", 
-              "scientificname", "raw_distance_code", "raw_duration_code", "originalBehaviourData", "missingindetections", 
-              "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", "displaytype", "nestevidence", "behaviourother")
+Extended <- c("location", "surveyDateTime", "species", "distanceband", "durationinterval", "site", "station", "utmZone", "easting", 
+              "northing", "missinginlocations", "time_zone", "data_origin", "missinginvisit", "pkey_dt", "survey_time",
+              "survey_year", "rawObserver", "original_species", "scientificname", "raw_distance_code", "raw_duration_code", 
+               "originalBehaviourData", "missingindetections", "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", 
+               "displaytype", "nestevidence", "behaviourother")
 extended_tbl <- data_flat[!duplicated(data_flat[,Extended]), Extended] 
 write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_extended.csv")), quote = FALSE, row.names = FALSE)
 

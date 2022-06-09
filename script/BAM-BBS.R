@@ -255,11 +255,11 @@ location_tbl <- subset(location_tbl,location_tbl$location %in% survey_tbl$locati
 write.csv(location_tbl, file= file.path(out_dir, paste0(dataset_code,"_location.csv")), row.names = FALSE)
 
 #---EXTENDED
-Extended <- c("location", "surveyDateTime", "species", "utmZone", "easting", "northing", "missinginlocations", "time_zone", 
-              "data_origin", "missinginvisit", "pkey_dt", "survey_time", "survey_year", "rawObserver", "original_species", 
-              "scientificname", "raw_distance_code", "raw_duration_code", "originalBehaviourData", "missingindetections", 
-              "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", "displaytype", "nestevidence", "behaviourother", 
-              "atlas_breeding_code")
+Extended <- c("location", "surveyDateTime", "species", "distanceband", "durationinterval", "site", "station", "utmZone", "easting", 
+              "northing", "missinginlocations", "time_zone", "data_origin", "missinginvisit", "pkey_dt", "survey_time",
+              "survey_year", "rawObserver", "original_species", "scientificname", "raw_distance_code", "raw_duration_code", 
+              "originalBehaviourData", "missingindetections", "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", 
+              "displaytype", "nestevidence", "behaviourother", "atlas_breeding_code")
 extended_tbl <- data_flat[!duplicated(data_flat[,Extended]), Extended] 
 write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_extended.csv")), row.names = FALSE)
 

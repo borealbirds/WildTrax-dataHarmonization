@@ -29,7 +29,9 @@ project <- file.path("./project", project_dir)
 WT_spTbl <- "./lookupTables/species_codes.csv"
 ATLAS_spTbl <- "./lookupTables/lu_NatureCount_ATLAS_species.xlsx"
 out_dir <- file.path("./out", project_dir)
-
+if (!dir.exists(out_dir)) {
+  dir.create(out_dir)
+}
 # Source credential
 config <- "./config.R"
 source(config)
@@ -100,7 +102,7 @@ location_tbl <- data_flat[!duplicated(data_flat[,WTlocation]),]
 out_translated <- split(location_tbl,location_tbl$collection)
 out_translated <- lapply(out_translated, setNames, nm = colnames(data_flat))
 out_translated <- lapply(out_translated, function(x) { x[ ,WTlocation] })
-for (df in names(out_translated)) write.csv(out_translated[[df]], file= file.path(out_dir, paste0(df,"_location1.csv")), row.names = FALSE)
+for (df in names(out_translated)) write.csv(out_translated[[df]], file= file.path(out_dir, paste0(df,"_location.csv")), row.names = FALSE)
 
 
 ############################
@@ -133,7 +135,7 @@ visit_tbl <- data_flat[!duplicated(data_flat[,WTvisit]),]
 out_translated <- split(visit_tbl,visit_tbl$collection)
 out_translated <- lapply(out_translated, setNames, nm = colnames(data_flat))
 out_translated <- lapply(out_translated, function(x) { x[ ,WTvisit] })
-for (df in names(out_translated)) write.csv(out_translated[[df]], file= file.path(out_dir, paste0(df,"_visit1.csv")), row.names = FALSE)
+for (df in names(out_translated)) write.csv(out_translated[[df]], file= file.path(out_dir, paste0(df,"_visit.csv")), row.names = FALSE)
 
 
 ############################
@@ -226,16 +228,16 @@ survey_tbl <- data_translated[!duplicated(data_translated[,WTsurvey]),]
 out_translated <- split(survey_tbl,survey_tbl$collection)
 out_translated <- lapply(out_translated, setNames, nm = colnames(data_translated))
 out_translated <- lapply(out_translated, function(x) { x[ ,WTsurvey] })
-for (df in names(out_translated)) write.csv(out_translated[[df]], file= file.path(out_dir, paste0(df,"_survey1.csv")), row.names = FALSE)
+for (df in names(out_translated)) write.csv(out_translated[[df]], file= file.path(out_dir, paste0(df,"_survey.csv")), row.names = FALSE)
 
 ############################
 #### EXTENDED TABLE ####
 ############################
-Extended <- c("location", "surveyDateTime", "species", "utmZone", "easting", "northing", "missinginlocations", "time_zone", 
-              "data_origin", "missinginvisit", "pkey_dt", "survey_time", "survey_year", "rawObserver", "original_species", 
-              "scientificname", "raw_distance_code", "raw_duration_code", "originalBehaviourData", "missingindetections", 
-              "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", "displaytype", "nestevidence", "behaviourother", 
-              "atlas_breeding_code")
+Extended <- c("location", "surveyDateTime", "species", "distanceband", "durationinterval", "site", "station", "utmZone", "easting", 
+              "northing", "missinginlocations", "time_zone", "data_origin", "missinginvisit", "pkey_dt", "survey_time",
+              "survey_year", "rawObserver", "original_species", "scientificname", "raw_distance_code", "raw_duration_code", 
+              "originalBehaviourData", "missingindetections", "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", 
+              "displaytype", "nestevidence", "behaviourother", "atlas_breeding_code")
 out_translated <- split(survey_tbl,survey_tbl$collection)
 out_translated <- lapply(out_translated, setNames, nm = colnames(data_translated))
 out_translated <- lapply(out_translated, function(x) { x[ ,Extended] })
