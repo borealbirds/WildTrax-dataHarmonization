@@ -1,6 +1,7 @@
 # ignore ALL .log files
 *.RData
 *.Rhistory
+project_Integration.xlsx
 
 # ignore ALL files in ANY directory named temp
 project/
