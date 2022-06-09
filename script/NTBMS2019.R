@@ -1,6 +1,6 @@
 # ---
 
-# Title: "Translate Northwest Territories bird Monitoring Survey"
+# Title: "Translate Northwest Territories Bird Monitoring Survey"
 # Source dataset is an Excel spreadsheet
 # Author: "Melina Houle"
 # Date: "March 11, 2022"
@@ -22,7 +22,7 @@ library(plyr) #rbind.fill
 wd <- "E:/MelinaStuff/BAM/dataImport"
 setwd(wd)
 
-dataset_code = "NTBMS"
+dataset_code = "NTBMS2019"
 lu <- "./lookupTables"
 WT_spTbl <- "./WT_PointCount_Codes/species_codes.csv"
 project <- file.path("./project", dataset_code)
@@ -139,17 +139,17 @@ data_flat$distanceband <-  ifelse(data_flat$Distance == "< 50m", "0m-50m",
                                         ifelse(data_flat$Distance == "> 100m", "100m-INF",
                                   "UNKNOWN")))
 
-data_flat$durationinterval <- sapply(data_flat$Time, switch, 
-                                     '1 min' = "0-1min", 
-                                     '2 min' = "1-2min",
-                                     '3 min' = "2-3min",
-                                     '4 min' = "3-4min",
-                                     '5 min' = "4-5min",
-                                     '6 min' = "5-6min",
-                                     '7 min' = "6-7min",
-                                     '8 min' = "7-8min",
-                                     '9 min' = "8-9min",
-                                     '10 min' = "9-10min")
+data_flat$durationinterval <- ifelse(data_flat$Time == "1 min", "0-1min",
+                                     ifelse(data_flat$Time == "2 min", "1-2min",
+                                     ifelse(data_flat$Time == "3 min", "2-3min",
+                                     ifelse(data_flat$Time == "4 min", "3-4min",
+                                     ifelse(data_flat$Time == "5 min", "4-5min",
+                                      ifelse(data_flat$Time == "6 min", "5-6min",
+                                      ifelse(data_flat$Time == "7 min", "6-7min",
+                                      ifelse(data_flat$Time == "8 min", "7-8min",
+                                      ifelse(data_flat$Time == "9 min", "8-9min",
+                                      ifelse(data_flat$Time == "10 min", "9-10min",
+                                  "UNKNOWN"))))))))))
 
 data_flat$raw_distance_code <- data_flat$Distance
 data_flat$raw_duration_code <- data_flat$Time
@@ -170,28 +170,28 @@ WTsurvey <- c("location", "surveyDateTime", "durationMethod", "distanceMethod", 
                 "durationinterval", "abundance", "isHeard", "isSeen", "comments")
 survey_tbl <- data_flat[!duplicated(data_flat[,WTsurvey]), WTsurvey] 
 
+
 #--------------------------------------------------------------
 #
 #       EXPORT
 #
 #--------------------------------------------------------------
+#---SURVEY
+write.csv(survey_tbl, file= file.path(out_dir, paste0(dataset_code,"_survey.csv")), quote = FALSE, row.names = FALSE)
 
-#subset columns 
-outputName  <- c("organization", "dataset_code", "site", "station", "location", "utm_zone", "easting", "northing", "latitude", "longitude",
-                 "bufferRadiusMeters", "elevationMeters", "isHidden", "trueCoordinates", "comments_location", "internal_wildtrax_id", "internal_update_ts",
-                 "visitDate", "snowDepthMeters", "waterDepthMeters", "landFeatures", "crew", "bait", "accessMethod", "comments_visit", "wildtrax_internal_update_ts",
-                 "wildtrax_internal_lv_id", "pkey_dt", "surveyDateTime", "survey_time", "observer", "observer_raw", "distanceMethod", "durationMethod", 
-                 "species", "Species_Old", "scientificname", "isHeard", "isSeen", "abundance", "distanceband", "raw_distance_code", "durationinterval",
-                 "raw_duration_code", "comments", "behaviour_raw", "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", "displaytype", "nestevidence", "otherbehaviour") 
+#---VISIT (only where observation exists)
+write.csv(visit_tbl, file= file.path(out_dir, paste0(dataset_code,"_visit.csv")), quote = FALSE, row.names = FALSE)
 
+#---LOCATION (only select location with observation)
+write.csv(location_tbl, file= file.path(out_dir, paste0(dataset_code,"_location.csv")), quote = FALSE, row.names = FALSE)
 
-out <- match(outputName, names(data_flat))
-out_translated <- data_flat[,out]
-
-##Export local copy
-write.csv(out_translated, file.path(wd,"out", paste0(dataset_code, ".csv")))
-write.csv(lu_observer_updated, file.path(wd,"out", "lu_observer_updated.csv"))
-
-
+#---EXTENDED
+Extended <- c("location", "surveyDateTime", "species", "distanceband", "durationinterval", "site", "station", "utmZone", "easting", 
+              "northing", "missinginlocations", "time_zone", "data_origin", "missinginvisit", "pkey_dt", "survey_time",
+              "survey_year", "rawObserver", "original_species", "scientificname", "raw_distance_code", "raw_duration_code", 
+              "originalBehaviourData", "missingindetections", "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", 
+              "displaytype", "nestevidence", "behaviourother")
+extended_tbl <- data_flat[!duplicated(data_flat[,Extended]), Extended] 
+write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_extended.csv")), quote = FALSE, row.names = FALSE)
 
 
