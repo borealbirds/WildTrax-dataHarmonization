@@ -7,8 +7,6 @@ This repo aimed to share scripts, lookup tables and templates needed to translat
 <pre>
 ./                                      Sample files for configuring and running scripts
 
-./WT_Point_Count_Codes                  Distance, duration and species code used by WT database
-
 ./archived                              Old versions of scripts 
 
 ./lookupTables                          Project specific lookup tables created to allow translation from source data to WildTrax format
