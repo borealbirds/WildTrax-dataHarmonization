@@ -24,7 +24,7 @@ setwd(wd)
 organization_code = "NRRI"
 dataset_code = "MN-BBATLAS"
 lu <- "./lookupTables"
-WT_spTbl <- "./WT_PointCount_Codes/species_codes.csv"
+WT_spTbl <- "./lookupTables/species_codes.csv"
 project <- file.path(wd, "project", dataset_code, "NRRI-MNATLAS-20220303.accdb")
 out_dir <- file.path("./out", dataset_code)    # where output dataframe will be exported
 if (!dir.exists(out_dir)) {

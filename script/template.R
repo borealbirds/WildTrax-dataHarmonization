@@ -16,7 +16,7 @@ wd <- "E:/MelinaStuff/BAM/WildTrax/WT-Integration"
 setwd(wd)
 
 lu <- "./lookupTables"
-WT_spTbl <- "./WT_PointCount_Codes/species_codes.csv"
+WT_spTbl <- "./lookupTables/species_codes.csv"
 
 dataset_code <- "xxxxxxxx"
 project <- file.path("./project", dataset_code)

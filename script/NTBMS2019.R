@@ -24,7 +24,7 @@ setwd(wd)
 
 dataset_code = "NTBMS2019"
 lu <- "./lookupTables"
-WT_spTbl <- "./WT_PointCount_Codes/species_codes.csv"
+WT_spTbl <- "./lookupTables/species_codes.csv"
 project <- file.path("./project", dataset_code)
 out_dir <- file.path("./out", dataset_code)    # where output dataframe will be exported
 if (!dir.exists(out_dir)) {

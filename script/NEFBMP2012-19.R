@@ -26,7 +26,7 @@ wd <- "E:/MelinaStuff/BAM/WildTrax/WT-Integration"
 setwd(wd)
 
 lu <- "./lookupTables"
-WT_spTbl <- "./WT_PointCount_Codes/species_codes.csv"
+WT_spTbl <- "./lookupTables/species_codes.csv"
 detection_raw <- "lu_NEFBMP_detection.csv"
 observer_raw <- "lu_NEFBMP_observer.xlsx"
 
