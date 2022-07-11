@@ -1,7 +1,7 @@
 # WT-Integration
 **** The documentation is in progress. Feel free to add sections. 
 
-This repo aimed to share scripts, lookup tables and templates needed to translate point counts data into WT upload format. The Directory folder of the working directory is presented below. Sub-folder "project" and "out" aren't shared because they are often too large.  
+The purpose of this repository is to share scripts, lookup tables and templates that are needed for translating point count data into the WildTrax upload format. The Directory folder of the working directory is presented below. Sub-folder "project" and "out" aren't shared because they are often too large.  
 
 # Directory Structure
 <pre>
@@ -22,7 +22,7 @@ This repo aimed to share scripts, lookup tables and templates needed to translat
 
 # Introduction
 
-The Data intake process involve five main steps:
+The Data intake process involves five main steps:
 
 * Communication with data contributor.
 * Acquire sharing agreement
@@ -33,12 +33,12 @@ The Data intake process involve five main steps:
 
 # Communication with data contributor
 
-Communication  with data partners are generally by email. When relevant, save email communication as a pdf and store it into the respective data folder under communication. Email template should be added in Template directory 
+Communication  with data partners is generally by email. When relevant, save email communication as a pdf and store it into the respective data folder in the BAM Shared Google Drive under "communication". An email template should be found in Template directory. 
 
 
 # Sharing Agreement
 
-A template of Sharing agreement should be found in Template. In WT, sharing can be either:
+A template of Sharing agreement should be found in Template. In WildTrax, sharing can be either:
 
 1. **Published - Private**  - The project data will only be available to project members. Users will need to request access to the project in order to view any details such as species or locations.
 2. **Published - Map Only** - The project data will be accessible through Data Discover but the media and report are not accessible to users who are not project members. If you're not a project or organization member, the location buffering and visibility settings will apply.
@@ -47,7 +47,7 @@ A template of Sharing agreement should be found in Template. In WT, sharing can 
 
 (Note that you can also use **Active** status for projects that are currently being processed, designed or are in the preliminary stages of data uploading. Use this status if the project is actively being worked on. This is the default project status when it is first created.)
 
-You need to make sure the communication reflect these options.
+You need to make sure the communication reflects these options.
 
 
 # Source data and related documentation to allow reformatting
@@ -58,21 +58,21 @@ All data acquired should be logged in the [template](https://github.com/MelinaHo
 * Create a new project entry. Marked it as NS (Not Started). 
 * Create a new PartnerContactInfo entry for the project
 
-If you don't intend to process the data straight away, make sure you overview the data to document some attributes, have all tables that define attributes and values used. Some informations will be answered by emails. Make sure you keep a copy by converting the email as a PDF and make it available in the respective project folder. 
+If you don't intend to process the data straight away, make sure you overview the data to document some attributes, have all tables that define attributes and values used. Some information will be answered by emails. Make sure you keep a copy by converting the email as a PDF and make it available in the respective project folder under "communication". 
 
 Overviewing the data includes:
 * Observations have XY coordinates.
 * Reference system of the coordinates is known.
-* Protocol is documented (can be a report, email exchange, or found in the db itself)
+* Protocol is documented (can be a report, email exchange, or found in the db itself).
 * Species code definition is present. We cannot assume the species code used is the same as the one used by WildTrax. We need to check.
 * If behaviour data are present, make sure we have the meaning of the values.
 * Date and time is present.
-* Abundance is present
+* Abundance is present.
 
 # Reformatting
-Reformating will be unique per project. Some projects will use rules that are similar. scripts are all available to allow reusing chunk of codes. 
+Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing chunk of codes. 
 
-Example of the expected upload format for the Point Count and definition of attributes are found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
+An example of the expected upload format for the point count and definition of attributes are found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
 
 
 # Upload to WildTrax
