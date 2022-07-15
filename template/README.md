@@ -75,7 +75,7 @@ The **EXTENDED** attributes are information BAM wants to keep but are not implem
 | durationinterval     | Text | The duration interval the species was detected in. Refer to duration_interval_codes table  |
 | site     | Text | Site is any part of the location name that groups the stations, if they are multiple parts, separate by hyphens (dashes) |
 | station     | Text | Individual survey location, if there are multiple parts, separate by hyphens (dashes) |
-| utm_zone     | Text | Include if the source coordinates were not using NAD83  |
+| utmZone     | Text | Include if the source coordinates were not using NAD83  |
 | easting     | Text |  Source X if coordinates were transposed   |
 | northing     | Text | Source Y if coordinates were transposed |
 | missinginlocations     | Text | Information on missing locations  |
