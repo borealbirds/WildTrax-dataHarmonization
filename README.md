@@ -1,4 +1,4 @@
-# WT-Integration **MM TESTING**
+# WT-Integration
 **** The documentation is in progress. Feel free to add sections. 
 
 The purpose of this repository is to share scripts, lookup tables and templates that are needed for translating point count data into the WildTrax upload format. The Directory folder of the working directory is presented below. Sub-folder "project" and "out" aren't shared because they are often too large.  
