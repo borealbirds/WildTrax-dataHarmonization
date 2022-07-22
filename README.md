@@ -1,4 +1,4 @@
-# WT-Integration
+# The Boreal Avian Modelling Project's WildTrax Inegration Instructions for Processing Avian Count Data
 **** The documentation is in progress. Please feel free to add and edit text and sections. 
 
 # Citation
