@@ -49,7 +49,7 @@ The avian count data intake process involves six main steps (numbered 0-5). Here
 
 
 # 0. Identifying avian count data.
-The first main objective of the Boreal Avian Modelling Project (hereafter, BAM), is to assemble, harmonize, and archive standardized bird survey data [see here](https://borealbirds.ualberta.ca/about-us/vision-mission-values/). 
+The first main objective of the Boreal Avian Modelling Project (hereafter, BAM), is to assemble, harmonize, and archive standardized bird survey data. See more [here](https://borealbirds.ualberta.ca/about-us/vision-mission-values/). 
 
 **What kind of data does BAM assemble, harmonize, and archive?**
 
