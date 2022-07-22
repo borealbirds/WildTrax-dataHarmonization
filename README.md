@@ -32,7 +32,7 @@ The Directory folder of the working directory is presented below. Sub-folder "pr
 # Introduction
 The motivation for creating this repository was to share scripts, lookup tables and templates that are needed for translating point count data into the WildTrax upload format. This document serves as a step-by-step guide for how to bring data into BAM's network of datasets that are uploaded to WildTrax. In other words, a cradle-to-WildTrax story of avian count data.
 
-The Data intake process involves six main steps (numbered 0-5). Here, we introduce each step with text. When naming of projects, datasets, or files must occur, you will see *file naming protocol:* within each step. Please follow these file naming protocols precisely so that BAM can easily track and find all information easily and as needed. 
+The avian count data intake process involves six main steps (numbered 0-5). Here, we introduce each step with text. When naming of projects, datasets, or files must occur, you will see *file naming protocol:* within each step. Please follow these file naming protocols precisely so that BAM can easily track and find all information easily and as needed. 
 
 0. Identifying avian count data.
 
@@ -48,7 +48,14 @@ The Data intake process involves six main steps (numbered 0-5). Here, we introdu
 
 
 # 0. Identifying avian count data.
+The first main objective of the Boreal Avian Modelling Project (hereafter, BAM), is to assemble, harmonize, and archive standardized bird survey data [see here](https://borealbirds.ualberta.ca/about-us/vision-mission-values/). 
 
+**What kind of data does BAM assemble, harmonize, and archive?**
+The BAM project gratefully accepts avian point-count data from studies conducted within the boreal and hemiboreal regions of North America. 
+
+To find this data, BAM... (maybe TD can offer a general statement of how most of the data we use has been collected?). BAM also reaches out to potential data contributors when they become aware of projects (e.g., through reading scientific literature) that may have count data from boreal and hemiboreal regions of North America.
+
+If you have count data that you might want to contribute to BAM's projects, please [contact](mailto:borealavianmodellingproject@ualberta.ca?subject=[GitHub]%20Count%20Data%20Contribution) BAM to discuss possible data contributions. To discuss contributing data from autonomous recording units (ARUs), please [contact](http://bioacoustic.abmi.ca/job-opportunities/contact/) the Bioacoustic Unit.
 
 # 1. Communicating with the data contributor
 
