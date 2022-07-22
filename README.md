@@ -1,9 +1,18 @@
 # WT-Integration
-**** The documentation is in progress. Feel free to add sections. 
+**** The documentation is in progress. Please feel free to add and edit text and sections. 
 
-The purpose of this repository is to share scripts, lookup tables and templates that are needed for translating point count data into the WildTrax upload format. The Directory folder of the working directory is presented below. Sub-folder "project" and "out" aren't shared because they are often too large.  
+# Citation
+When referencing any information from this repository or using data that was processed using this protocol, please cite this document.
+Citation: Mélina Houle, Maggie MacPherson, Ana Raymundo, Teegan Dougherty. The Boreal Avian Modelling Project's WildTrax Inegration Instructions for Processing Avian Count Data. Version Number Scheme.
+
+IMPORTANT NOTE: If any authors are asked to give additional assistance, they should be invited to be listed co-authors on the product.
+
+# Version Number Scheme
 
 # Directory Structure
+
+The Directory folder of the working directory is presented below. Sub-folder "project" and "out" aren't shared because they are often too large.  
+
 <pre>
 ./                                      Sample files for configuring and running scripts
 
@@ -21,22 +30,32 @@ The purpose of this repository is to share scripts, lookup tables and templates 
 </pre>
 
 # Introduction
+The motivation for creating this repository was to share scripts, lookup tables and templates that are needed for translating point count data into the WildTrax upload format. This document serves as a step-by-step guide for how to bring data into BAM's network of datasets that are uploaded to WildTrax. In other words, a cradle-to-WildTrax story of avian count data.
 
-The Data intake process involves five main steps:
+The Data intake process involves six main steps (numbered 0-5). Here, we introduce each step with text. When naming of projects, datasets, or files must occur, you will see *file naming protocol:* within each step. Please follow these file naming protocols precisely so that BAM can easily track and find all information easily and as needed. 
 
-* Communication with data contributor.
-* Acquire sharing agreement
-* Acquire source data and related documentation to allow reformatting.
-* Reformat the data.
-* Upload data to WildTrax.
+0. Identifying avian count data.
+
+1. Communicating with the data contributor.
+
+2. Acquiring a data sharing agreement.
+
+3. Acquiring source data and related documentation that facilitates revormatting (step 4, below).
+
+4. Reformatting the data for WildTrax.
+
+5. Uploading the data to WildTrax.
 
 
-# Communication with data contributor
+# 0. Identifying avian count data.
+
+
+# 1. Communicating with the data contributor
 
 Communication  with data partners is generally by email. When relevant, save email communication as a pdf and store it into the respective data folder in the BAM Shared Google Drive under "communication". An email template should be found in Template directory. 
 
 
-# Sharing Agreement
+# 2. Acquiring a data sharing agreement. 
 
 A template of Sharing agreement should be found in Template. In WildTrax, sharing can be either:
 
@@ -50,7 +69,7 @@ A template of Sharing agreement should be found in Template. In WildTrax, sharin
 You need to make sure the communication reflects these options.
 
 
-# Source data and related documentation to allow reformatting
+# 3. Acquiring source data and related documentation that facilitates revormatting (step 4, below).
 
 All data acquired should be logged in the [template](https://github.com/MelinaHoule/WT-Integration/blob/345282009ddcbd465f07789eca1cc0b8ba78e13a/project_Integration.xlsx) as soon as you receive it. 
 
@@ -69,14 +88,10 @@ Overviewing the data includes:
 * Date and time is present.
 * Abundance is present.
 
-# Reformatting
+# 4. Reformatting the data for WildTrax.
 Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing chunk of codes. 
 
 An example of the expected upload format for the point count and definition of attributes are found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
 
 
-# Upload to WildTrax
-
-# Citation
-
-# Version Number Scheme
+# 5. Uploading the data to WildTrax.
