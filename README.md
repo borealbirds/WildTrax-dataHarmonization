@@ -3,7 +3,8 @@
 
 # Citation
 When referencing any information from this repository or using data that was processed using this protocol, please cite this document.
-Citation: Mélina Houle, Maggie MacPherson, Ana Raymundo, Teegan Dougherty. The Boreal Avian Modelling Project's WildTrax Inegration Instructions for Processing Avian Count Data. Version Number Scheme.
+
+Citation: Mélina Houle, Maggie MacPherson, Ana Raymundo, Teegan Dougherty. *The Boreal Avian Modelling Project's WildTrax Inegration Instructions for Processing Avian Count Data*. Version Number Scheme.
 
 IMPORTANT NOTE: If any authors are asked to give additional assistance, they should be invited to be listed co-authors on the product.
 
@@ -51,15 +52,18 @@ The avian count data intake process involves six main steps (numbered 0-5). Here
 The first main objective of the Boreal Avian Modelling Project (hereafter, BAM), is to assemble, harmonize, and archive standardized bird survey data [see here](https://borealbirds.ualberta.ca/about-us/vision-mission-values/). 
 
 **What kind of data does BAM assemble, harmonize, and archive?**
-The BAM project gratefully accepts avian point-count data from studies conducted within the boreal and hemiboreal regions of North America. 
 
-To find this data, BAM... (maybe TD can offer a general statement of how most of the data we use has been collected?). BAM also reaches out to potential data contributors when they become aware of projects (e.g., through reading scientific literature) that may have count data from boreal and hemiboreal regions of North America.
+The BAM project gratefully accepts avian point-count data from studies conducted within the boreal and hemiboreal regions of North America. BAM [harmonizes](https://borealbirds.ualberta.ca/data-harmonization/) avian count data to produce models of [bird densities & population estimates](https://borealbirds.ualberta.ca/bird-densities/), that are applied in a variety of [collaborative projects](https://borealbirds.ualberta.ca/projects/).
+
+To find original count datasets, BAM... (maybe TD can offer a general statement of how most of the data we use has been collected?). BAM also reaches out to potential data contributors when they become aware of projects (e.g., through reading scientific and grey literature) that may have count data from boreal and hemiboreal regions of North America.
 
 If you have count data that you might want to contribute to BAM's projects, please [contact](mailto:borealavianmodellingproject@ualberta.ca?subject=[GitHub]%20Count%20Data%20Contribution) BAM to discuss possible data contributions. To discuss contributing data from autonomous recording units (ARUs), please [contact](http://bioacoustic.abmi.ca/job-opportunities/contact/) the Bioacoustic Unit.
 
 # 1. Communicating with the data contributor
 
-Communication  with data partners is generally by email. When relevant, save email communication as a pdf and store it into the respective data folder in the BAM Shared Google Drive under "communication". An email template should be found in Template directory. 
+The majority of our communication  with data partners is by email. Although, many collaborations begin with in-person conversations at meetings. 
+
+************* MM editing here (taking a breaK0. When a discussion with a potential data contributor takes place, a All email communication as a pdf and store it into the respective data folder in the BAM Shared Google Drive under "communication". An email template should be found in Template directory. 
 
 
 # 2. Acquiring a data sharing agreement. 
