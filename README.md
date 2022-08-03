@@ -65,9 +65,17 @@ If you have count data that you might want to contribute to BAM's projects, plea
 
 The majority of our communication  with data partners is by email. Although, many collaborations begin with in-person conversations at meetings. 
 
-When a discussion with a potential data contributor takes place, there should be a record of all commmunication with a data partner saved in BAM.SharedDrive/DataStuff/Avian.Data/WildTraxIntegration/Communications. All communications are stored in the same Google folder. This is so that any BAM staff and scientists can follow up with potential contributors so that data can be processed as efficiently as possible. For any spoken conversations, please keep a GoogleDoc record of the details, with the most recent conversation at the top of the document. The *file naming protocol* for these communications is to label them with the name of the organization, the word 'communication', and the date in MMDDYYYY format (e.g., United_States_Geological_Survey_communication_08012022). For GoogleDocs with multiple communications, use the MMDDYYYY format for the first date and then add a hyphen with the most recent communication date also in MMDDYYYY format (e.g., United_States_Geological_Survey_communication_08012022-08022022). Do not use short-forms because this creates room for error when any team members aren't familiar with a certain short form. When the data is coming from an individual, then the individual's full name should be used instead in the First_Last order (e.g., Elly Knight should be 'Elly_Knight'). Please take the time to upload every conversation on the day that it occrred, or as soon therafter as possible so that no information is lost.
+When a discussion with a potential data contributor takes place, there should be a record of all commmunication with a data partner saved in BAM.SharedDrive/DataStuff/Avian.Data/WildTraxIntegration/Communications. All communications are stored in the same Google folder. This is so that any BAM staff and scientists can follow up with potential contributors so that data can be processed as efficiently as possible. 
 
-When reaching out to potentail data contributors, the following email template can be used.
+For any spoken conversations, please keep a GoogleDoc record of the details, with the most recent conversation at the top of the document. 
+
+*File naming protocol* for documenting communication:
+The *file naming protocol* for these communications is to label them with the name of the organization, the word 'communication', and the date in MMDDYYYY format (e.g., United_States_Geological_Survey_communication_08012022). For GoogleDocs with multiple communications, use the MMDDYYYY format for the first date and then add a hyphen with the most recent communication date also in MMDDYYYY format (e.g., United_States_Geological_Survey_communication_08012022-08022022). Do not use short-forms because this creates room for error when any team members aren't familiar with a certain short form. When the data is coming from an individual, then the individual's full name should be used instead in the First_Last order (e.g., Elly Knight should be 'Elly_Knight'). Please take the time to upload every conversation on the day that it occrred, or as soon therafter as possible so that no information is lost.
+
+When reaching out to potentail data contributors, the following email templates can be used.
+
+COLD CALL EMAILS
+Below is an example template that can be used when reaching out to a potential data contributor in the 'cold call' fashion. This is done, for example, when we're requesting data that we found out about from a third party, like by reading a journal article.
 
 From : bamp@ualberta.ca
 Cc: bayne@ualberta.ca; lankau@ualberta.ca; tdochert@ualberta.ca; 
@@ -76,11 +84,17 @@ Subject: Adding your avian count data to the Boreal Avian Modelling Project's pl
 
 Dear [data partner’s name], 
 
-I am contacting you to inquire about the addition of your avian count data to [WildTrax](https://www.wildtrax.ca/home). My name is [your name], and I am a representative of the Boreal Avian Modelling (BAM) Project. Would you be willing to have your avian count data stored at WildTrax?
+I am contacting you to inquire about sharing your avian count data with the Boreal Avian Modelling (BAM) Project. We are an international scientific collaboration that develops and disseminates reliable, data-driven and model-based science and products to support migratory bird management and conservation across the boreal region of North America (read more [here](https://borealbirds.ca/about-us/)). My name is [your name], and I am a representative of BAM. I discovered your data [briefly, in one sentence, describe how data was discovered]. Data like yours has contributed to many important data products and research such as BAM's [large-scale bird density models](https://borealbirds.github.io/). **Would you be willing to share your avian count data with BAM?**
 
-BAM has recently developed a new data platform on WildTrax to host avian point count data. WildTrax will allow you, the data owner, to manage and access your data in real time. It also gives data owners tools to make the most of their data and integrate it with other data sets and data types (e.g., ARU data). WildTrax supports advanced data sharing options and you can make your data as private or public as you like. While BAM encourages open access, we understand the constraints of data sharing and realize that this is not alway possible. BAM is part of a new initiative called [*CanAvian: the Canadian Network for Open Avian Data*](http://canavian.ca/), which is a collaboration among BAM, ECCC, Birds Canada, ABMI, and the Bioacoustic Unit. We are working to network Avian Data Portals across North America to support data access and sharing. Learn more about BAM’s open data initiative [here](TBD).
+BAM has recently developed a new data platform on [WildTrax](https://www.wildtrax.ca/home) to host avian point count data. WildTrax allows you, the data owner, to manage and access your data in real time. It also gives data owners tools to make the most of their data and integrate it with other data sets and data types (e.g., ARU data). WildTrax supports advanced data sharing options and you can make your data as private or public as you like. We can help you upload your data yourself or we can upload it for you, whatever is your preference.
 
-*************Maggie taking a break here. 
+While BAM encourages open access, we understand the constraints of data sharing and realize that this is not always possible. BAM is part of a new initiative called [*CanAvian: the Canadian Network for Open Avian Data*](http://canavian.ca/), which is a collaboration among BAM, Environment and Climate Change Canada, Birds Canada, the Alberta Biodiversity Monitoring Institute (ABMI), and the Bioacoustic Unit. We are working to network Avian Data Portals across North America to support data access and sharing. Learn more about BAM’s open data initiative [here](TBD). 
+
+What is the next step? If you are willing to share your avian count data with BAM, we will make sure that it is stored and shared appropriately using a data sharing agreement. As we strive to efficiently encorporate count data, we would appreciate your response by [give the date 1 week from when email is sent] and we will send you our data sharing agreement to review before advancing with adding your data to WildTrax. 
+
+Sincerely, and on behalf of BAM,
+[your name]
+
 
 All email communication as a pdf and store it into the respective data folder in the BAM Shared Google Drive under "communication". An email template should be found in Template directory. 
 
