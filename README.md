@@ -99,6 +99,7 @@ While BAM encourages open access, we understand the constraints of data sharing 
 What is the next step? If you are willing to share your avian count data with BAM, we will make sure that it is stored and shared appropriately using a data sharing agreement. As we strive to efficiently encorporate count data, we would appreciate your response by [give the date 1 week from when email is sent] and we will send you our data sharing agreement to review before advancing with adding your data to WildTrax. 
 
 Sincerely, and on behalf of BAM,
+
 [your name]
 
 
@@ -109,6 +110,8 @@ Below is an example template that can be used when reaching out to a potential d
 From : [your institutional email address]
 Cc: bamp@ualberta.ca; houle.melina@gmail.com; tdochert@ualberta.ca; 
 
+Subject: Inquiry about Bird Point Count Data
+
 Dear [data partner’s name], 
 
 I am writing to you from the Boreal Avian Modelling (BAM) Project. BAM is a collaborative research project that has spent years assembling a large avian point count database to support the development of avian population estimates, research and conservation in North America (read more [here](https://borealbirds.ca/about-us/)). However, we still have some important data gaps in our harmonized database. **We are currently looking for data from [the region their data is from] to support projects related to the [name of specific project focus; e.g., Eastern Habitat Joint Venture]. 
@@ -118,21 +121,29 @@ BAM has a data mission to advance avian conservation and knowledge by enhancing 
 **If you have data that you would be interested in sharing with BAM and/or placing on WildTrax then please let us know.** We have a team who can standardize the data so that it is in the right format to upload to WildTrax. We can accept data in most formats and from any year; however, it must be point count data and must have spatial coordinates. 
 
 Sincerely, and on behalf of BAM,
+
 [your name]
+
 
 
 DATA SHARING AGREEMENT EMAIL
 
 Below is an example template that can be used when responding to the potential data contributor with the data sharing agreement. This is done, when the data partner requests to see the agreement or has elected to share their data. 
 
-From : bamp@ualberta.ca
-Cc: bayne@ualberta.ca; lankau@ualberta.ca; tdochert@ualberta.ca; 
+From : [your institutional email address]
+Cc: bamp@ualberta.ca; houle.melina@gmail.com; tdochert@ualberta.ca; 
 
-Subject: Adding your avian count data to the Boreal Avian Modelling Project's platform on WildTrax
+Subject: BAM's data sharing agreement
 
 Dear [data partner’s name], 
 
-Thank you for your interest in sharing your avian count data with BAM! Please find attached the data sharing agreement [attach ]
+Thank you for your interest in sharing your avian count data with BAM! Please find attached the data sharing agreement [attach DataSharingAgreementTemplate.docx found in BAM.SharedDrive/DataStuff/Avian.Data/WildTraxIntegration/Communications]. 
+
+Once the signed data sharing agreement is returned, we can move forward with helping you to add your avian count data to WildTrax. :)
+
+Sincerely, and on behalf of BAM,
+
+[your name]
 
 
 
