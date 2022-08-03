@@ -150,7 +150,19 @@ Sincerely, and on behalf of BAM,
 
 # 2. Acquiring a data sharing agreement. 
 
-A template of Sharing agreement should be found in Template. In WildTrax, sharing can be either:
+*****A template of Sharing agreement should be found in Template. 
+
+A data sharing agreement must be signed prior to working with a data partner to upload their data to WildTrax. 
+
+Once we have a signed data sharing agreement with a data partner, this should be saved as a PDF at BAM.SharedDrive/DataStuff/Avian.Data/Contributions.Sharing using the following *file naming protocol*.
+
+
+*File naming protocol* for data sharing agreements:
+
+Data sharing agreements should be saved using the full name of the data partner, the words 'DataSharingAgreement', and the date it was signed or received in MMDDYYYY format (e.g., 'United_States_Geological_Survey_DataSharingAgreement_08042022'). In addition, a copy should be emailed to bamp@ualberta.ca as a backup with the name of the file in the subject line.
+
+
+In WildTrax, sharing can be either:
 
 1. **Published - Private**  - The project data will only be available to project members. Users will need to request access to the project in order to view any details such as species or locations.
 2. **Published - Map Only** - The project data will be accessible through Data Discover but the media and report are not accessible to users who are not project members. If you're not a project or organization member, the location buffering and visibility settings will apply.
@@ -159,7 +171,7 @@ A template of Sharing agreement should be found in Template. In WildTrax, sharin
 
 (Note that you can also use **Active** status for projects that are currently being processed, designed or are in the preliminary stages of data uploading. Use this status if the project is actively being worked on. This is the default project status when it is first created.)
 
-You need to make sure the communication reflects these options.
+Any detailed communication about the data sharing agreement should clearly reflect these options.
 
 
 # 3. Acquiring source data and related documentation that facilitates revormatting (step 4, below).
