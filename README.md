@@ -70,6 +70,7 @@ When a discussion with a potential data contributor takes place, there should be
 For any spoken conversations, please keep a GoogleDoc record of the details, with the most recent conversation at the top of the document. 
 
 *File naming protocol* for documenting communication:
+
 The *file naming protocol* for these communications is to label them with the name of the organization, the word 'communication', and the date in MMDDYYYY format (e.g., United_States_Geological_Survey_communication_08012022). For GoogleDocs with multiple communications, use the MMDDYYYY format for the first date and then add a hyphen with the most recent communication date also in MMDDYYYY format (e.g., United_States_Geological_Survey_communication_08012022-08022022). Do not use short-forms because this creates room for error when any team members aren't familiar with a certain short form. When the data is coming from an individual, then the individual's full name should be used instead in the First_Last order (e.g., Elly Knight should be 'Elly_Knight'). Please take the time to upload every conversation on the day that it occrred, or as soon therafter as possible so that no information is lost.
 
 When reaching out to potentail data contributors, the following email templates can be used.
