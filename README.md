@@ -174,7 +174,9 @@ In WildTrax, sharing can be either:
 Any detailed communication about the data sharing agreement should clearly reflect these options.
 
 
-# 3. Acquiring source data and related documentation that facilitates revormatting (step 4, below).
+# 3. Acquiring source data and related documentation that facilitates reformatting (step 4, below).
+
+Once a signed data sharing agreement has been acquired, data acquisition can take place.
 
 All data acquired should be logged in the [template](https://github.com/MelinaHoule/WT-Integration/blob/345282009ddcbd465f07789eca1cc0b8ba78e13a/project_Integration.xlsx) as soon as you receive it. 
 
