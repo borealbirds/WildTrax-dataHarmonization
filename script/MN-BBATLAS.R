@@ -8,7 +8,7 @@
 # --- Data were pre-porcessed by Hedwig Lankau. Script do not run using source data. 
 # ---
 
-update.packages()
+library("googledrive")
 library(dplyr) # mutate, %>%
 library(utils) #read.csv
 library(RODBC) #odbcConnect, sqlFetch
@@ -17,19 +17,30 @@ library(sf) #st_crs, st_as_sf, st_transform, st_drop_geometry
 library(purrr) #map
 
 ## Initialize variables
-## Conversion do not use source data. It rather use an unfinished version of BAM V4 db
 wd <- "E:/MelinaStuff/BAM/WildTrax/WT-Integration"
 setwd(wd)
 
-organization_code = "NRRI"
+organization = "NRRI"
 dataset_code = "MN-BBATLAS"
+source_data <- "NRRI-MNATLAS.accdb"
 lu <- "./lookupTables"
 WT_spTbl <- "./lookupTables/species_codes.csv"
-project <- file.path(wd, "project", dataset_code, "NRRI-MNATLAS-20220303.accdb")
+
+#set working folder
+project_dir <- file.path(wd, "project", dataset_code)
+if (!dir.exists(project_dir)) {
+  dir.create(project_dir)
+}
+data_db <- file.path(project_dir, source_data)
+if (!file.exists(data_db)) {
+  #Download from GoogleDrive
+  drive_download(paste0("sourceData/",source_data), path = data_db)
+}
 out_dir <- file.path("./out", dataset_code)    # where output dataframe will be exported
 if (!dir.exists(out_dir)) {
   dir.create(out_dir)
 }
+
 
 # Data CRS: NAD83 UTM15N,EPSG: 26915
 crs_utm15N <- st_crs(26915)
@@ -40,7 +51,7 @@ crs_WT <- st_crs(4386)
 ##                    Connect
 #######################################################
 #Connecte and load tables
-con <- odbcDriverConnect(paste0("Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=", project))
+con <- odbcDriverConnect(paste0("Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=",data_db))
 
 #--------------------------------------------------------------
 #
@@ -65,6 +76,8 @@ st_drop_geometry(s_location)
 s_location$geometry <- NULL
 
 names(s_location)<-str_replace_all(names(s_location), c(" " = "_"))
+s_location$organization <- organization
+s_location$project <- dataset_code
 s_location$site <- s_location$site_name 
 s_location$station <- s_location$station_name
 s_location$location <- s_location$Location_Name
@@ -187,23 +200,40 @@ survey_tbl <- data_flat[!duplicated(data_flat[,WTsurvey]), WTsurvey]
 #       EXPORT
 #
 #--------------------------------------------------------------
+#Extract GoogleDrive id to store output
+dr<- drive_get(paste0("toUpload/",organization))
+
+if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
+  dr_dataset_code <-drive_mkdir(dataset_code, path = as_id(dr), overwrite = NA)
+} else {
+  dr_dataset_code <- drive_ls(as_id(dr), pattern = dataset_code)
+}
+
 #---SURVEY
 write.csv(survey_tbl, file= file.path(out_dir, paste0(dataset_code,"_survey.csv")), quote = FALSE, row.names = FALSE)
+survey_out <- file.path(out_dir, paste0(dataset_code,"_survey.csv"))
+drive_upload(media = survey_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_survey.csv")) 
 
 #---VISIT (only where observation exists)
 uniqueVisit <- unique(paste0(data_flat$location, " ", data_flat$survey_date))
 visit_tbl <- subset(visit_tbl, paste0(visit_tbl$location, " ", visit_tbl$visitDate) %in% uniqueVisit)
 write.csv(visit_tbl, file= file.path(out_dir, paste0(dataset_code,"_visit.csv")), quote = FALSE, row.names = FALSE)
+visit_out <- file.path(out_dir, paste0(dataset_code,"_visit.csv"))
+drive_upload(media = visit_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_visit.csv")) 
 
 #---LOCATION (only select location with observation)
 location_tbl <- subset(location_tbl,location_tbl$location %in% survey_tbl$location)
 write.csv(location_tbl, file= file.path(out_dir, paste0(dataset_code,"_location.csv")), quote = FALSE, row.names = FALSE)
+location_out <- file.path(out_dir, paste0(dataset_code,"_location.csv"))
+drive_upload(media = location_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_location.csv")) 
 
 #---EXTENDED
-Extended <- c("location", "surveyDateTime", "species", "distanceband", "durationinterval", "site", "station", "utmZone", "easting", 
+Extended <- c("organization", "project", "location", "surveyDateTime", "species", "distanceband", "durationinterval", "site", "station", "utmZone", "easting", 
               "northing", "missinginlocations", "time_zone", "data_origin", "missinginvisit", "pkey_dt", "survey_time",
               "survey_year", "rawObserver", "original_species", "scientificname", "raw_distance_code", "raw_duration_code", 
               "originalBehaviourData", "missingindetections", "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", 
               "displaytype", "nestevidence", "behaviourother")
 extended_tbl <- data_flat[!duplicated(data_flat[,Extended]), Extended] 
 write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_extended.csv")), quote = FALSE, row.names = FALSE)
+extended_out <- file.path(out_dir, paste0(dataset_code,"_extended.csv"))
+drive_upload(media = extended_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_extended.csv")) 
