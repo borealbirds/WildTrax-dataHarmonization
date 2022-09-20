@@ -20,18 +20,30 @@ library(googledrive) #drive_upload
 wd <- getwd()
 setwd(wd)
 
-organization_code = "ECCC"
-dataset_code = "ECCC_ON-Between-Rivers"
+organization = "ECCC"
+dataset_code = "ON-Between-Rivers"
+source_data <- 'BetweenRivers.accdb'
 lu <- "./lookupTables"
 WT_spTbl <- "./lookupTables/species_codes.csv"
-project <- file.path(wd, "project", dataset_code, ".accdb")
+
+#set working folder
+project_dir <- file.path(wd, "project", dataset_code)
+if (!dir.exists(project_dir)) {
+  dir.create(project_dir)
+}
+data_db <- file.path(project_dir, source_data)
+if (!file.exists(data_db)) {
+  #Download from GoogleDrive
+  drive_download(paste0("sourceData/",source_data), path = data_db)
+}
 out_dir <- file.path("./out", dataset_code)    # where output dataframe will be exported
 if (!dir.exists(out_dir)) {
   dir.create(out_dir)
 }
 
+
 # Data CRS: NAD83 UTM15N,EPSG: 26915
-crs_utm15N <- st_crs(26915)
+crs_NAD83 <- st_crs(8232)
 # WildTrax CRS (EPSG: 4386)
 crs_WT <- st_crs(4386)
 
@@ -39,21 +51,23 @@ crs_WT <- st_crs(4386)
 ##                    Connect
 #######################################################
 #Connecte and load tables
-con <- odbcDriverConnect(paste0("Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=", project))
+con <- odbcDriverConnect(paste0("Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=", data_db))
 
 #--------------------------------------------------------------
-#
+#queries<- sqlQuery(project, "BAM-V6")  ##Look up any queries
+tbls <- sqlTables(con) ##Look up tables
+tbls$TABLE_NAME
 #       TRANSLATE
 #
 #--------------------------------------------------------------
 ############################
 #### LOCATION TABLE ####
 ############################
-pc_location <- sqlFetch(con, "location")
+pc_location <- sqlFetch(con, "BR_location")
 
 # Transform
-pc_location <- st_as_sf(pc_location, coords = c("x", "y"), remove = FALSE)
-st_crs(pc_location) <- crs_utm15N
+pc_location <- st_as_sf(pc_location, coords = c("Longitude", "Latitude"), remove = FALSE)
+st_crs(pc_location) <- crs_NAD83
 pc_location_DD <- st_transform(pc_location, crs_WT)
 
 s_location <- pc_location_DD %>%
@@ -63,10 +77,9 @@ s_location <- pc_location_DD %>%
 st_drop_geometry(s_location)
 s_location$geometry <- NULL
 
-names(s_location)<-str_replace_all(names(s_location), c(" " = "_"))
-s_location$site <- s_location$site_name 
-s_location$station <- s_location$station_name
-s_location$location <- s_location$Location_Name
+s_location$site <- s_location$Site
+s_location$station <- NA
+s_location$location <- s_location$location_name
 s_location$latitude <- s_location$lat
 s_location$longitude <- s_location$long
 s_location$elevationMeters <- NA
@@ -78,9 +91,9 @@ s_location$internal_wildtrax_id <- NA
 s_location$internal_update_ts <- NA
 
 # If exists in source data
-s_location$utmZone	<- s_location$zone
-s_location$easting	<- s_location$y
-s_location$northing	<- s_location$x
+s_location$utmZone	<- NA
+s_location$easting	<- NA
+s_location$northing	<- NA
 s_location$missinginlocations <- NA
 
 #---LOCATION
@@ -91,11 +104,10 @@ location_tbl <- s_location[!duplicated(s_location[,WTlocation]), WTlocation] #
 ############################
 #### VISIT TABLE ####
 ############################
-pc_visit <- sqlFetch(con, "pc_visit")#Fix column names that have space
-names(pc_visit)<-str_replace_all(names(pc_visit), c(" " = "_"))
+pc_visit <- sqlFetch(con, "BR_visit")#Fix column names that have space
 
 ## visitDate
-pc_visit$location <- pc_visit$Location_Name 
+pc_visit$location <- pc_visit$location_name 
 pc_visit$visitDate <- as.character(format(pc_visit$survey_date, format = "%Y-%m-%d"))
 ## snowDepthMeters, waterDepthMeters, landFeatures, crew, bait, accessMethod, comments_visit,wildtrax_internal_update_ts, wildtrax_internal_lv_id
 pc_visit$snowDepthMeters <- NA  #derived from location at upload
@@ -114,8 +126,8 @@ pc_visit$missinginvisit <- NA
 pc_visit$survey_time <- as.character(format(pc_visit$survey_time, format = "%H:%M:%S"))
 pc_visit$survey_year <- pc_visit$survey_year
 ## observer, observer_raw
-pc_visit$observer <- pc_visit$localobservercode
-pc_visit$rawObserver <- pc_visit$observer_raw
+pc_visit$observer <- pc_visit$ObserverID
+pc_visit$rawObserver <- pc_visit$ObserverID
 
 ## pkey_dt -- Concatenate, separated by colons: [location]:[visitDate]_[survey_time]:[localobservercode]; can also use raw observer or observer ID if needed
 pc_visit$pkey_dt<- paste(pc_visit$location, paste0(gsub("-", "", as.character(pc_visit$visitDate)),"_", gsub(":", "", pc_visit$survey_time)), pc_visit$observer, sep=":")
@@ -129,36 +141,35 @@ visit_tbl <- pc_visit[!duplicated(pc_visit[,WTvisit]), WTvisit]
 ############################
 #### SURVEY TABLE ####
 ############################
-pc_detection <- sqlFetch(con, "pc_detection")
-names(pc_detection)<-str_replace_all(names(pc_detection), c(" " = "_"))
+pc_detection <- sqlFetch(con, "BR_detection_grouped")
 
-s_data <- merge(pc_detection, pc_visit, by.x = c("Location_Name", as.character("date")), by.y = c("Location_Name", "visitDate"))
-data_flat <- merge(s_data, s_location, by = "Location_Name")
+s_data <-merge(pc_detection, s_location[,c("location_name","Site","Latitude", "Longitude", "lat", "long")], by ="location_name", all.x = TRUE)
+
+data_flat <- merge(s_data, pc_visit, by = c('PKEY'))
 
 # Translate df with species only. In this case, species and abundance always present
-data_flat <-data_flat[!is.na(data_flat$species),]
-data_flat <-data_flat[!is.na(data_flat$Abundance),]
+data_flat <-data_flat[!is.na(data_flat$SpeciesID),]
+data_flat <-data_flat[!is.na(data_flat$Count),]
 
-data_flat$location <- data_flat$Location_Name
 data_flat$surveyDateTime <- paste(as.character(data_flat$survey_date), data_flat$survey_time)
 
 ## Distance and duration Methods
 data_flat$distanceMethod <- data_flat$distance_protocol
 data_flat$durationMethod <- data_flat$duration_protocol
 ## Species, species_old, comments, scientificname
-data_flat$species <- data_flat$species
+data_flat$species <- data_flat$BAM_ID  ##TODO: ASK HEDWING
 data_flat$comments <- NA
-data_flat$original_species <- data_flat$species_old
-data_flat$scientificname <- NA
+data_flat$original_species <- data_flat$SpeciesID
+data_flat$scientificname <- NA #TODO: IF THE SCIENTIFIC NAMES IS NOT IN THE RAW DATA DO WE FILL THIS FIELD WITH THE WILDTRAX LOOKUP TABLE
 
 ## isHeard isSeen
-data_flat$isHeard <- data_flat$Heard
-data_flat$isSeen <- data_flat$Seen
+data_flat$isHeard <- data_flat$heard
+data_flat$isSeen <- data_flat$seen
 
 ## abundance
-data_flat$abundance <- data_flat$Abundance
+data_flat$abundance <- data_flat$Count
 
-# distance and duration interval
+# distance and duration interval  #TODO: PENDING 
 data_flat$distanceband <- data_flat$distance_band
 data_flat$durationinterval <- data_flat$duration_interval
 data_flat$raw_distance_code <- data_flat$distance_raw
@@ -166,9 +177,9 @@ data_flat$raw_duration_code <- data_flat$time_interval
 data_flat$missingindetections <- NA
 
 # Behaviour
-data_flat$originalBehaviourData <- data_flat$behaviour_raw
-data_flat$pc_vt <- data_flat$pc_vt
-data_flat$pc_vt_detail <- data_flat$pc_vt_detail
+data_flat$originalBehaviourData <- data_flat$Behaviour
+data_flat$pc_vt <- data_flat$howheard
+data_flat$pc_vt_detail <- NA
 data_flat$age <- data_flat$age
 data_flat$fm <- data_flat$fm
 data_flat$group <- data_flat$group
