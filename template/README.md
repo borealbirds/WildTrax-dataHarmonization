@@ -62,7 +62,7 @@ The **SURVEY** attributes identify protocols, species, abundance, and time of th
 | comments     | Text | Any comments related to survey. As needed |
 
 
-**SURVEY TRANSLATION RULES**
+**NOTES ON SURVEY TRANSLATION RULES**
 
 surveyDateTime: when time is missing, fill time with 00:00:01.
 
