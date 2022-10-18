@@ -63,7 +63,9 @@ The **SURVEY** attributes identify protocols, species, abundance, and time of th
 
 
 **SURVEY TRANSLATION RULES**
+
 surveyDateTime: when time is missing, fill time with 00:00:01.
+
 ### EXTENDED TABLE
 
 The **EXTENDED** attributes are information BAM wants to keep but are not implemented in WildTrax
