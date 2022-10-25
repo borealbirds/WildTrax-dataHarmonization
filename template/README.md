@@ -66,6 +66,8 @@ The **SURVEY** attributes identify protocols, species, abundance, and time of th
 
 surveyDateTime: when time is missing, fill time with 00:00:01.
 
+observer: Can't be NULL. Must me of type TEXT. Default value is NA if information is not provided in the source data.
+
 ### EXTENDED TABLE
 
 The **EXTENDED** attributes are information BAM wants to keep but are not implemented in WildTrax
