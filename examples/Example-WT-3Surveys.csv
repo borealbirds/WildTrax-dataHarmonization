@@ -1,0 +1,6 @@
+location,surveyDateTime,durationMethod,distanceMethod,observer,species,distanceband,durationinterval,abundance,isHeard,isSeen,comments
+QC-ATLAS:15PM01:1,6/8/2010 5:16,0-5min,0m-INF,QC-ATLAS_01,AMCR,0m-INF,0-5min,3,Yes,No,
+QC-ATLAS:15PM01:1,6/8/2010 5:16,0-5min,0m-INF,QC-ATLAS_01,AMRO,0m-INF,0-5min,1,Yes,No,
+QC-ATLAS:15PM01:1,6/8/2010 5:16,0-5min,0m-INF,QC-ATLAS_01,BWHA,0m-INF,0-5min,1,Yes,No,
+QC-ATLAS:15PM01:2,6/8/2010 7:16,0-5min,0m-INF,QC-ATLAS_01,AMCR,0m-INF,0-5min,2,Yes,No,
+QC-ATLAS:15PM01:2,6/8/2010 7:16,0-5min,0m-INF,QC-ATLAS_01,AMRO,0m-INF,0-5min,2,Yes,No,
