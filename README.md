@@ -197,7 +197,12 @@ Overviewing the data includes verifying that:
 Once verification has taken place, the WT-status of the data can be changed from 'NS' (for 'not started') to IP, for 'in progress' in the [template](https://github.com/MelinaHoule/WT-Integration/blob/345282009ddcbd465f07789eca1cc0b8ba78e13a/project_Integration.xlsx).
 
 # 4. Reformatting the data for WildTrax.
-Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing chunk of codes. 
+Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing of code. 
+
+For data to be uploaded to WildTrax, three hierarchical files are needed:
+1. A Location file - This is the highest level in the hierarchy at the organization level. The location file comes first because it allows the organization to use the location for multiple projects without duplication. Here is an [example].
+2. A visit file
+3. A survey file
 
 An example of the expected upload format for the point count and definition of attributes are found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
 
