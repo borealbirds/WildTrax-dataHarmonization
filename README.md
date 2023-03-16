@@ -217,7 +217,7 @@ The **location** field:
 | :------- | :-------------- | :-------------- | :------------------|
 | location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
 
-### Common location field errors
+Common **location** field errors:
 
 
 
@@ -228,7 +228,7 @@ The **latitude** and **longitude** fields:
 | latitude     | Decimal degrees | NAD83, convert if otherwise | YES |
 | longitude     | Decimal degrees | NAD83, convert if otherwise | YES |
 
-### Common coordinate fields errors
+Common **coordinate** fields errors:
 
 
 
@@ -244,7 +244,7 @@ Location table unrequired fields:
 | internal_wildtrax_id     | Numeric | Generated during the upload. Leave it blank | NO |
 | internal_update_ts     | Text | Generated during the upload. Leave it blank | NO |
 
-### Common Location Table Errors for Unrequired Fields
+Common Location Table Errors for Unrequired Fields"
 
 
 
@@ -261,7 +261,7 @@ The **location** field:
 | :------- | :-------------- | :-------------- | :---------------- |
 | location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
 
-### Common location field errors
+Common **location** field errors:
 
 
 
@@ -271,7 +271,7 @@ The **visitDate** field:
 | :------- | :-------------- | :-------------- | :---------------- |
 | visitDate     | Text | The date of the survey (YYYY-MM-DD) | YES |
 
-### Common visitDate field errors
+Common **visitDate** field errors:
 
 
 
@@ -289,7 +289,7 @@ Visit table unrequired fields:
 | wildtrax_internal_update_ts     | Text | Generated during the upload. Leave it blank | NO |
 | wildtrax_internal_lv_id     | Text | Generated during the upload. Leave it blank | NO |
 
-### Common Visit Table Errors for Unrequired Fields
+Common Visit Table Errors for Unrequired Fields:
 
 
 
@@ -307,7 +307,7 @@ The **location** field:
 | :------- | :-------------- | :-------------- | :---------------- |
 | location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
 
-### Common location field errors
+Common **location** field errors:
 
 
 
@@ -317,7 +317,7 @@ The **surveyDateTime** field:
 | :------- | :-------------- | :-------------- | :---------------- |
 | surveyDateTime     | Text | YYYY-MM-DD HH:MM:SS, Concatenation of  visitDate  survey_time; separated by space | YES |
 
-### Common surveyDateTime field errors
+Common **surveyDateTime** field errors:
 * when time is missing, fill time with 00:00:01.
 
 
@@ -327,7 +327,7 @@ The **durationMethod** field:
 | :------- | :-------------- | :-------------- | :---------------- |
 | durationMethod     | Text | The duration method used the count-remove species from the survey. Refer to duration_method_codes table  | YES |
 
-### Common durationMethod field errors
+Common **durationMethod** field errors:
 
 
 
@@ -337,7 +337,7 @@ The **distanceMethod** field:
 | :------- | :-------------- | :-------------- | :---------------- |
 | distanceMethod     | Text | The distance band separation method used. Refer to distance_method_codes table   | YES |
 
-### Common distanceMethod field errors
+Common **distanceMethod** field errors:
 
 
 
@@ -347,7 +347,7 @@ The **observer** field:
 | :------- | :-------------- | :-------------- | :---------------- |
 | observer     | Text | The observer code who conducted the survey. When observer name are provided in the source data, we create a lookup table where observer name get a serial number assigned using this format:  [Dataset Code]_[serial number] | YES |
 
-### Common observer field errors
+Common **observer** field errors:
 * Can't be NULL. Must me of type TEXT. Default value is NA if information is not provided in the source data.
 
 
@@ -357,7 +357,7 @@ The **species** field:
 | :------- | :-------------- | :-------------- | :---------------- |
 | species     | Text | AOU code used by WildTrax. See species codes table  | YES |
 
-### Common species field errors
+Common **species** field errors:
 
 
 
@@ -367,7 +367,7 @@ The **distanceband** field:
 | :------- | :-------------- | :-------------- | :---------------- |
 | distanceband     | Text | The distance band the species was detected in. Refer to distance_band_codes table   | YES |
 
-### Common distanceband field errors
+Common **distanceband** field errors:
 
 
 
@@ -377,7 +377,7 @@ The **durationinterval** field:
 | :------- | :-------------- | :-------------- | :---------------- |
 | durationinterval     | Text | The duration interval the species was detected in. Refer to duration_interval_codes table  | YES |
 
-### Common durationinterval field errors
+Common **durationinterval** field errors:
 
 
 
@@ -387,7 +387,7 @@ The **abundance** field:
 | :------- | :-------------- | :-------------- | :---------------- |
 | abundance     | Numeric | Number of individual of a species with the same date, time, observer, isHeard, isSeen, distanceband and durationinterval information | YES |
 
-### Common abundance field errors
+Common **abundance** field errors:
 
 
 
@@ -397,17 +397,17 @@ The **isHeard** field:
 | :------- | :-------------- | :-------------- | :---------------- |
 | isHeard     | Text | Was / were the bird(s) detected using a visual method (Yes, No or DNC). If no behaviour data, fill in as DNC except for NONE = null | YES |
 
-### Common isHeard field errors
+Common **isHeard** field errors:
 
 
 
 
-The **isSeen* field:
+The **isSeen** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
 | isSeen     | Text | Was / were the bird(s) detected using an auditory method (Yes, No or DNC). If no behaviour data, fill in as DNC except for NONE = null | YES |
 
-### Common isSeen field errors
+Common **isSeen** field errors:
 
 
 
@@ -417,7 +417,7 @@ Survey table unrequired fields:
 | :------- | :-------------- | :-------------- | :---------------- |
 | comments     | Text | Any comments related to survey. As needed | NO |
 
-### Common Survey Table Errors for Unrequired Fields
+Common Survey Table Errors for Unrequired Fields:
 
 
 
