@@ -425,7 +425,7 @@ Common Survey Table Errors for Unrequired Fields:
 
 
 Templates for each file can be found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
-Examples for each file can be found under [examples].
+Examples for each file can be found under [examples](https://github.com/MelinaHoule/WT-Integration/tree/main/examples).
 
 
 # 5. Uploading the data to WildTrax.
