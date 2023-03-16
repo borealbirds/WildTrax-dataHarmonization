@@ -200,9 +200,22 @@ Once verification has taken place, the WT-status of the data can be changed from
 Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing of code. 
 
 For data to be uploaded to WildTrax, three hierarchical files are needed:
-1. A Location file - This is the highest level in the hierarchy at the organization level. The location file comes first because it allows the organization to use the location for multiple projects without duplication.
-2. A Visit file - This is the second level in the hierarchy at the project level. Visits occur at the date scale (YYYY-MM-DD). The Location file has to come before the Visit file so that the Visit can occur at the location. You cannot load to a location that has not previously been loaded to WildTrax. 
-3. A Survey file - This is the third file that includes the point count data. All Surveys include the date, time, and detection information.
+1. A *LOCATION* file - This is the highest level in the hierarchy at the organization level. The location file comes first because it allows the organization to use the location for multiple projects without duplication. Each line in the location file will be the unique, and precise location for each point count station in TEXT format.
+
+2. A *VISIT* file - This is the second level in the hierarchy at the project level. Visits occur at the date scale (YYYY-MM-DD). The location file has to come before the Visit file so that the visit can occur at the location. You cannot load to a location that has not previously been loaded to WildTrax. Each line in the visit file will have the location, written exactly as it appears in the location file, and the date in YYYY-MM-DD format.
+
+3. A *SURVEY* file - This is the third file that includes the point count data. All surveys include the:
+* location, written exactly as it appears in the location file, 
+* date and time in YYYY-MM-DD hh:mm:ss format, 
+* observer, written as the project code and an integer [PCODE]-[Integer] to anonymize the identities of individuals, 
+* distance method, see (website) for list of accepted distance methods, NOTE: You can request to add a new distance method if the one that was used for the project is not already in WildTrax,
+* duration method, same as above for distance method,
+* species, the 4 letter code specified for each species in WildTrax, NOTE: each line is for one species,
+* is heard, DEFINE
+* is seen, DEFINE
+* abundance, an integer
+* distance band, DEFINE, and
+* duration interval, DEFINE.
 
 Definitions for each field in the three files, and examples of the expected upload format for the point count can be found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
 
