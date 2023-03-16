@@ -200,11 +200,11 @@ Once verification has taken place, the WT-status of the data can be changed from
 Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing of code. 
 
 For data to be uploaded to WildTrax, three hierarchical files are needed:
-1. A *LOCATION* file - This is the highest level in the hierarchy at the organization level. The location file comes first because it allows the organization to use the location for multiple projects without duplication. Each line in the location file will be the unique, and precise location for each point count station in TEXT format.
+1. A **LOCATION** file - This is the highest level in the hierarchy at the organization level. The location file comes first because it allows the organization to use the location for multiple projects without duplication. Each line in the location file will be the unique, and precise location for each point count station in TEXT format.
 
-2. A *VISIT* file - This is the second level in the hierarchy at the project level. Visits occur at the date scale (YYYY-MM-DD). The location file has to come before the Visit file so that the visit can occur at the location. You cannot load to a location that has not previously been loaded to WildTrax. Each line in the visit file will have the location, written exactly as it appears in the location file, and the date in YYYY-MM-DD format.
+2. A **VISIT** file - This is the second level in the hierarchy at the project level. Visits occur at the date scale (YYYY-MM-DD). The location file has to come before the Visit file so that the visit can occur at the location. You cannot load to a location that has not previously been loaded to WildTrax. Each line in the visit file will have the location, written exactly as it appears in the location file, and the date in YYYY-MM-DD format.
 
-3. A *SURVEY* file - This is the third file that includes the point count data. All surveys include the:
+3. A **SURVEY** file - This is the third file that includes the point count data. All surveys include the:
 * location, written exactly as it appears in the location file, 
 * date and time in YYYY-MM-DD hh:mm:ss format, 
 * observer, written as the project code and an integer [PCODE]-[Integer] to anonymize the identities of individuals, 
@@ -223,6 +223,18 @@ Definitions for each field in the three files, and examples of the expected uplo
 Reformatting data for WildTrax can be challenging when data files are missing required fields, the fields are not filled in properly or are incomplete (according to WildTrax requirements), or the data was collected using a different documentation scheme. If data is being reformatted by BAM, team members communicate with the original data partner to acquire project metadata (e.g., documentation that can clarify how data was collected). Below is a table that describes the decisions that we make when managing common missing data problems that can't be resolved with the available project metadata.
 
 Table 1. Solutions to Common Missing Data Problems
+| Location of Problem   | Field Affected   | Description   | Solution     |
+| :------- | :-------------- | :-------------- |
+| location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified |
+| latitude     | Decimal degrees | NAD83, convert if otherwise |
+| longitude     | Decimal degrees | NAD83, convert if otherwise |
+| elevationMeters     | Numeric | Elevation in meters. NULL if not collected. The upload will fill it  |
+| bufferRadiusMeters     | Numeric | Radius of the buffer around the location (in meters). Use only if points need to be masked. NULL otherwise |
+| isHidden     | Logical | t if points need to be masked  |
+| trueCoordinates     | Logical | t if coordinates are not buffered |
+| comments     | Text | Any comments related to locations. As needed |
+| internal_wildtrax_id     | Numeric | Generated during the upload. Leave it blank |
+| internal_update_ts     | Text | Generated during the upload. Leave it blank |
 
 
 
