@@ -219,5 +219,11 @@ For data to be uploaded to WildTrax, three hierarchical files are needed:
 
 Definitions for each field in the three files, and examples of the expected upload format for the point count can be found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
 
+## Solutions to Common Missing Data Problems
+Reformatting data for WildTrax can be challenging when data files are missing required fields, the fields are not filled in properly or are incomplete (according to WildTrax requirements), or the data was collected using a different documentation scheme. If data is being reformatted by BAM, team members communicate with the original data partner to acquire project metadata (e.g., documentation that can clarify how data was collected). Below is a table that describes the decisions that we make when managing common missing data problems that can't be resolved with the available project metadata.
+
+Table 1. Solutions to Common Missing Data Problems
+
+
 
 # 5. Uploading the data to WildTrax.
