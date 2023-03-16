@@ -218,7 +218,7 @@ The **location** field:
 | location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
 
 Common **location** field errors:
-
+* A location might not be accepted because it includes characters that are not allowed (e.g., *"*", or "%").
 
 
 
@@ -229,7 +229,7 @@ The **latitude** and **longitude** fields:
 | longitude     | Decimal degrees | NAD83, convert if otherwise | YES |
 
 Common **coordinate** fields errors:
-
+* This will not load if the fields are empty or NULL. Do not load any locations with missing coordinates.
 
 
 
@@ -308,7 +308,7 @@ The **location** field:
 | location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
 
 Common **location** field errors:
-
+* The location is not written exactly as it appears in the location file.
 
 
 
@@ -328,7 +328,7 @@ The **durationMethod** field:
 | durationMethod     | Text | The duration method used the count-remove species from the survey. Refer to duration_method_codes table  | YES |
 
 Common **durationMethod** field errors:
-
+* NOTE: You can request to add a new duration method if the one that was used for the project is not already in WildTrax.
 
 
 
@@ -338,7 +338,7 @@ The **distanceMethod** field:
 | distanceMethod     | Text | The distance band separation method used. Refer to distance_method_codes table   | YES |
 
 Common **distanceMethod** field errors:
-
+* NOTE: You can request to add a new distance method if the one that was used for the project is not already in WildTrax.
 
 
 
@@ -349,7 +349,7 @@ The **observer** field:
 
 Common **observer** field errors:
 * Can't be NULL. Must me of type TEXT. Default value is NA if information is not provided in the source data.
-
+* To anonymize the identities of individuals, BAM writes the name of the project and an integer for observer (e.g., [PCODE]-[Integer]).
 
 
 The **species** field:
@@ -358,7 +358,7 @@ The **species** field:
 | species     | Text | AOU code used by WildTrax. See species codes table  | YES |
 
 Common **species** field errors:
-
+* NOTE: each line if for one species, not for each individual counted during a point count.
 
 
 
