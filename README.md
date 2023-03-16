@@ -223,6 +223,7 @@ Definitions for each field in the three files, and examples of the expected uplo
 Reformatting data for WildTrax can be challenging when data files are missing required fields, the fields are not filled in properly or are incomplete (according to WildTrax requirements), or the data was collected using a different documentation scheme. If data is being reformatted by BAM, team members communicate with the original data partner to acquire project metadata (e.g., documentation that can clarify how data was collected). Below is a table that describes the decisions that we make when managing common missing data problems that can't be resolved with the available project metadata.
 
 Table 1. Solutions to Common Missing Data Problems
+
 | Location of Problem   | Field Affected   | Description   | Solution     |
 | :------- | :-------------- | :-------------- |
 | location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified |
