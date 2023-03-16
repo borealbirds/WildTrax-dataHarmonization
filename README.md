@@ -212,6 +212,7 @@ The location table is the highest level in the hierarchy at the organization lev
 
 The **LOCATION** attributes identify the geographic extent of the site. 
 
+The **location** field:
 | Field   | Format   | Description   | Requred     |
 | :------- | :-------------- | :-------------- | :------------------|
 | location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
@@ -219,6 +220,9 @@ The **LOCATION** attributes identify the geographic extent of the site.
 ### Common location field errors
 
 
+
+
+The **latitude** and **longitude** fields:
 | Field   | Format   | Description   | Required     |
 | :------- | :-------------- | :-------------- | :---------------- |
 | latitude     | Decimal degrees | NAD83, convert if otherwise | YES |
@@ -227,6 +231,9 @@ The **LOCATION** attributes identify the geographic extent of the site.
 ### Common coordinate fields errors
 
 
+
+
+Location table unrequired fields:
 | Field   | Format   | Description   | Required     |
 | :------- | :-------------- | :-------------- | :---------------- |
 | elevationMeters     | Numeric | Elevation in meters. NULL if not collected. The upload will fill it  | NO |
@@ -241,10 +248,15 @@ The **LOCATION** attributes identify the geographic extent of the site.
 
 
 
+
+
+
+
 ## 2. VISIT TABLE
 This is the second level in the hierarchy at the project level. Visits occur at the date scale (YYYY-MM-DD). The location file has to come before the Visit file so that the visit can occur at the location. You cannot load to a location that has not previously been loaded to WildTrax. Each line in the visit file will have the location, written exactly as it appears in the location file, and the date in YYYY-MM-DD format.
 
 The **VISIT** attributes identify the date the survey was performed.
+The **location** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
 | location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
@@ -252,6 +264,9 @@ The **VISIT** attributes identify the date the survey was performed.
 ### Common location field errors
 
 
+
+
+The **visitDate** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
 | visitDate     | Text | The date of the survey (YYYY-MM-DD) | YES |
@@ -259,6 +274,9 @@ The **VISIT** attributes identify the date the survey was performed.
 ### Common visitDate field errors
 
 
+
+
+Visit table unrequired fields:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
 | snowDepthMeters     | Numeric | Generated during the upload. Leave it blank | NO |
@@ -275,11 +293,16 @@ The **VISIT** attributes identify the date the survey was performed.
 
 
 
+
+
+
+
 ## 3. SURVEY TABLE
 This is the third file that includes the point count data. 
 
 The **SURVEY** attributes identify protocols, species, abundance, and time of the observations.
 
+The **location** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
 | location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
@@ -288,6 +311,8 @@ The **SURVEY** attributes identify protocols, species, abundance, and time of th
 
 
 
+
+The **surveyDateTime** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
 | surveyDateTime     | Text | YYYY-MM-DD HH:MM:SS, Concatenation of  visitDate  survey_time; separated by space | YES |
@@ -296,6 +321,8 @@ The **SURVEY** attributes identify protocols, species, abundance, and time of th
 * when time is missing, fill time with 00:00:01.
 
 
+
+The **durationMethod** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
 | durationMethod     | Text | The duration method used the count-remove species from the survey. Refer to duration_method_codes table  | YES |
@@ -303,6 +330,9 @@ The **SURVEY** attributes identify protocols, species, abundance, and time of th
 ### Common durationMethod field errors
 
 
+
+
+The **distanceMethod** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
 | distanceMethod     | Text | The distance band separation method used. Refer to distance_method_codes table   | YES |
@@ -310,6 +340,9 @@ The **SURVEY** attributes identify protocols, species, abundance, and time of th
 ### Common distanceMethod field errors
 
 
+
+
+The **observer** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
 | observer     | Text | The observer code who conducted the survey. When observer name are provided in the source data, we create a lookup table where observer name get a serial number assigned using this format:  [Dataset Code]_[serial number] | YES |
@@ -318,6 +351,8 @@ The **SURVEY** attributes identify protocols, species, abundance, and time of th
 * Can't be NULL. Must me of type TEXT. Default value is NA if information is not provided in the source data.
 
 
+
+The **species** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
 | species     | Text | AOU code used by WildTrax. See species codes table  | YES |
@@ -325,6 +360,9 @@ The **SURVEY** attributes identify protocols, species, abundance, and time of th
 ### Common species field errors
 
 
+
+
+The **distanceband** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
 | distanceband     | Text | The distance band the species was detected in. Refer to distance_band_codes table   | YES |
@@ -332,6 +370,9 @@ The **SURVEY** attributes identify protocols, species, abundance, and time of th
 ### Common distanceband field errors
 
 
+
+
+The **durationinterval** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
 | durationinterval     | Text | The duration interval the species was detected in. Refer to duration_interval_codes table  | YES |
@@ -339,6 +380,9 @@ The **SURVEY** attributes identify protocols, species, abundance, and time of th
 ### Common durationinterval field errors
 
 
+
+
+The **abundance** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
 | abundance     | Numeric | Number of individual of a species with the same date, time, observer, isHeard, isSeen, distanceband and durationinterval information | YES |
@@ -346,6 +390,9 @@ The **SURVEY** attributes identify protocols, species, abundance, and time of th
 ### Common abundance field errors
 
 
+
+
+The **isHeard** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
 | isHeard     | Text | Was / were the bird(s) detected using a visual method (Yes, No or DNC). If no behaviour data, fill in as DNC except for NONE = null | YES |
@@ -353,6 +400,9 @@ The **SURVEY** attributes identify protocols, species, abundance, and time of th
 ### Common isHeard field errors
 
 
+
+
+The **isSeen* field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
 | isSeen     | Text | Was / were the bird(s) detected using an auditory method (Yes, No or DNC). If no behaviour data, fill in as DNC except for NONE = null | YES |
@@ -360,11 +410,16 @@ The **SURVEY** attributes identify protocols, species, abundance, and time of th
 ### Common isSeen field errors
 
 
+
+
+Survey table unrequired fields:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
 | comments     | Text | Any comments related to survey. As needed | NO |
 
 ### Common Survey Table Errors for Unrequired Fields
+
+
 
 
 
