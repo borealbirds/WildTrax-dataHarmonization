@@ -200,11 +200,11 @@ Once verification has taken place, the WT-status of the data can be changed from
 Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing of code. 
 
 For data to be uploaded to WildTrax, three hierarchical files are needed:
-1. A Location file - This is the highest level in the hierarchy at the organization level. The location file comes first because it allows the organization to use the location for multiple projects without duplication. Here is an [example].
-2. A visit file
-3. A survey file
+1. A Location file - This is the highest level in the hierarchy at the organization level. The location file comes first because it allows the organization to use the location for multiple projects without duplication.
+2. A Visit file - This is the second level in the hierarchy at the project level. Visits occur at the date scale (YYYY-MM-DD). The Location file has to come before the Visit file so that the Visit can occur at the location. You cannot load to a location that has not previously been loaded to WildTrax. 
+3. A Survey file - This is the third file that includes the point count data. All Surveys include the date, time, and detection information.
 
-An example of the expected upload format for the point count and definition of attributes are found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
+Definitions for each field in the three files, and examples of the expected upload format for the point count can be found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
 
 
 # 5. Uploading the data to WildTrax.
