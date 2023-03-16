@@ -225,17 +225,17 @@ Reformatting data for WildTrax can be challenging when data files are missing re
 Table 1. Solutions to Common Missing Data Problems
 
 | Location of Problem   | Field Affected   | Description   | Solution     |
-| :------- | :-------------- | :-------------- |
-| location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified |
-| latitude     | Decimal degrees | NAD83, convert if otherwise |
-| longitude     | Decimal degrees | NAD83, convert if otherwise |
-| elevationMeters     | Numeric | Elevation in meters. NULL if not collected. The upload will fill it  |
-| bufferRadiusMeters     | Numeric | Radius of the buffer around the location (in meters). Use only if points need to be masked. NULL otherwise |
-| isHidden     | Logical | t if points need to be masked  |
-| trueCoordinates     | Logical | t if coordinates are not buffered |
-| comments     | Text | Any comments related to locations. As needed |
-| internal_wildtrax_id     | Numeric | Generated during the upload. Leave it blank |
-| internal_update_ts     | Text | Generated during the upload. Leave it blank |
+| :------- | :-------------- | :-------------- | :----------------  |
+| location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified |  |
+| latitude     | Decimal degrees | NAD83, convert if otherwise |  |
+| longitude     | Decimal degrees | NAD83, convert if otherwise |  |
+| elevationMeters     | Numeric | Elevation in meters. NULL if not collected. The upload will fill it  |  |
+| bufferRadiusMeters     | Numeric | Radius of the buffer around the location (in meters). Use only if points need to be masked. NULL otherwise |  |
+| isHidden     | Logical | t if points need to be masked  |  |
+| trueCoordinates     | Logical | t if coordinates are not buffered |  |
+| comments     | Text | Any comments related to locations. As needed |  |
+| internal_wildtrax_id     | Numeric | Generated during the upload. Leave it blank |  |
+| internal_update_ts     | Text | Generated during the upload. Leave it blank |  |
 
 
 
