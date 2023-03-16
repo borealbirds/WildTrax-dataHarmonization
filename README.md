@@ -174,11 +174,11 @@ In WildTrax, sharing can be either:
 Any detailed communication about the data sharing agreement should clearly reflect these options.
 
 
-# 3. Acquiring source data and related documentation that facilitates reformatting (step 4, below).
+# 3. Source data and related documentation that facilitates reformatting (step 4, below).
 
-Once a signed data sharing agreement has been acquired, data acquisition can take place.
+Historically for BAM, once a signed data sharing agreement has been acquired the data acquisition process can take place.
 
-All data acquired should be logged in the [template](https://github.com/MelinaHoule/WT-Integration/blob/345282009ddcbd465f07789eca1cc0b8ba78e13a/project_Integration.xlsx) as soon as you receive it. 
+All data acquired should be logged in the [template](https://github.com/MelinaHoule/WT-Integration/blob/345282009ddcbd465f07789eca1cc0b8ba78e13a/project_Integration.xlsx) as soon as it is received. 
 
 * Make sure the Organization exists. If not, create an entry.
 * Create a new project entry. Marked it as NS (Not Started). 
@@ -186,14 +186,15 @@ All data acquired should be logged in the [template](https://github.com/MelinaHo
 
 If you don't intend to process the data straight away, make sure you overview the data to document some attributes, have all tables that define attributes and values used. Some information will be answered by emails. Make sure you keep a copy by converting the email as a PDF and make it available in the respective project folder under "communication". 
 
-Overviewing the data includes:
+Overviewing the data includes verifying that:
 * Observations have XY coordinates.
 * Reference system of the coordinates is known.
 * Protocol is documented (can be a report, email exchange, or found in the db itself).
 * Species code definition is present. We cannot assume the species code used is the same as the one used by WildTrax. We need to check.
-* If behaviour data are present, make sure we have the meaning of the values.
 * Date and time is present.
 * Abundance is present.
+
+Once verification has taken place, the WT-status of the data can be changed from 'NS' (for 'not started') to IP, for 'in progress' in the [template](https://github.com/MelinaHoule/WT-Integration/blob/345282009ddcbd465f07789eca1cc0b8ba78e13a/project_Integration.xlsx).
 
 # 4. Reformatting the data for WildTrax.
 Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing chunk of codes. 
