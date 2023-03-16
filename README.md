@@ -199,12 +199,176 @@ Once verification has taken place, the WT-status of the data can be changed from
 # 4. Reformatting the data for WildTrax.
 Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing of code. 
 
-For data to be uploaded to WildTrax, three hierarchical files are needed:
-1. A **LOCATION** file - This is the highest level in the hierarchy at the organization level. The location file comes first because it allows the organization to use the location for multiple projects without duplication. Each line in the location file will be the unique, and precise location for each point count station in TEXT format.
+For data to be uploaded to WildTrax, three hierarchical files are needed.
 
-2. A **VISIT** file - This is the second level in the hierarchy at the project level. Visits occur at the date scale (YYYY-MM-DD). The location file has to come before the Visit file so that the visit can occur at the location. You cannot load to a location that has not previously been loaded to WildTrax. Each line in the visit file will have the location, written exactly as it appears in the location file, and the date in YYYY-MM-DD format.
+Reformatting data for WildTrax can be challenging when data files are missing required fields, the fields are not filled in properly or are incomplete (according to WildTrax requirements), or the data was collected using a different documentation scheme. If data is being reformatted by BAM, team members communicate with the original data partner to acquire project metadata (e.g., documentation that can clarify how data was collected). 
 
-3. A **SURVEY** file - This is the third file that includes the point count data. All surveys include the:
+NOTE: WildTrax does not yet provide space for the storage of project metadata. Here we use the term **metadata** could include important information found in literature published using data from a project, explicit conditions for permission of use (e.g., what the data can be used for or not used for), or instructions on how to cite the data.
+
+Below, we describe what WildTrax is expecting in each of the three required files, the constraints that can cause upload errors and how to resolve them. 
+
+## 1. LOCATION TABLE
+The location table is the highest level in the hierarchy at the organization level. The location file comes first because it allows the organization to use the location for multiple projects without duplication. Each line in the location file will be the unique, and precise location for each point count station in TEXT format.
+
+The **LOCATION** attributes identify the geographic extent of the site. 
+
+| Field   | Format   | Description   | Requred     |
+| :------- | :-------------- | :-------------- | :------------------|
+| location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
+
+### Common location field errors
+
+
+| Field   | Format   | Description   | Required     |
+| :------- | :-------------- | :-------------- | :---------------- |
+| latitude     | Decimal degrees | NAD83, convert if otherwise | YES |
+| longitude     | Decimal degrees | NAD83, convert if otherwise | YES |
+
+### Common coordinate fields errors
+
+
+| Field   | Format   | Description   | Required     |
+| :------- | :-------------- | :-------------- | :---------------- |
+| elevationMeters     | Numeric | Elevation in meters. NULL if not collected. The upload will fill it  | NO |
+| bufferRadiusMeters     | Numeric | Radius of the buffer around the location (in meters). Use only if points need to be masked. NULL otherwise | NO |
+| isHidden     | Logical | t if points need to be masked  | NO |
+| trueCoordinates     | Logical | t if coordinates are not buffered | NO |
+| comments     | Text | Any comments related to locations. As needed | NO |
+| internal_wildtrax_id     | Numeric | Generated during the upload. Leave it blank | NO |
+| internal_update_ts     | Text | Generated during the upload. Leave it blank | NO |
+
+### Common Location Table Errors for Unrequired Fields
+
+
+
+## 2. VISIT TABLE
+This is the second level in the hierarchy at the project level. Visits occur at the date scale (YYYY-MM-DD). The location file has to come before the Visit file so that the visit can occur at the location. You cannot load to a location that has not previously been loaded to WildTrax. Each line in the visit file will have the location, written exactly as it appears in the location file, and the date in YYYY-MM-DD format.
+
+The **VISIT** attributes identify the date the survey was performed.
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
+
+### Common location field errors
+
+
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| visitDate     | Text | The date of the survey (YYYY-MM-DD) | YES |
+
+### Common visitDate field errors
+
+
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| snowDepthMeters     | Numeric | Generated during the upload. Leave it blank | NO |
+| waterDepthMeters     | Numeric | Generated during the upload. Leave it blank  | NO |
+| crew     | Text | Leave blank. ARUs field | NO |
+| bait     | Text | Use "None" for point count data  | NO |
+| accessMethod     | Text | Leave blank. ARUs field | NO |
+| landFeatures     | Text | Leave blank. ARUs field | NO |
+| comments     | Text | Any comments related to visit. As needed | NO |
+| wildtrax_internal_update_ts     | Text | Generated during the upload. Leave it blank | NO |
+| wildtrax_internal_lv_id     | Text | Generated during the upload. Leave it blank | NO |
+
+### Common Visit Table Errors for Unrequired Fields
+
+
+
+## 3. SURVEY TABLE
+This is the third file that includes the point count data. 
+
+The **SURVEY** attributes identify protocols, species, abundance, and time of the observations.
+
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
+
+### Common location field errors
+
+
+
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| surveyDateTime     | Text | YYYY-MM-DD HH:MM:SS, Concatenation of  visitDate  survey_time; separated by space | YES |
+
+### Common surveyDateTime field errors
+* when time is missing, fill time with 00:00:01.
+
+
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| durationMethod     | Text | The duration method used the count-remove species from the survey. Refer to duration_method_codes table  | YES |
+
+### Common durationMethod field errors
+
+
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| distanceMethod     | Text | The distance band separation method used. Refer to distance_method_codes table   | YES |
+
+### Common distanceMethod field errors
+
+
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| observer     | Text | The observer code who conducted the survey. When observer name are provided in the source data, we create a lookup table where observer name get a serial number assigned using this format:  [Dataset Code]_[serial number] | YES |
+
+### Common observer field errors
+* Can't be NULL. Must me of type TEXT. Default value is NA if information is not provided in the source data.
+
+
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| species     | Text | AOU code used by WildTrax. See species codes table  | YES |
+
+### Common species field errors
+
+
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| distanceband     | Text | The distance band the species was detected in. Refer to distance_band_codes table   | YES |
+
+### Common distanceband field errors
+
+
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| durationinterval     | Text | The duration interval the species was detected in. Refer to duration_interval_codes table  | YES |
+
+### Common durationinterval field errors
+
+
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| abundance     | Numeric | Number of individual of a species with the same date, time, observer, isHeard, isSeen, distanceband and durationinterval information | YES |
+
+### Common abundance field errors
+
+
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| isHeard     | Text | Was / were the bird(s) detected using a visual method (Yes, No or DNC). If no behaviour data, fill in as DNC except for NONE = null | YES |
+
+### Common isHeard field errors
+
+
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| isSeen     | Text | Was / were the bird(s) detected using an auditory method (Yes, No or DNC). If no behaviour data, fill in as DNC except for NONE = null | YES |
+
+### Common isSeen field errors
+
+
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| comments     | Text | Any comments related to survey. As needed | NO |
+
+### Common Survey Table Errors for Unrequired Fields
+
+
+
+All surveys include the:
 * location, written exactly as it appears in the location file, 
 * date and time in YYYY-MM-DD hh:mm:ss format, 
 * observer, written as the project code and an integer [PCODE]-[Integer] to anonymize the identities of individuals, 
@@ -217,10 +381,11 @@ For data to be uploaded to WildTrax, three hierarchical files are needed:
 * distance band, DEFINE, and
 * duration interval, DEFINE.
 
-Definitions for each field in the three files, and examples of the expected upload format for the point count can be found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
+Templates for each file can be found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
+Examples for each file can be found under [examples].
 
 ## Solutions to Common Missing Data Problems
-Reformatting data for WildTrax can be challenging when data files are missing required fields, the fields are not filled in properly or are incomplete (according to WildTrax requirements), or the data was collected using a different documentation scheme. If data is being reformatted by BAM, team members communicate with the original data partner to acquire project metadata (e.g., documentation that can clarify how data was collected). Below is a table that describes the decisions that we make when managing common missing data problems that can't be resolved with the available project metadata.
+
 
 Table 1. Solutions to Common Missing Data Problems
 
