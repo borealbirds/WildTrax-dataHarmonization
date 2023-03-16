@@ -226,16 +226,15 @@ Table 1. Solutions to Common Missing Data Problems
 
 | Location of Problem   | Field Affected   | Description   | Solution     |
 | :------- | :-------------- | :-------------- | :----------------  |
-| location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified |  |
-| latitude     | Decimal degrees | NAD83, convert if otherwise |  |
-| longitude     | Decimal degrees | NAD83, convert if otherwise |  |
-| elevationMeters     | Numeric | Elevation in meters. NULL if not collected. The upload will fill it  |  |
-| bufferRadiusMeters     | Numeric | Radius of the buffer around the location (in meters). Use only if points need to be masked. NULL otherwise |  |
-| isHidden     | Logical | t if points need to be masked  |  |
-| trueCoordinates     | Logical | t if coordinates are not buffered |  |
-| comments     | Text | Any comments related to locations. As needed |  |
-| internal_wildtrax_id     | Numeric | Generated during the upload. Leave it blank |  |
-| internal_update_ts     | Text | Generated during the upload. Leave it blank |  |
+| **LOCATION** file     | location | The location is not accepted because it includes characters that are not allowed (e.g., *"*"* or "%") | Reformat location names to not include banned characters |
+| **LOCATION** file    | latitude or longitude | will not load if null | Do not load any locations with missing coordinates |
+| **VISIT** file     | location | location does not match any previously loaded locations | Check that the location file was loaded first. If it was, check that the spelling of the location is correct in the visit file |
+| **VISIT** file    | visitDate | There is no day or month listed.  | Change these to January 1st (e.g., YYYY-01-01). |
+| **SURVEY** file     | surveyDateTime | There is no time listed. | Change these to 12:01 a.m. (e.g., 00:00:01). |
+| **SURVEY** file     | abundance | Is not an integer (e.g., "too many to count").  | Change these to 999. |
+| **SURVEY** file     | distanceMethod or durationMethod | Does not match a methodology in WildTrax. | Request to add if does not exist. WildTrax will have to update their server before the change is reflected and then you can upload. |
+| **SURVEY** file     | distancebnad or distanceinterval | Does not match distanceMethod or durationMethod. | These must be resolved in communication with the data partner. |
+| **SURVEY**   | abuncance | There is a single line for every individual bird seen/heard. | You can't have duplicates of species at the same dateTime and location. These must be summed. |
 
 
 
