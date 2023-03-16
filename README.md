@@ -218,7 +218,7 @@ The **location** field:
 | location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
 
 Common **location** field errors:
-* A location might not be accepted because it includes characters that are not allowed (e.g., *"*", or "%").
+* A location might not be accepted because it includes characters that are not allowed (e.g., "*****", or "%").
 
 
 
@@ -262,7 +262,7 @@ The **location** field:
 | location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
 
 Common **location** field errors:
-
+* The location does not match any previously loaded locations. In this case, check that the location file was loaded first. If it was, check that the spelling of the location is correct in the visit table.
 
 
 
@@ -272,7 +272,7 @@ The **visitDate** field:
 | visitDate     | Text | The date of the survey (YYYY-MM-DD) | YES |
 
 Common **visitDate** field errors:
-
+* When there is no day or month listed, Change these to January 1st (e.g., YYYY-01-01).
 
 
 
@@ -318,7 +318,7 @@ The **surveyDateTime** field:
 | surveyDateTime     | Text | YYYY-MM-DD HH:MM:SS, Concatenation of  visitDate  survey_time; separated by space | YES |
 
 Common **surveyDateTime** field errors:
-* when time is missing, fill time with 00:00:01.
+* When there is no time listed, fill time with 00:00:01.
 
 
 
@@ -388,7 +388,8 @@ The **abundance** field:
 | abundance     | Numeric | Number of individual of a species with the same date, time, observer, isHeard, isSeen, distanceband and durationinterval information | YES |
 
 Common **abundance** field errors:
-
+* This must be an number. When the cell reads "too many to count", change it to 999.
+* You can't have duplicates of species at the same date, time, and location because there must be a single line for every species. If data is organized as every individual that was seen/heard per line, these must be summed (e.g., the total number of Black-capped Chickadees during that point count).
 
 
 
@@ -423,39 +424,8 @@ Common Survey Table Errors for Unrequired Fields:
 
 
 
-All surveys include the:
-* location, written exactly as it appears in the location file, 
-* date and time in YYYY-MM-DD hh:mm:ss format, 
-* observer, written as the project code and an integer [PCODE]-[Integer] to anonymize the identities of individuals, 
-* distance method, see (website) for list of accepted distance methods, NOTE: You can request to add a new distance method if the one that was used for the project is not already in WildTrax,
-* duration method, same as above for distance method,
-* species, the 4 letter code specified for each species in WildTrax, NOTE: each line is for one species,
-* is heard, DEFINE
-* is seen, DEFINE
-* abundance, an integer
-* distance band, DEFINE, and
-* duration interval, DEFINE.
-
 Templates for each file can be found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
 Examples for each file can be found under [examples].
-
-## Solutions to Common Missing Data Problems
-
-
-Table 1. Solutions to Common Missing Data Problems
-
-| Location of Problem   | Field Affected   | Description   | Solution     |
-| :------- | :-------------- | :-------------- | :----------------  |
-| **LOCATION** file     | location | The location is not accepted because it includes characters that are not allowed (e.g., *"*"* or "%") | Reformat location names to not include banned characters |
-| **LOCATION** file    | latitude or longitude | will not load if null | Do not load any locations with missing coordinates |
-| **VISIT** file     | location | location does not match any previously loaded locations | Check that the location file was loaded first. If it was, check that the spelling of the location is correct in the visit file |
-| **VISIT** file    | visitDate | There is no day or month listed.  | Change these to January 1st (e.g., YYYY-01-01). |
-| **SURVEY** file     | surveyDateTime | There is no time listed. | Change these to 12:01 a.m. (e.g., 00:00:01). |
-| **SURVEY** file     | abundance | Is not an integer (e.g., "too many to count").  | Change these to 999. |
-| **SURVEY** file     | distanceMethod or durationMethod | Does not match a methodology in WildTrax. | Request to add if does not exist. WildTrax will have to update their server before the change is reflected and then you can upload. |
-| **SURVEY** file     | distancebnad or distanceinterval | Does not match distanceMethod or durationMethod. | These must be resolved in communication with the data partner. |
-| **SURVEY**   | abuncance | There is a single line for every individual bird seen/heard. | You can't have duplicates of species at the same dateTime and location. These must be summed. |
-
 
 
 # 5. Uploading the data to WildTrax.
