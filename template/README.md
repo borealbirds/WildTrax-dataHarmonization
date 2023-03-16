@@ -1,4 +1,4 @@
-WildTrax upload is a 3 steps process. 
+WildTrax upload is a 3 step process. 
 
 
 
