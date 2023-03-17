@@ -213,9 +213,9 @@ The location table is the highest level in the hierarchy at the organization lev
 The **LOCATION** attributes identify the geographic extent of the site. 
 
 The **location** field:
-| Field   | Format   | Description   | Requred     |
+| Field   | Format   | Description   | Required     |
 | :------- | :-------------- | :-------------- | :------------------|
-| location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
+| location     | Text | Name of the physical place on the landscape where the data was collected. If not present in source data, create it using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
 
 Common **location** field errors:
 * A location might not be accepted because it includes characters that are not allowed (e.g., "*****", or "%").
@@ -272,7 +272,8 @@ The **visitDate** field:
 | visitDate     | Text | The date of the survey (YYYY-MM-DD) | YES |
 
 Common **visitDate** field errors:
-* When there is no day or month listed, Change these to January 1st (e.g., YYYY-01-01).
+* When there is no year, day or month listed, change these to January 1st 1900 (e.g., 1900-01-01).
+* When date doesn't exist (2014-06-31), change these to January 1st 1900 (e.g., 1900-01-01).
 
 
 
@@ -315,7 +316,7 @@ Common **location** field errors:
 The **surveyDateTime** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
-| surveyDateTime     | Text | YYYY-MM-DD HH:MM:SS, Concatenation of  visitDate  survey_time; separated by space | YES |
+| surveyDateTime     | Text | YYYY-MM-DD HH:MM:SS, Concatenation of  visitDate  and time of survey; separated by space | YES |
 
 Common **surveyDateTime** field errors:
 * When there is no time listed, fill time with 00:00:01.
@@ -325,7 +326,7 @@ Common **surveyDateTime** field errors:
 The **durationMethod** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
-| durationMethod     | Text | The duration method used the count-remove species from the survey. Refer to duration_method_codes table  | YES |
+| durationMethod     | Text | The duration method used the count-remove species from the survey. Refer to [duration_method_codes table] (https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/duration_method_codes.csv)  | YES |
 
 Common **durationMethod** field errors:
 * NOTE: You can request to add a new duration method if the one that was used for the project is not already in WildTrax.
@@ -335,7 +336,7 @@ Common **durationMethod** field errors:
 The **distanceMethod** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
-| distanceMethod     | Text | The distance band separation method used. Refer to distance_method_codes table   | YES |
+| distanceMethod     | Text | The distance band separation method used. Refer to [distance_method_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/distance_method_codes.csv)  | YES |
 
 Common **distanceMethod** field errors:
 * NOTE: You can request to add a new distance method if the one that was used for the project is not already in WildTrax.
@@ -349,26 +350,25 @@ The **observer** field:
 
 Common **observer** field errors:
 * Can't be NULL. Must me of type TEXT. Default value is NA if information is not provided in the source data.
-* To anonymize the identities of individuals, BAM writes the name of the project and an integer for observer (e.g., [PCODE]-[Integer]).
+* To anonymize the identities of individuals, BAM writes the name of the project and an integer for observer (e.g., [Dataset Code]_[serial number]).
 
 
 The **species** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
-| species     | Text | AOU code used by WildTrax. See species codes table  | YES |
+| species     | Text | AOU code used by WildTrax. See [species_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/species_codes.csv)   | YES |
 
 Common **species** field errors:
-* NOTE: each line if for one species, not for each individual counted during a point count.
-
+* NOTE: Individuals from the same species observed at the same location, same day, same distance band and duration interval MUST HAVE THEIR ABUNDANCE SUMMED in the same line. Duplicate entries based on location, species, surveyDateTime distanceband and durationinterval are not allowed. 
 
 
 The **distanceband** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
-| distanceband     | Text | The distance band the species was detected in. Refer to distance_band_codes table   | YES |
+| distanceband     | Text | The distance band the species was detected in. Refer to [distance_band_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/duration_interval_codes.csv)   | YES |
 
 Common **distanceband** field errors:
-
+* NOTE: **distanceband** must follow the protocol given in **distanceMethod**. For example, if **distanceMethod** = 0m-50m-100m-INF can't have **distanceband** of 0m-100m. It needs to be either 0m-50m, 50m-100m, 100m-INF or UNKNOWN otherwise. 
 
 
 
@@ -378,7 +378,7 @@ The **durationinterval** field:
 | durationinterval     | Text | The duration interval the species was detected in. Refer to duration_interval_codes table  | YES |
 
 Common **durationinterval** field errors:
-
+* NOTE: **durationinterval** must follow the protocol given in **durationMethod**. For example, if **durationMethod** = 0-3-5-10min can't have **durationinterval** of 0-5min. It needs to be either 0-3min, 0-5min, 5-10min or UNKNOWN otherwise. 
 
 
 
