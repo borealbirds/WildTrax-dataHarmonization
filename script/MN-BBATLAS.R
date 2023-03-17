@@ -57,8 +57,8 @@ if (!dir.exists(out_dir)) {
 
 # Data CRS: NAD83 UTM15N,EPSG: 26915
 crs_utm15N <- st_crs(26915)
-# WildTrax CRS (EPSG: 4386)
-crs_WT <- st_crs(4386)
+# WildTrax CRS (EPSG: 4326)
+crs_WT <- st_crs(4326)
 
 #######################################################
 ##                    Connect
@@ -169,9 +169,9 @@ pc_visit$pkey_dt<- paste(pc_visit$location, paste0(gsub("-", "", as.character(pc
 pc_detection <- sqlFetch(con, "pc_detection")
 names(pc_detection)<-str_replace_all(names(pc_detection), c(" " = "_"))
 
-s_data <- merge(pc_detection, pc_visit,by.x = c("Location_Name", as.character("survey_date")), by.y = c("Location_Name", "visitDate"))
+s_data <- merge(pc_detection, pc_visit,by =c("Location_Name", as.character("survey_date")))
 
-data_flat <- merge(s_data, s_location, by.x = "Location_Name", by.y = "location")
+data_flat <- merge(s_data, s_location, by = "Location_Name")
 
 data_flat$location <- data_flat$Location_Name 
 data_flat$surveyDateTime <- paste(as.character(data_flat$visitDate), data_flat$survey_time)

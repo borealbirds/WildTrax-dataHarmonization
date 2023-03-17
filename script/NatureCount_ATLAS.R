@@ -11,6 +11,9 @@
 
 
 # --- FIX DETAILS
+# -- Delete PC with missing lat/long
+# ------- 1448 obs missing lat/long in "QCATLAS2PC"
+# ------- 251 obs missing lat/long in "BCATLAS1PC"
 # -- Time is missing. Was replaced by 00:00:01
 # ------- 52717 visit
 # -- Some species do not match WT species_code
@@ -24,15 +27,17 @@
 # ------- 220 obs is.na(species_id) with abundance 0 SET TO "NONE"     
 # ------- 5 obs is.na(species_id) with abundance >0 SET TO "UNBI"     
 
-# -- Some observations have species code without abundance. (No answer from Nature Count about that issue). Need to delete
-# ------- 4849 obs deleted
+# -- Some observations have species code without abundance. Nature Counts confirmed those are report of 
+# -- breeding evidence and cannot be used for abundance estimates. Need to delete
+# ------- 4919 obs deleted
 
 
 
 ## Update reading:  https://birdstudiescanada.github.io/NatureCounts_IntroTutorial/index.html
 update.packages()
-install.packages("remotes")
-remotes::install_github("BirdStudiesCanada/naturecounts")
+install.packages("naturecounts", 
+                 repos = c(birdscanada = 'https://birdscanada.r-universe.dev',
+                           CRAN = 'https://cloud.r-project.org'))
 library(naturecounts)
 library(tidyverse)
 library(plyr) #rbind.fill
@@ -40,6 +45,7 @@ library(reshape2) # melt
 library(readxl)
 library(readr)
 library(dplyr)
+library(stringi)
 
 ## Initialize variables
 wd <- "E:/MelinaStuff/BAM/WildTrax/WT-Integration"
@@ -72,11 +78,12 @@ out_dir <- file.path("./out", dataset_code)
 if (!dir.exists(out_dir)) {
   dir.create(out_dir)
 }
-# Source credential
+
+# Source credential to log on NatureCounts
 config <- "./config.R"
 source(config)
 
-
+# check if data are still on local computer, if not download from source
 if(file.exists(file.path(project_dir, "s_data.RData"))){
   load(file.path(project_dir, "s_data.RData"))
 } else {
@@ -86,8 +93,12 @@ if(file.exists(file.path(project_dir, "s_data.RData"))){
                 "QCATLAS_NORTH_PC",
                 "QCATLAS2PC",
                 "SKATLAS1PC")
-  s_data <- nc_data_dl(collections = dataList, fields_set = "extended", request_id = r_id, username = natureCounts_username, info = "download Atlas")
+  bc_data <- nc_data_dl(collections = "BCATLAS1PC", fields_set = "extended",  username = natureCounts_username, info = "download Atlas")
+  
+  request_data <- nc_data_dl(collections = dataList, fields_set = "extended", request_id = r_id, username = natureCounts_username, info = "download Atlas")
+  
   #backup
+  s_data <- rbind(bc_data, request_data)
   save(s_data, file = file.path(project_dir, "s_data.RData"))
 }
 
@@ -113,18 +124,30 @@ data_flat$organization <- organization
 data_flat$project <-ifelse(data_flat$collection == "QCATLAS2PC", "QC-BBATLAS",
                                 ifelse(data_flat$collection == "NFATLAS1PC", "NF-BBATLAS",
                                 ifelse(data_flat$collection == "ONATLAS3PC", "ON-BBATLAS",
-                                ifelse(data_flat$collection == "QCATLAS_NORTH_PC", "QCNORTH_BBATLAS",
-                                ifelse(data_flat$collection == "SKATLAS1PC", "SK_BBATLAS", "UNKNOWN")))))
+                                ifelse(data_flat$collection == "QCATLAS_NORTH_PC", "QCNORTH-BBATLAS",
+                                ifelse(data_flat$collection == "SKATLAS1PC", "SK-BBATLAS", 
+                                ifelse(data_flat$collection == "BCATLAS1PC", "BC-BBATLAS", "UNKNOWN"))))))
 data_flat$project_full_name <-ifelse(data_flat$collection == "QCATLAS2PC", "Quebec_Breeding_Bird_Atlas_(2010-2014)",
                            ifelse(data_flat$collection == "NFATLAS1PC", "Newfoundland_Breeding_Bird_Atlas_(2020-2024)",
                                   ifelse(data_flat$collection == "ONATLAS3PC", "Ontario_Breeding_Bird_(2021-2025)",
                                          ifelse(data_flat$collection == "QCATLAS_NORTH_PC", "Quebec_Breeding_Bird_Atlas_(northern_project)",
-                                                ifelse(data_flat$collection == "SKATLAS1PC", "Saskatchewan_Breeding_Bird_Atlas_(2017-2021)", "UNKNOWN")))))  
+                                                ifelse(data_flat$collection == "SKATLAS1PC", "Saskatchewan_Breeding_Bird_Atlas_(2017-2021)",
+                                                       ifelse(data_flat$collection == "BCATLAS1PC", "British_Columbia_Breeding_Bird_Atlas_(2008-2012)","UNKNOWN"))))))  
 data_flat$site <- gsub("^.* ", "", data_flat$Locality)
-data_flat$station <- ifelse(data_flat$SamplingEventIdentifier  == "" | nchar(data_flat$SamplingEventIdentifier) >15 , sub(".*?-","", data_flat$SamplingEventIdentifier), data_flat$SamplingEventIdentifier)
+data_flat$station <- data_flat$SamplingEventIdentifier
+data_flat$station <- stri_replace_all_regex(data_flat$station,
+                                  pattern=c("NFATLAS-", "SKATLAS-", "ONATLAS-", "QCATLAS-", "BCATLAS-"),
+                                  replacement=c('', '', '', '', ''),
+                                  vectorize=FALSE)
+
 data_flat$station <- gsub(" ", "_", data_flat$station)
 data_flat$location <- paste(data_flat$project, data_flat$site, data_flat$station, sep=":")
+data_flat[is.na(data_flat$latitude),]
+#  1699 obs don't have lat/long
+data_flat <- data_flat[!is.na(data_flat$latitude),]
 data_flat$latitude <- data_flat$latitude
+# Should be empty
+data_flat[is.na(data_flat$longitude),]
 data_flat$longitude <- data_flat$longitude
 #data_flat$elevationMeters <- NA
 #data_flat$bufferRadiusMeters <- NA
@@ -183,7 +206,7 @@ data_flat$survey_year <- data_flat$survey_year
 ############################
 # surveyDateTime
 data_flat$surveyDateTime <- paste(data_flat$visitDate, data_flat$survey_time)
-data_flat$comments[is.na(data_flat$TimeCollected)] <- "Survey time missing in source data"
+data_flat$comments[is.na(data_flat$TimeCollected)] <- "Time missing in source data"
 #------------------------------
 # Species
 # Merge Atlas species list and species code
@@ -191,10 +214,9 @@ data_flat <-merge(data_flat, ATLAS_spId[,c("species_id","common_name", "species_
 
 # Translate species
 data_flat$species <- data_flat$species_code
-print(unique(data_flat$species_id[!(data_flat$species %in% WT_spTbl$species_code)])) # 700 21110 40154 40289 41254 41773 44245    NA
-
+print(unique(data_flat$species_id[!(data_flat$species %in% WT_spTbl$species_code)])) #21110 40154 40289 41254 41773 44245  NA
+                                                                                
 # Check what is missing
-data_flat$species[data_flat$species_id == 700] <-"UNSC" # Aythya sp.  1 occurence
 data_flat$species[data_flat$species_id == 21110] <-"UNBI"
 data_flat$species[data_flat$species_id == 40154] <-"ABDU"   #Mallard x American Black Duck (hybrid)    1 occurrence
 data_flat$species[data_flat$species_id == 40289] <-"NOHA"   # Circus cyaneus 1 occurrence
@@ -207,6 +229,11 @@ data_flat$species[is.na(data_flat$species_id) & !(is.na(data_flat$ObservationCou
 # Should be empty
 print(unique(data_flat$species_id[!(data_flat$species %in% WT_spTbl$species_code)])) 
 data_flat$original_species <- data_flat$species_id
+
+# Delete obs with species without abundance. Those are breeding evidence and shouldn't considered for population estimate. 
+# 4919 obs to delete. Those have species without abundance. Keep the species = NONE with abundance = 0. 
+data_flat <- subset(data_flat, data_flat$NoObservations == "NoObs" | 
+                      !(data_flat$species == "NONE") & as.numeric(data_flat$ObservationCount)>0)
 
 ## Split df according to protocol. 
 #-- Point Count
@@ -246,7 +273,7 @@ norac_expanded <- melt(norac_sp, measure.vars = c("ObservationCount2","Observati
 norac_expanded$abundance <- as.numeric(norac_expanded$abundance)
 norac_expanded$distanceband <-"0m-INF"
 norac_expanded$durationinterval[norac_expanded$variable == "ObservationCount2" & norac_expanded$abundance >= 1] <- "0-3min"
-norac_expanded$durationinterval[norac_expanded$variable == "ObservationCount3" & norac_expanded$abundance >= 1] <- "4-5min"
+norac_expanded$durationinterval[norac_expanded$variable == "ObservationCount3" & norac_expanded$abundance >= 1] <- "3-5min"
 norac_expanded$raw_distance_code <- norac_expanded$ProtocolCode
 norac_expanded$raw_duration_code <- norac_expanded$variable
 # Delete false 0 created by melt
@@ -278,11 +305,11 @@ pc6_expanded$durationinterval[pc6_expanded$variable == "ObservationCount3" & pc6
 pc6_expanded$distanceband[pc6_expanded$variable == "ObservationCount3" & pc6_expanded$abundance >= 1] <- "50m-100m"
 pc6_expanded$durationinterval[pc6_expanded$variable == "ObservationCount4" & pc6_expanded$abundance >= 1] <- "0-3min"
 pc6_expanded$distanceband[pc6_expanded$variable == "ObservationCount4" & pc6_expanded$abundance >= 1] <- "100m-INF"
-pc6_expanded$durationinterval[pc6_expanded$variable == "ObservationCount5" & pc6_expanded$abundance >= 1] <- "4-5min"
+pc6_expanded$durationinterval[pc6_expanded$variable == "ObservationCount5" & pc6_expanded$abundance >= 1] <- "3-5min"
 pc6_expanded$distanceband[pc6_expanded$variable == "ObservationCount5" & pc6_expanded$abundance >= 1] <- "0m-50m"
-pc6_expanded$durationinterval[pc6_expanded$variable == "ObservationCount6" & pc6_expanded$abundance >= 1] <- "4-5min"
+pc6_expanded$durationinterval[pc6_expanded$variable == "ObservationCount6" & pc6_expanded$abundance >= 1] <- "3-5min"
 pc6_expanded$distanceband[pc6_expanded$variable == "ObservationCount6" & pc6_expanded$abundance >= 1] <- "50m-100m"
-pc6_expanded$durationinterval[pc6_expanded$variable == "ObservationCount7" & pc6_expanded$abundance >= 1] <- "4-5min"
+pc6_expanded$durationinterval[pc6_expanded$variable == "ObservationCount7" & pc6_expanded$abundance >= 1] <- "3-5min"
 pc6_expanded$distanceband[pc6_expanded$variable == "ObservationCount7" & pc6_expanded$abundance >= 1] <- "100m-INF"
 pc6_expanded$raw_distance_code <- pc6_expanded$variable
 pc6_expanded$raw_duration_code <- pc6_expanded$variable
@@ -298,7 +325,7 @@ print(unique(data_translated$distanceband[!(data_translated$distanceband %in% WT
 print(unique(data_translated$durationinterval[!(data_translated$durationinterval %in% WT_durBandTbl$duration_interval_type)]))
 
 data_translated$isHeard <- "Yes"
-data_translated$isSeen <- "No"
+data_translated$isSeen <- NA # did not collect
 data_translated$rawObserver <- NA
 
 data_translated$scientificname <- data_translated$ScientificName
@@ -318,7 +345,8 @@ data_translated$atlas_breeding_code <- "DNC"
 ##EXPORT
 WTlocation <- c("location", "latitude", "longitude")
 
-location_tbl <- data_flat[!duplicated(data_flat[,WTlocation]),] 
+# Remove duplicates location that has different lat/long
+location_tbl <- data_flat[!duplicated(data_flat[,c("location")]),] 
 out_translated <- split(location_tbl,location_tbl$project_full_name)
 out_translated <- lapply(out_translated, setNames, nm = colnames(data_flat))
 out_translated <- lapply(out_translated, function(x) { x[ ,WTlocation] })
@@ -344,7 +372,7 @@ for (df in names(out_translated)) write_lines(paste0("Number of visit: ", nrow(o
 # Sum obs that are the same based on WildTrax field
 survey_tbl <- data_translated %>% 
   group_by(project_full_name, location, surveyDateTime, durationMethod, distanceMethod, observer, species, distanceband, durationinterval, isHeard, isSeen, comments) %>%
-  summarise(abundance = sum(abundance), .groups= "keep")
+  dplyr::summarise(abundance = sum(abundance), .groups= "keep")
 
 WTsurvey <- c("location", "surveyDateTime", "durationMethod", "distanceMethod", "observer", "species", "distanceband",
               "durationinterval", "abundance", "isHeard", "isSeen", "comments")
@@ -363,9 +391,9 @@ extended_tbl <- data_translated %>%
            survey_year, rawObserver, original_species, scientificname, raw_distance_code, raw_duration_code, 
            originalBehaviourData, missingindetections, pc_vt, pc_vt_detail, age, fm, group, flyover, 
            displaytype, nestevidence, behaviourother, atlas_breeding_code) %>%
-  dplyr::summarise(abundance = sum(abundance), .groups= "keep")
+  dplyr::summarise(ind_count = sum(abundance), .groups= "keep")
 
-Extended <- c("organization", "project","location", "surveyDateTime", "species", "abundance", "distanceband", "durationinterval", "site", "station", "utmZone", "easting", 
+Extended <- c("organization", "project","location", "surveyDateTime", "species", "ind_count", "distanceband", "durationinterval", "site", "station", "utmZone", "easting", 
               "northing", "missinginlocations", "time_zone", "data_origin", "missinginvisit", "pkey_dt", "survey_time",
               "survey_year", "rawObserver", "original_species", "scientificname", "raw_distance_code", "raw_duration_code", 
               "originalBehaviourData", "missingindetections", "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", 

@@ -37,7 +37,7 @@ library(stringr) #str_replace_all
 library(sf) #st_crs, st_as_sf, st_transform, st_drop_geometry
 library(purrr) #map
 library(plyr) #rbind.fill
-library(data.table)
+library(data.table) #fread
 library(googledrive) #drive_get, drive_mkdir, drive_ls, drive_upload
 library(dplyr) # mutate, %>%
 library(readr) # write_lines
@@ -181,7 +181,7 @@ data_flat$surveyDateTime <- paste(data_flat$visitDate, data_flat$survey_time)
 data_flat$distanceMethod <- "0m-50m-INF"
 print(unique(data_flat$distanceMethod[!(data_flat$distanceMethod %in% WT_distMethTbl$distance_method_type)]))
 
-data_flat$durationMethod <- "0-5-10min"
+data_flat$durationMethod <- "0-3-5-10min"
 print(unique(data_flat$durationMethod[!(data_flat$durationMethod %in% WT_durMethTbl$duration_method_type)]))
 
 ## Species, species_old, comments, scientificname
@@ -204,7 +204,7 @@ data_flat[data_flat$Common_Name=="Solitary Vireo", "species"] <- "SOVI"
 # Cross-check species code
 print(unique(data_flat$species[!(data_flat$species %in% WT_spTbl$species_code)]))
 
-data_flat$comments <- data_flat$Point_Note
+data_flat$comments <- NA #data_flat$Point_Note
 data_flat$original_species <- data_flat$Spp
 data_flat$scientificname <- WT_spTbl$scientific_name[match(data_flat$species, WT_spTbl$species_code)]
 
@@ -265,7 +265,7 @@ if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
 #---LOCATION
 #Only select location with observation
 location_tbl <- subset(s_location,s_location$location %in% data_flat$location)
-WTlocation <- c("location", "latitude", "longitude", "comments")
+WTlocation <- c("location", "latitude", "longitude")
 location_tbl <- s_location[!duplicated(s_location[,WTlocation]), WTlocation]  
 
 write.csv(location_tbl, file= file.path(out_dir, paste0(dataset_code,"_location.csv")), quote = FALSE, row.names = FALSE, na = "")
@@ -332,3 +332,4 @@ nrow_visit <- paste0("Number of visit: ", nrow(visit_tbl))
 write_lines(nrow_visit, file.path(out_dir, paste0(dataset_code, "_stats.csv")), append= TRUE)
 nrow_survey <- paste0("Number of survey: ", nrow(survey_tbl))
 write_lines(nrow_survey, file.path(out_dir, paste0(dataset_code, "_stats.csv")), append= TRUE)
+

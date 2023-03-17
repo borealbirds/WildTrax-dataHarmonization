@@ -1,37 +1,16 @@
 # ---
-# PCODE: * all Alaska PC from BAM v6
-# Title: "Translate Alaska data loaded in BAM v6"
-# Source dataset is extracted from BAM v6
+# PCODE: BBCLRV
+# Title: "Translate BBCLRV Yukon data received from MArty Mossop "
+# Source dataset : received by email by Marty Mossop
 # Author: "Melina Houle"
-# Date: "September 20, 2022"
+# Date: "November 21, 2022"
 # Note on translation:
-# --- Data were pre-processed by Hedwig Lankau. Script do not use source data. 
-# --- BAM v6 has duplicate entries. The output of that script do not match tables from BAM v6 because the script control for duplicates
-# ------- locations: 665 duplicates
-# ------- We decided to remove the before/after
-# ------- We decided to fix to UNKNOWN duration interval and distance band that don't fit methodology
-# ------- Waiting from the AK folks prior to upload the data on WildTrax.
+# --- 
+# ------- 
 
 # --- FIX DETAILS
-# --- Time is missing. Was replaced by 00:00:01
-# ------- 950 visit
-# --- Species ACGO changed for CACG
-# ------- 76 obs
-# --- Duration and distance interval don't fit methodology. 
-# ------SET TO UNKNOWN
-# ------- 202 obs :distanceMethod ="0m-10m-20m-30m-40m-50m-60m-70m-80m-90m-100m-125m-150m-INF" with band "50m-INF","0m-50m","50m-100m","100m-150m"
-# ------- 138 obs :durationMethod ="0-3-5-8-10min" with durationinterval = "0-5min"
-# ------FIX durationinterval to 0-5min
-# ------- 248 obs :durationMethod=="0-5-8min" with durationinterval %in% c("3-5min", "0-3min")
-# ------FIX durationinterval to 0-10min
-# ------- 4710 obs: durationMethod=="0-10min" with durationinterval ="0-3min"
-# ------DELETE (don't respect duration protocol)
-# ------- 68458 obs :durationinterval = "before or after/incidental"
-# ------- 2771 obs :durationinterval = "15-20min"
-# ------- 24 obs :durationMethod=="0-5-8min" with durationinterval = "8-10min"
-# ------DELETE DUPLICATES ON LOCATIONS
-# -------- 669 locations: The same location has different lat/long
-
+# --- 
+# ------- 
 
 library(utils) #read.csv
 library(RODBC) #odbcConnect, sqlFetch
@@ -40,22 +19,24 @@ library(tidyr) #separate
 library(googledrive)
 library(dplyr) # mutate, %>%
 library(readr) # write_lines
+library(readxl) #read_excel
 
 ## Initialize variables
 ## Conversion do not use source data. It rather use an unfinished version of BAM V4 db
 wd <- "E:/MelinaStuff/BAM/WildTrax/WT-Integration"
 setwd(wd)
 
-organization = "USGS-ALASKA"
-dataset_folder <- "BAM-AK"
-source_data <- "BAM-V6-USE.accdb"
+organization = "CWS-NOR"
+dataset_folder <- "BBCLRV"
+project_name <- "Breeding_Bird_Communities_Liard_Valley_1994_YT"
+source_data <- "1-BBCLRV_1994_Liard_4BAM_new.xlsx"
 WT_spTbl <- read.csv(file.path("./lookupTables/species_codes.csv"))
 colnames(WT_spTbl) <- c("species_common_name", "species_code", "scientific_name")
 WT_durMethTbl <- read.csv(file.path("./lookupTables/duration_method_codes.csv"), fileEncoding="UTF-8-BOM")
 WT_distMethTbl <- read.csv(file.path("./lookupTables/distance_method_codes.csv"), fileEncoding="UTF-8-BOM")
 WT_durBandTbl <- read.csv(file.path("./lookupTables/duration_interval_codes.csv"), fileEncoding="UTF-8-BOM")
 WT_distBandTbl <- read.csv(file.path("./lookupTables/distance_band_codes.csv"), fileEncoding="UTF-8-BOM")
-project_dir <- file.path(wd, "project", dataset_folder)
+project_dir <- file.path(wd, "project", paste0(organization, "_", dataset_folder))
 if (!dir.exists(project_dir)) {
   dir.create(project_dir)
 }
@@ -63,7 +44,12 @@ if (!dir.exists(project_dir)) {
 data_db <- file.path(project_dir, source_data)
 if (!file.exists(data_db)) {
   #Download from GoogleDrive
-  drive_download(paste0("BAM-V6/", source_data), path = data_db)
+  drive_download(paste0("BBCLRV/", source_data), path = data_db)
+  data <- read_excel(data_db, sheet = "Bird data")
+  location <- read_excel(data_db, sheet = "Point coordinates")
+  species_lu <- read_excel(data_db, sheet = "species LU")
+  age <- read_excel(data_db, sheet = "Age codes LU")
+  behavior <- read_excel(data_db, sheet = "Behaviour codes LU")
 }
 out_dir <- file.path("./out", dataset_folder)    # where output dataframe will be exported
 if (!dir.exists(out_dir)) {
@@ -79,7 +65,7 @@ project <- odbcDriverConnect(paste0("Driver={Microsoft Access Driver (*.mdb, *.a
     #tbls <- sqlTables(project) ##Look up tables
     #tbls$TABLE_NAME
 # Check dataset code for ALASKA
-s_dataset <- sqlFetch(project, "dataset") # 5-6-7-10
+s_dataset <- sqlFetch(project, "dataset") # 5-6-7-8-9-10
 s_location <- sqlFetch(project, "location")
 pc_visit <- sqlFetch(project, "pc_visit")
 pc_survey <- sqlFetch(project, "pc_detection")
@@ -96,18 +82,17 @@ lu_species <- sqlFetch(project, "WT_Species_codes")
 ############################
 #### LOCATION TABLE ####
 ############################
-s_location <- subset(s_location, (s_location$dataset_fk <11 & s_location$dataset_fk >6) | s_location$dataset_fk ==5)
-# check if location have all lat/long (should be empty)
-subset(s_location,is.na(s_location$latitude))
-subset(s_location,is.na(s_location$longitude))  
-  ## If not empty, subset.
-  #s_location <- s_location[!is.na(s_location$latitude),]
+s_location <- s_location[s_location$dataset_fk <11 & s_location$dataset_fk >4,]
+s_location <- s_location[!is.na(s_location$dataset_fk),]
 s_location$location <- s_location$location_name_V6
 s_location <- s_location %>%
   separate(location_name_V6, c("project", "site", "station"), ":")
 
 s_location$organization <- organization 
 s_location$project <- s_location$project
+#Check if lat/long are missing. Should be empty
+s_location[is.na(s_location$latitude),]
+s_location[is.na(s_location$longitude),]
 s_location$latitude <- s_location$latitude
 s_location$longitude <- s_location$longitude
 #s_location$elevationMeters <- NA
@@ -186,7 +171,6 @@ print(unique(data_flat$durationMethod[!(data_flat$durationMethod %in% WT_durMeth
   #print(unique(data_flat$species_code[!(data_flat$species_code %in% WT_spTbl$species_code)]))
   #lu_species[lu_species$species_code =="UNHU",] # Contact Alex to add UNHU as unidentified hummingbird
 data_flat$species <- WT_spTbl$species_code[match(data_flat$species_code, WT_spTbl$species_code)]
-data_flat$species[is.na(data_flat$species)] <- "UNBI"
 print(unique(data_flat$species_code[!(data_flat$species_code %in% WT_spTbl$species_code)]))
 # FIX BAM species code ACGO to CACG
 data_flat$species_code[data_flat$species_code == "ACGO"] <- "CACG"
@@ -197,14 +181,11 @@ data_flat$comments <- NA
 data_flat$original_species <- data_flat$species_code
 data_flat$scientificname <- WT_spTbl$scientific_name[match(data_flat$original_species, WT_spTbl$species_code)]
 ## isHeard isSeen
-data_flat$isHeard <- ifelse(data_flat$heard == "No", "no",
-                            ifelse(data_flat$heard == "Yes", "yes",
-                                   ifelse(data_flat$heard == "DNC", NA,
-                                          ifelse(data_flat$heard == "N/A", NA, NA))))
-data_flat$isSeen <- ifelse(data_flat$seen == "No", "no",
-                            ifelse(data_flat$seen == "Yes", "yes",
-                                   ifelse(data_flat$seen == "DNC", NA,
-                                          ifelse(data_flat$seen == "N/A", NA, NA))))
+data_flat$isHeard <- data_flat$heard
+data_flat$isHeard[data_flat$isHeard =="N/A"] <-"DNC"
+data_flat$isSeen <- data_flat$seen
+data_flat$isSeen[data_flat$isSeen =="N/A"] <-"DNC"
+
 ## abundance
 data_flat$abundance <- data_flat$abundance
 
@@ -222,27 +203,29 @@ print(unique(data_flat$distanceband[!(data_flat$distanceband %in% WT_distBandTbl
 
 # CHECK duration
 data_flat$durationinterval <- lu_duration_interval$duration_description[match(data_flat$duration_interval, lu_duration_interval$duration_interval)]
-unique(data_flat$durationMethod) # "0-3-5-8-10min"  "0-5-8min"      "0-10min"       "0-3-5min"
+unique(data_flat$durationMethod) # "0-3-5-8-10min" "0-5min"        "0-5-8min"      "0-10min"       "0-3-5min"
 unique(data_flat$durationinterval)
+# Delete "before or after/incidental" "15-20min" . Don't fit protocol
+data_flat <- data_flat[!(data_flat$durationinterval %in% c("before or after/incidental", "15-20min")),]
 
 
 unique(data_flat$durationinterval[data_flat$durationMethod=="0-3-5-8-10min"]) # DON'T MATCH "0-5min" 
 #FIX
 data_flat$durationinterval[data_flat$durationMethod=="0-3-5-8-10min" & data_flat$durationinterval %in% c("0-5min")] <- "UNKNOWN"
 
+unique(data_flat$durationinterval[data_flat$durationMethod=="0-5min"]) # MATCH
 unique(data_flat$durationinterval[data_flat$durationMethod=="0-5-8min"]) # DON'T MATCH "3-5min" "0-3min"  "8-10min"
 #FIX "3-5min" "0-3min" and delete "8-10min" that is outside the protocol
 data_flat$durationinterval[data_flat$durationMethod=="0-5-8min" & data_flat$durationinterval %in% c("3-5min", "0-3min")] <- "0-5min"
-data_flat$durationinterval[data_flat$durationMethod=="0-5-8min" & data_flat$durationinterval %in% c("8-10min")] <- "before or after/incidental"
+data_flat <- data_flat[!(data_flat$durationMethod=="0-5-8min" & data_flat$durationinterval %in% c("8-10min")),] 
 
 unique(data_flat$durationinterval[data_flat$durationMethod=="0-10min"]) # DON'T MATCH "0-3min"      
 # FIX
 data_flat$durationinterval[data_flat$durationMethod=="0-10min" & data_flat$durationinterval %in% c("0-3min")] <- "0-10min"
-data_flat$durationinterval[data_flat$durationMethod=="0-10min" & data_flat$durationinterval %in% c("15-20min")] <- "before or after/incidental"
 
 unique(data_flat$durationinterval[data_flat$durationMethod=="0-3-5min"]) # MATCH
 
-# check if it follow WT duration code. Should only have before/after. We'll deal with that later
+# check if it follow WT duration code. Should be empty
 print(unique(data_flat$durationinterval[!(data_flat$durationinterval %in% WT_durBandTbl$duration_interval_type)]))
 
 data_flat$raw_distance_code <- data_flat$distance_band
@@ -260,8 +243,6 @@ data_flat$flyover <- data_flat$flyover
 data_flat$displaytype <- data_flat$displaytype
 data_flat$nestevidence <- data_flat$nestevidence
 data_flat$behaviourother <- data_flat$behaviourother
-
-
 
 #--------------------------------------------------------------
 #
@@ -282,8 +263,8 @@ for (x in dataset_code) {
   location <- s_location[s_location$project==x,]
   WTlocation <- c("location", "latitude", "longitude")
   
-  # Remove duplicated location
-  location_tbl <- location[!duplicated(location[,c("location")]), WTlocation] # 
+  #WTlocation <- c("location", "latitude", "longitude", "bufferRadiusMeters", "elevationMeters", "isHidden", "trueCoordinates", "comments")
+  location_tbl <- location[!duplicated(location[,WTlocation]), WTlocation] # 
   location_tbl <- subset(location_tbl,location_tbl$location %in% data_flat$location)
   
   write.csv(location_tbl, file= file.path(out_dir, paste0(x,"_location.csv")), row.names = FALSE, na = "")
@@ -304,11 +285,8 @@ for (x in dataset_code) {
   
   #---SURVEY
   survey_flat <- data_flat[data_flat$project==x,]
-  # Delete "before or after/incidental" "15-20min" . Don't fit protocol
-  survey <- subset(survey_flat, !(survey_flat$durationinterval %in% c("before or after/incidental")))
-  
   # Sum obs that are the same based on WildTrax field
-  survey_tbl <- survey %>% 
+  survey_tbl <- survey_flat %>% 
             group_by(location, surveyDateTime, durationMethod, distanceMethod, observer, species, distanceband, durationinterval, isHeard, isSeen, comments) %>%
     dplyr::summarise(abundance = sum(abundance), .groups= "keep")
   
@@ -319,23 +297,17 @@ for (x in dataset_code) {
   survey_out <- file.path(out_dir, paste0(x,"_survey.csv"))
   #drive_upload(media = survey_out, path = as_id(dr_dataset_code), name = paste0(x,"_survey.csv"), overwrite = TRUE) 
   
+  species <-sort(unique(survey_flat$species_name))
+  write.csv(species, file= file.path(out_dir, paste0(x,"_speciesList.csv")), row.names = FALSE)
+  
   #---EXTENDED
-  extended_tbl <- survey_flat %>% 
-    group_by(organization, project, location, surveyDateTime, species, distanceband, durationinterval, site, station, utmZone, easting, 
-             northing, missinginlocations, time_zone, data_origin, missinginvisit, pkey_dt, survey_time,
-             survey_year, rawObserver, original_species, scientificname, raw_distance_code, raw_duration_code, 
-             originalBehaviourData, missingindetections, pc_vt, pc_vt_detail, age, fm, group, flyover, 
-             displaytype, nestevidence, behaviourother, atlas_breeding_code) %>%
-    dplyr::summarise(ind_count = sum(abundance), .groups= "keep")
-  
-  
-  Extended <- c("organization", "project","location", "surveyDateTime", "species", "ind_count", "distanceband", "durationinterval", "site", "station", "utmZone", "easting", 
+  Extended <- c("organization", "project","location", "surveyDateTime", "species", "distanceband", "durationinterval", "site", "station", "utmZone", "easting", 
               "northing", "missinginlocations", "time_zone", "data_origin", "missinginvisit", "pkey_dt", "survey_time",
               "survey_year", "rawObserver", "original_species", "scientificname", "raw_distance_code", "raw_duration_code", 
               "originalBehaviourData", "missingindetections", "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", 
               "displaytype", "nestevidence", "behaviourother")
-  extended_tbl <- extended_tbl[!duplicated(extended_tbl[,Extended]), Extended] 
-  write.csv(extended_tbl, file.path(out_dir, paste0(x, "_extended.csv")), quote = FALSE, row.names = FALSE, na = "")
+  extended_tbl <- survey_flat[!duplicated(survey_flat[,Extended]), Extended] 
+  write.csv(extended_tbl, file.path(out_dir, paste0(x, "_extended.csv")), quote = FALSE, row.names = FALSE)
   extended_out <- file.path(out_dir, paste0(x,"_extended.csv"))
   #drive_upload(media = extended_out, path = as_id(dr_dataset_code), name = paste0(x,"_extended.csv"), overwrite = TRUE) 
   
@@ -350,4 +322,3 @@ for (x in dataset_code) {
   write_lines(nrow_survey, file.path(out_dir, paste0(x, "_stats.csv")), append= TRUE)
 }
   
-
