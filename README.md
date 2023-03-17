@@ -299,9 +299,9 @@ Common Visit Table Errors for Unrequired Fields:
 
 
 ## 3. SURVEY TABLE
-This is the third file that includes the point count data. 
+This is the third file that includes the point count data. No fly-over data should be included in the data upload. 
 
-The **SURVEY** attributes identify protocols, species, abundance, and time of the observations. No fly-over data should be uploaded in WildTrax. 
+The **SURVEY** attributes identify protocols, species, abundance, and time of the observations.  
 
 The **location** field:
 | Field   | Format   | Description   | Required |
@@ -309,7 +309,7 @@ The **location** field:
 | location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
 
 Common **location** field errors:
-* The location is not written exactly as it appears in the location file.
+* The **location** is not written exactly as it appears in the location file.
 
 
 
@@ -326,7 +326,7 @@ Common **surveyDateTime** field errors:
 The **durationMethod** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
-| durationMethod     | Text | The duration method used the count-remove species from the survey. Refer to [duration_method_codes table] (https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/duration_method_codes.csv)  | YES |
+| durationMethod     | Text | The duration method used the count-remove species from the survey. Refer to [duration_method_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/duration_method_codes.csv)  | YES |
 
 Common **durationMethod** field errors:
 * NOTE: You can request to add a new duration method if the one that was used for the project is not already in WildTrax. Locations within a project can't use different **durationMethod** for the same surveyDateTime. For example, a specie observed on a specific location/surveyDateTime need to have the same **durationMethod** across all species observed at that location/surveyDateTime. 
@@ -360,6 +360,7 @@ The **species** field:
 
 Common **species** field errors:
 * NOTE: Individuals from the same species observed at the same location, same day, same distance band and duration interval MUST HAVE THEIR ABUNDANCE SUMMED in the same line. Duplicate entries based on location, species, surveyDateTime, distanceband and durationinterval are not allowed. 
+*  A visit without observation should have an entry created in the survey table with species = NONE, abundance = 0, durationinterval = UNKNOWN, distanceband = UNKNOWN.
 
 
 The **distanceband** field:
