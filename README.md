@@ -301,7 +301,7 @@ Common Visit Table Errors for Unrequired Fields:
 ## 3. SURVEY TABLE
 This is the third file that includes the point count data. 
 
-The **SURVEY** attributes identify protocols, species, abundance, and time of the observations.
+The **SURVEY** attributes identify protocols, species, abundance, and time of the observations. No fly-over data should be uploaded in WildTrax. 
 
 The **location** field:
 | Field   | Format   | Description   | Required |
@@ -329,7 +329,7 @@ The **durationMethod** field:
 | durationMethod     | Text | The duration method used the count-remove species from the survey. Refer to [duration_method_codes table] (https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/duration_method_codes.csv)  | YES |
 
 Common **durationMethod** field errors:
-* NOTE: You can request to add a new duration method if the one that was used for the project is not already in WildTrax.
+* NOTE: You can request to add a new duration method if the one that was used for the project is not already in WildTrax. Locations within a project can't use different **durationMethod** for the same surveyDateTime. For example, a specie observed on a specific location/surveyDateTime need to have the same **durationMethod** across all species observed at that location/surveyDateTime. 
 
 
 
@@ -339,7 +339,7 @@ The **distanceMethod** field:
 | distanceMethod     | Text | The distance band separation method used. Refer to [distance_method_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/distance_method_codes.csv)  | YES |
 
 Common **distanceMethod** field errors:
-* NOTE: You can request to add a new distance method if the one that was used for the project is not already in WildTrax.
+* NOTE: You can request to add a new distance method if the one that was used for the project is not already in WildTrax. Locations within a project can't use different **distanceMethod** for the same surveyDateTime. For example, a specie observed on a specific location/surveyDateTime need to have the same **distanceMethod** across all species observed at that location/surveyDateTime.
 
 
 
@@ -359,7 +359,7 @@ The **species** field:
 | species     | Text | AOU code used by WildTrax. See [species_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/species_codes.csv)   | YES |
 
 Common **species** field errors:
-* NOTE: Individuals from the same species observed at the same location, same day, same distance band and duration interval MUST HAVE THEIR ABUNDANCE SUMMED in the same line. Duplicate entries based on location, species, surveyDateTime distanceband and durationinterval are not allowed. 
+* NOTE: Individuals from the same species observed at the same location, same day, same distance band and duration interval MUST HAVE THEIR ABUNDANCE SUMMED in the same line. Duplicate entries based on location, species, surveyDateTime, distanceband and durationinterval are not allowed. 
 
 
 The **distanceband** field:
@@ -388,8 +388,8 @@ The **abundance** field:
 | abundance     | Numeric | Number of individual of a species with the same date, time, observer, isHeard, isSeen, distanceband and durationinterval information | YES |
 
 Common **abundance** field errors:
-* This must be an number. When the cell reads "too many to count", change it to 999.
-* You can't have duplicates of species at the same date, time, and location because there must be a single line for every species. If data is organized as every individual that was seen/heard per line, these must be summed (e.g., the total number of Black-capped Chickadees during that point count).
+* This must be an number. When the cell reads "too many to count" or UNKNOWN, change it to 999.
+* You can't have duplicates of species at the same date, time, distanceband, durationinterval and location because there must be a single line for every species. If data is organized as every individual that was seen/heard per line, these must be summed (e.g., the total number of Black-capped Chickadees during that point count).
 
 
 
