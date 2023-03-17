@@ -62,7 +62,7 @@ XYtbl <- file.path(dataDir,"stopsXY_july2022.csv")
 f_weather <- file.path(dataDir,"weather.csv")
 fiftystop <- file.path(dataDir,"50-StopData.zip")
 #species_lu <- file.path(project, "lookupTables/BBS_BAM-Avian-Species.xlsx")
-BBS_spTbl <- file.path(project, "lookupTables/BBS_BAM_speciesList.csv")
+BBS_spTbl <- read.csv(file.path(project, "lookupTables/speciesList.csv"), header= TRUE)
 
 #Download from GoogleDrive
 if (!file.exists(XYtbl)) {
@@ -82,8 +82,8 @@ if (!file.exists(fiftystop)) {
   lapply(flist,  function(x) {unzip(file.path(dataDir,folderName,version,x), exdir= dataDir)})
   
 }
-if (!file.exists(BBS_spTbl)) {
-  drive_download("lookupTable/BBS_BAM_speciesList.csv", path = species_lu)
+if (!file.exists(species_lu)) {
+  drive_download("lookupTable/BBS_BAM-Avian-Species.xlsx", path = species_lu)
 }
 
 #--------------------------------------------------------------
@@ -155,7 +155,7 @@ data_flat$crew <- NA
 data_flat$bait <- "None"
 data_flat$accessMethod <- NA
 data_flat$landFeatures <- NA
-data_flat$comments <- NA
+data_flat$comments <- "Include only visit with known XY locations"
 data_flat$wildtrax_internal_update_ts <- NA
 data_flat$wildtrax_internal_lv_id <- NA
 data_flat$time_zone <- NA
@@ -182,7 +182,7 @@ data_flat$survey_time <- as.character(data_flat$StartTime_BAM + ((data_flat$stop
 # Assign survey_time =="00:01:01" when does not meet one or more BBS weather, date, time, or route completion criteria
 data_flat$survey_time[is.na(data_flat$survey_time)] <- "00:01:01"
 data_flat$surveyDateTime <- paste(data_flat$visitDate, data_flat$survey_time)
-data_flat$comments <- paste0("route time interval: ", data_flat$StartTime, "-", data_flat$EndTime)
+data_flat$comments_visit <- paste0("route time interval: ", data_flat$StartTime, "-", data_flat$EndTime)
 ##Observer (internal ID number)
 data_flat$observer <- data_flat$ObsN
 data_flat$pkey_dt<- paste(data_flat$location, paste0(gsub("-", "", as.character(data_flat$visitDate)),"_", gsub(":", "", data_flat$survey_time)), data_flat$observer, sep=":")
@@ -197,7 +197,6 @@ visit_tbl <- data_flat
 ############################
 #### SURVEY TABLE ####
 ############################
-BBS_spTbl <- read.csv(BBS_spTbl, header = TRUE)
 ##Protocol duration  (3 min)
 data_flat$durationMethod <- "0-3min"
 print(unique(data_flat$durationMethod[!(data_flat$durationMethod %in% WT_durMethTbl$duration_method_type)]))
@@ -263,11 +262,11 @@ outPtCount <- lapply(fifties, function(x){
     
     
     #HEARD
-    fifty_BAM$isHeard <- NA
+    fifty_BAM$isHeard <- "DNC"
     #SEEN
-    fifty_BAM$isSeen <- NA
+    fifty_BAM$isSeen <- "DNC"
     #comments
-    #fifty_BAM$comments <- ""
+    fifty_BAM$comments <- ""
     fifty_BAM$rawObserver <- fifty_BAM$ObsN
     fifty_BAM$raw_distance_code <- "During the count, every bird seen within a 0.25-mile radius or heard is recorded."
     fifty_BAM$raw_duration_code <- "At each stop, a 3-minute point count is conducted."

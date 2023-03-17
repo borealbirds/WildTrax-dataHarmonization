@@ -123,6 +123,7 @@ data_flat$rawObserver <- data_flat$PC_Observer
 ## pkey_dt -- Concatenate, separated by colons: [location]:[visitDate]_[survey_time]:[localobservercode]; can also use raw observer or observer ID if needed
 data_flat$pkey_dt<- paste(data_flat$location, paste0(gsub("-", "", data_flat$visitDate),"_", gsub(":", "", data_flat$survey_time)), data_flat$observer, sep=":")
 
+
 ############################
 #### SURVEY TABLE ####
 ############################
@@ -210,7 +211,7 @@ if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
 #---LOCATION
 WTlocation <- c("location", "latitude", "longitude", "comments")
 location_tbl <- data_flat[!duplicated(data_flat[,WTlocation]), WTlocation] # 
-write.csv(location_tbl, file= file.path(out_dir, paste0(dataset_code,"_location.csv")), quote = FALSE, row.names = FALSE, na = "")
+write.csv(location_tbl, file= file.path(out_dir, paste0(dataset_code,"_location.csv")), quote = FALSE, row.names = FALSE)
 location_out <- file.path(out_dir, paste0(dataset_code,"_location.csv"))
 drive_upload(media = location_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_location.csv"), overwrite = TRUE) 
 
@@ -227,17 +228,29 @@ drive_upload(media = visit_out, path = as_id(dr_dataset_code), name = paste0(dat
 
 
 #---SURVEY
+WTsurvey <- c("location", "surveyDateTime", "durationMethod", "distanceMethod", "observer", "species", "distanceband",
+              "durationinterval", "abundance", "isHeard", "isSeen", "comments")
+survey_tbl <- data_flat[!duplicated(data_flat[,WTsurvey]), WTsurvey] 
+
+
+write.csv(survey_tbl, file= file.path(out_dir, paste0(dataset_code,"_survey.csv")), quote = FALSE, row.names = FALSE)
+
+#---
 survey_tbl <- data_flat %>% 
   group_by(location, surveyDateTime, durationMethod, distanceMethod, observer, species, distanceband,
-           durationinterval, isHeard, isSeen) %>% 
+           durationinterval, isHeard, isSeen, comments) %>% 
   dplyr::summarise(abundance = sum(abundance), .groups= "keep")
 
 WTsurvey <- c("location", "surveyDateTime", "durationMethod", "distanceMethod", "observer", "species", "distanceband",
-              "durationinterval", "abundance", "isHeard", "isSeen")
+              "durationinterval", "abundance", "isHeard", "isSeen", "comments")
 survey_tbl <- survey_tbl[!duplicated(survey_tbl[,WTsurvey]), WTsurvey] 
 write.csv(survey_tbl, file= file.path(out_dir, paste0(dataset_code,"_survey.csv")), quote = FALSE, row.names = FALSE, na = "")
 survey_out <- file.path(out_dir, paste0(dataset_code,"_survey.csv"))
 drive_upload(media = survey_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_survey.csv"), overwrite = TRUE) 
+
+
+
+
 
 #---EXTENDED
 extended_tbl <- data_flat %>% 
@@ -245,14 +258,14 @@ extended_tbl <- data_flat %>%
            northing, missinginlocations, time_zone, data_origin, missinginvisit, pkey_dt, survey_time,
            survey_year, rawObserver, original_species, scientificname, raw_distance_code, raw_duration_code, 
            originalBehaviourData, missingindetections, pc_vt, pc_vt_detail, age, fm, group, flyover, 
-           displaytype, nestevidence, behaviourother, comments) %>% 
+           displaytype, nestevidence, behaviourother) %>% 
   dplyr::summarise(abundance = sum(abundance), .groups= "keep")
 
 Extended <- c("organization", "project", "location", "surveyDateTime", "species", "abundance","distanceband", "durationinterval", "site", "station", "utmZone", "easting", 
               "northing", "missinginlocations", "time_zone", "data_origin", "missinginvisit", "pkey_dt", "survey_time",
               "survey_year", "rawObserver", "original_species", "scientificname", "raw_distance_code", "raw_duration_code", 
               "originalBehaviourData", "missingindetections", "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", 
-              "displaytype", "nestevidence", "behaviourother", "comments")
+              "displaytype", "nestevidence", "behaviourother")
 extended_tbl <- extended_tbl[!duplicated(extended_tbl[,Extended]), Extended] 
 write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_extended.csv")), quote = FALSE, row.names = FALSE)
 extended_out <- file.path(out_dir, paste0(dataset_code,"_extended.csv"))
