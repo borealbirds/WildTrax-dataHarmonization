@@ -435,4 +435,11 @@ Order of operations: Several ordered steps are required prior to uploading forma
 2. Create an Organization - You must have a user account to add yourself to Organizations. You must be an administrator of at least one organization in order to create a project (below). If you are adding data from a new Organization to WildTrax, follow the guidance found on the WildTrax website [here](https://www.wildtrax.ca/home/resources/guide/organizations/organization-management.html).
 3. Create a Project - Projects can only belong to a single Organization, and you must be an administrator of an Organization to be able to create a Project. With the project in "active" mode, you can set the project to "Private" or "Public", and give access to specific individuals as either 'Administrators' or 'Read Only Access'.
 
+Once your Project is created, you can upload the three required .csv files detailed in Section 4 (above).
+
+As described in Section 4 on reformatting data for WildTrax, WildTrax is expecting 3 files: 1) the Location Table, 2) the Visit Table, and 3) the Survey Table. 
+
+Click on the 'Manage' button within your Project and select 'Upload Surveys' to begin uploading the 3 required .csv files. 
+
+Once the data is uploaded, a 'QA Project Data' button will turn green. You must click this button for WildTrax to check that the data you're uploading fits the WildTrax standards. When you run into errors, see Section 4 (above) for a list of common issues that cause files to not meet the standards that WildTrax is expecting. 
 
