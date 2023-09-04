@@ -1,5 +1,5 @@
 # ---
-# Title: "Translate Breeing bird communities in the forests of the Liard River Valley, Yukon"
+# Title: "Translate Breeding bird communities in the forests of the Liard River Valley, Yukon"
 # Source dataset is an Excel spreadsheet
 # Author: "Ana Raymundo & Melina Houle"
 # Date: "December 31, 2022"
@@ -92,7 +92,8 @@ pc_raw$visitDate <- format(pc_raw$date, format = "%Y-%m-%d")
 pc_raw<- tidyr::separate(pc_raw, visitDate, c("year", "month", "day"), "-", remove = FALSE)
 
 
-pc_visit <- pc_raw %>%  dplyr::rename('location' = 'point') %>% 
+pc_visit <- pc_raw %>%  dplyr::rename('location' = 'point',
+                                      'observer' = 'obs-code') %>% 
   mutate(snowDepthMeters = NA, #derived from location at upload
          waterDepthMeters = NA,  #derived from location at upload
          landFeatures = NA,  #ARUs attributes
@@ -109,8 +110,8 @@ pc_visit <- pc_raw %>%  dplyr::rename('location' = 'point') %>%
          survey_time = as.character(format(pc_raw$time, format = "%H:%M:%S")),
          survey_year = year,
          ## observer, observer_raw
-         observer = NA, ## should I add glue('{dataset_code}',TODO add a unique number to each observer??, sep= ':')
-         rawObserver = `obs-code`,
+         rawObserver = case_when(observer == 'CDE' ~ 'Cameron Eckert',
+                                 observer == 'PHS' ~ 'Pamela Sinclair'),
          pkey_dt = glue('{location}:{visitDate}:{survey_time}'))
 
 ##EXPORT

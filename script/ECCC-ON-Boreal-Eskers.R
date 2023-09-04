@@ -242,3 +242,4 @@ write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_extended.csv")
 extended_out <- file.path(out_dir, paste0(dataset_code,"_location.csv"))
 drive_upload(media = extended_tbl, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_location.csv"))
 
+
