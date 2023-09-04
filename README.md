@@ -174,11 +174,11 @@ In WildTrax, sharing can be either:
 Any detailed communication about the data sharing agreement should clearly reflect these options.
 
 
-# 3. Acquiring source data and related documentation that facilitates reformatting (step 4, below).
+# 3. Source data and related documentation that facilitates reformatting (step 4, below).
 
-Once a signed data sharing agreement has been acquired, data acquisition can take place.
+Historically for BAM, once a signed data sharing agreement has been acquired the data acquisition process can take place.
 
-All data acquired should be logged in the [template](https://github.com/MelinaHoule/WT-Integration/blob/345282009ddcbd465f07789eca1cc0b8ba78e13a/project_Integration.xlsx) as soon as you receive it. 
+All data acquired should be logged in the [template](https://github.com/MelinaHoule/WT-Integration/blob/345282009ddcbd465f07789eca1cc0b8ba78e13a/project_Integration.xlsx) as soon as it is received. 
 
 * Make sure the Organization exists. If not, create an entry.
 * Create a new project entry. Marked it as NS (Not Started). 
@@ -186,19 +186,260 @@ All data acquired should be logged in the [template](https://github.com/MelinaHo
 
 If you don't intend to process the data straight away, make sure you overview the data to document some attributes, have all tables that define attributes and values used. Some information will be answered by emails. Make sure you keep a copy by converting the email as a PDF and make it available in the respective project folder under "communication". 
 
-Overviewing the data includes:
+Overviewing the data includes verifying that:
 * Observations have XY coordinates.
 * Reference system of the coordinates is known.
 * Protocol is documented (can be a report, email exchange, or found in the db itself).
 * Species code definition is present. We cannot assume the species code used is the same as the one used by WildTrax. We need to check.
-* If behaviour data are present, make sure we have the meaning of the values.
 * Date and time is present.
 * Abundance is present.
 
-# 4. Reformatting the data for WildTrax.
-Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing chunk of codes. 
+Once verification has taken place, the WT-status of the data can be changed from 'NS' (for 'not started') to IP, for 'in progress' in the [template](https://github.com/MelinaHoule/WT-Integration/blob/345282009ddcbd465f07789eca1cc0b8ba78e13a/project_Integration.xlsx).
 
-An example of the expected upload format for the point count and definition of attributes are found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
+# 4. Reformatting the data for WildTrax.
+Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing of code. 
+
+For data to be uploaded to WildTrax, three hierarchical files are needed.
+
+Reformatting data for WildTrax can be challenging when data files are missing required fields, the fields are not filled in properly or are incomplete (according to WildTrax requirements), or the data was collected using a different documentation scheme. If data is being reformatted by BAM, team members communicate with the original data partner to acquire project metadata (e.g., documentation that can clarify how data was collected). 
+
+NOTE: WildTrax does not yet provide space for the storage of project metadata. Here we use the term **metadata** could include important information found in literature published using data from a project, explicit conditions for permission of use (e.g., what the data can be used for or not used for), or instructions on how to cite the data.
+
+Below, we describe what WildTrax is expecting in each of the three required files, the constraints that can cause upload errors and how to resolve them. 
+
+## 1. LOCATION TABLE
+The location table is the highest level in the hierarchy at the organization level. The location file comes first because it allows the organization to use the location for multiple projects without duplication. Each line in the location file will be the unique, and precise location for each point count station in TEXT format.
+
+The **LOCATION** attributes identify the geographic extent of the site. 
+
+The **location** field:
+| Field   | Format   | Description   | Required     |
+| :------- | :-------------- | :-------------- | :------------------|
+| location     | Text | Name of the physical place on the landscape where the data was collected. If not present in source data, create it using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
+
+Common **location** field errors:
+* A location might not be accepted because it includes characters that are not allowed (e.g., "*****", or "%").
+
+
+
+The **latitude** and **longitude** fields:
+| Field   | Format   | Description   | Required     |
+| :------- | :-------------- | :-------------- | :---------------- |
+| latitude     | Decimal degrees | NAD83, convert if otherwise | YES |
+| longitude     | Decimal degrees | NAD83, convert if otherwise | YES |
+
+Common **coordinate** fields errors:
+* This will not load if the fields are empty or NULL. Do not load any locations with missing coordinates.
+
+
+
+Location table unrequired fields:
+| Field   | Format   | Description   | Required     |
+| :------- | :-------------- | :-------------- | :---------------- |
+| elevationMeters     | Numeric | Elevation in meters. NULL if not collected. The upload will fill it  | NO |
+| bufferRadiusMeters     | Numeric | Radius of the buffer around the location (in meters). Use only if points need to be masked. NULL otherwise | NO |
+| isHidden     | Logical | t if points need to be masked  | NO |
+| trueCoordinates     | Logical | t if coordinates are not buffered | NO |
+| comments     | Text | Any comments related to locations. As needed | NO |
+| internal_wildtrax_id     | Numeric | Generated during the upload. Leave it blank | NO |
+| internal_update_ts     | Text | Generated during the upload. Leave it blank | NO |
+
+Common Location Table Errors for Unrequired Fields"
+
+
+
+
+
+
+
+## 2. VISIT TABLE
+This is the second level in the hierarchy at the project level. Visits occur at the date scale (YYYY-MM-DD). The location file has to come before the Visit file so that the visit can occur at the location. You cannot load to a location that has not previously been loaded to WildTrax. Each line in the visit file will have the location, written exactly as it appears in the location file, and the date in YYYY-MM-DD format.
+
+The **VISIT** attributes identify the date the survey was performed.
+The **location** field:
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
+
+Common **location** field errors:
+* The location does not match any previously loaded locations. In this case, check that the location file was loaded first. If it was, check that the spelling of the location is correct in the visit table.
+
+
+
+The **visitDate** field:
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| visitDate     | Text | The date of the survey (YYYY-MM-DD) | YES |
+
+Common **visitDate** field errors:
+* When there is no year, day or month listed, change these to January 1st 1900 (e.g., 1900-01-01).
+* When date doesn't exist (2014-06-31), change these to January 1st 1900 (e.g., 1900-01-01).
+
+
+
+Visit table unrequired fields:
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| snowDepthMeters     | Numeric | Generated during the upload. Leave it blank | NO |
+| waterDepthMeters     | Numeric | Generated during the upload. Leave it blank  | NO |
+| crew     | Text | Leave blank. ARUs field | NO |
+| bait     | Text | Use "None" for point count data  | NO |
+| accessMethod     | Text | Leave blank. ARUs field | NO |
+| landFeatures     | Text | Leave blank. ARUs field | NO |
+| comments     | Text | Any comments related to visit. As needed | NO |
+| wildtrax_internal_update_ts     | Text | Generated during the upload. Leave it blank | NO |
+| wildtrax_internal_lv_id     | Text | Generated during the upload. Leave it blank | NO |
+
+Common Visit Table Errors for Unrequired Fields:
+
+
+
+
+
+
+
+## 3. SURVEY TABLE
+This is the third file that includes the point count data. No fly-over data should be included in the data upload. 
+
+The **SURVEY** attributes identify protocols, species, abundance, and time of the observations.  
+
+The **location** field:
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
+
+Common **location** field errors:
+* The **location** is not written exactly as it appears in the location file.
+
+
+
+The **surveyDateTime** field:
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| surveyDateTime     | Text | YYYY-MM-DD HH:MM:SS, Concatenation of  visitDate  and time of survey; separated by space | YES |
+
+Common **surveyDateTime** field errors:
+* When there is no time listed, fill time with 00:00:01.
+
+
+
+The **durationMethod** field:
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| durationMethod     | Text | The duration method used the count-remove species from the survey. Refer to [duration_method_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/duration_method_codes.csv)  | YES |
+
+Common **durationMethod** field errors:
+* NOTE: You can request to add a new duration method if the one that was used for the project is not already in WildTrax. Locations within a project can't use different **durationMethod** for the same surveyDateTime. For example, a specie observed on a specific location/surveyDateTime need to have the same **durationMethod** across all species observed at that location/surveyDateTime. 
+
+
+
+The **distanceMethod** field:
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| distanceMethod     | Text | The distance band separation method used. Refer to [distance_method_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/distance_method_codes.csv)  | YES |
+
+Common **distanceMethod** field errors:
+* NOTE: You can request to add a new distance method if the one that was used for the project is not already in WildTrax. Locations within a project can't use different **distanceMethod** for the same surveyDateTime. For example, a specie observed on a specific location/surveyDateTime need to have the same **distanceMethod** across all species observed at that location/surveyDateTime.
+
+
+
+The **observer** field:
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| observer     | Text | The observer code who conducted the survey. When observer name are provided in the source data, we create a lookup table where observer name get a serial number assigned using this format:  [Dataset Code]_[serial number] | YES |
+
+Common **observer** field errors:
+* Can't be NULL. Must me of type TEXT. Default value is NA if information is not provided in the source data.
+* To anonymize the identities of individuals, BAM writes the name of the project and an integer for observer (e.g., [Dataset Code]_[serial number]).
+
+
+The **species** field:
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| species     | Text | AOU code used by WildTrax. See [species_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/species_codes.csv)   | YES |
+
+Common **species** field errors:
+* NOTE: Individuals from the same species observed at the same location, same day, same distance band and duration interval MUST HAVE THEIR ABUNDANCE SUMMED in the same line. Duplicate entries based on location, species, surveyDateTime, distanceband and durationinterval are not allowed. 
+*  A visit without observation should have an entry created in the survey table with species = NONE, abundance = 0, durationinterval = UNKNOWN, distanceband = UNKNOWN.
+
+
+The **distanceband** field:
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| distanceband     | Text | The distance band the species was detected in. Refer to [distance_band_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/duration_interval_codes.csv)   | YES |
+
+Common **distanceband** field errors:
+* NOTE: **distanceband** must follow the protocol given in **distanceMethod**. For example, if **distanceMethod** = 0m-50m-100m-INF can't have **distanceband** of 0m-100m. It needs to be either 0m-50m, 50m-100m, 100m-INF or UNKNOWN otherwise. 
+
+
+
+The **durationinterval** field:
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| durationinterval     | Text | The duration interval the species was detected in. Refer to duration_interval_codes table  | YES |
+
+Common **durationinterval** field errors:
+* NOTE: **durationinterval** must follow the protocol given in **durationMethod**. For example, if **durationMethod** = 0-3-5-10min can't have **durationinterval** of 0-5min. It needs to be either 0-3min, 0-5min, 5-10min or UNKNOWN otherwise. 
+
+
+
+The **abundance** field:
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| abundance     | Numeric | Number of individual of a species with the same date, time, observer, isHeard, isSeen, distanceband and durationinterval information | YES |
+
+Common **abundance** field errors:
+* This must be an number. When the cell reads "too many to count" or UNKNOWN, change it to 999.
+* You can't have duplicates of species at the same date, time, distanceband, durationinterval and location because there must be a single line for every species. If data is organized as every individual that was seen/heard per line, these must be summed (e.g., the total number of Black-capped Chickadees during that point count).
+
+
+
+The **isHeard** field:
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| isHeard     | Text | Was / were the bird(s) detected using a visual method (Yes, No or DNC). If no behaviour data, fill in as DNC except for NONE = null | YES |
+
+Common **isHeard** field errors:
+
+
+
+
+The **isSeen** field:
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| isSeen     | Text | Was / were the bird(s) detected using an auditory method (Yes, No or DNC). If no behaviour data, fill in as DNC except for NONE = null | YES |
+
+Common **isSeen** field errors:
+
+
+
+
+Survey table unrequired fields:
+| Field   | Format   | Description   | Required |
+| :------- | :-------------- | :-------------- | :---------------- |
+| comments     | Text | Any comments related to survey. As needed | NO |
+
+Common Survey Table Errors for Unrequired Fields:
+
+
+
+
+
+Templates for each file can be found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
+Examples for each file can be found under [examples](https://github.com/MelinaHoule/WT-Integration/tree/main/examples).
 
 
 # 5. Uploading the data to WildTrax.
+Order of operations: Several ordered steps are required prior to uploading formatted avian count data to WildTrax. Tutorials for these steps can be found on the WildTrax website [here](https://wildtrax.ca/home/resources/tutorials).
+1. Create an Account - This is the first step and is necessary prior to any other steps.
+2. Create an Organization - You must have a user account to add yourself to Organizations. You must be an administrator of at least one organization in order to create a project (below). If you are adding data from a new Organization to WildTrax, follow the guidance found on the WildTrax website [here](https://www.wildtrax.ca/home/resources/guide/organizations/organization-management.html).
+3. Create a Project - Projects can only belong to a single Organization, and you must be an administrator of an Organization to be able to create a Project. With the project in "active" mode, you can set the project to "Private" or "Public", and give access to specific individuals as either 'Administrators' or 'Read Only Access'.
+
+Once your Project is created, you can upload the three required .csv files detailed in Section 4 (above).
+
+As described in Section 4 on reformatting data for WildTrax, WildTrax is expecting 3 files: 1) the Location Table, 2) the Visit Table, and 3) the Survey Table. 
+
+Click on the 'Manage' button within your Project and select 'Upload Surveys' to begin uploading the 3 required .csv files. 
+
+Once the data is uploaded, a 'QA Project Data' button will turn green. You must click this button for WildTrax to check that the data you're uploading fits the WildTrax standards. When you run into errors, see Section 4 (above) for a list of common issues that cause files to not meet the standards that WildTrax is expecting. 
+

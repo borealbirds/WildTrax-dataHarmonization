@@ -1,0 +1,11 @@
+Fieldname,Mandatory field for WildTrax upload,Format,Description
+location,TRUE,Text,"The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified"
+latitude,TRUE,decimal degrees,"NAD83, create if these do no exist"
+longitude,TRUE,decimal degrees,"NAD83, create if these do no exist"
+elevationMeters,TRUE,Number,Elevation in meters. NULL if not collected 
+bufferRadiusMeters,TRUE,Number,Radius of the buffer around the location (in meters). Use only if points need to be masked. NULL otherwise
+isHidden,TRUE,LOGICAL,t if points need to be masked. 
+trueCoordinates,TRUE,LOGICAL,t if coordinates are not buffered. 
+comments,TRUE,Text,As needed. Any comments related to locations
+internal_wildtrax_id,TRUE,Number,Leave it blank. Generated during the upload 
+internal_update_ts,TRUE,Text,Leave it blank. Generated during the upload 

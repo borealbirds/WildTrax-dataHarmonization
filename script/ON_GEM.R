@@ -1,7 +1,7 @@
 # ---
-# title: "Translate Okanagan Edge Effects data"
-# author: "Elly Knight"
-# date: "July 14, 2022"
+# title: "Translate GEM data from MNRF (Rob Rempel)"
+# author: "Melina Houle"
+# date: "07 March, 2023"
 # Note on translation:
 # --  Fix distance band > 100m as UNKNOWN to fit protocol
 # --- Fix distance band > 250m as UNKNOWN to fit protocol
@@ -18,13 +18,6 @@ library(googledrive)
 wd <- "E:/MelinaStuff/BAM/WildTrax/WT-Integration"
 setwd(wd)
 
-organization = "Independent-Knight"
-dataset_code = "OKEDGE"
-dat <- "OK Database - PC data - Elly Knight.csv"
-pc <- "OK Database - PC info - Elly Knight.csv"
-plot <- "OK Database - plot info - Elly Knight.csv"
-site <- "OK Database - site info - Elly Knight.csv"
-lu <- "./lookupTables"
 WT_spTbl <- read.csv(file.path("./lookupTables/species_codes.csv"))
 colnames(WT_spTbl) <- c("species_common_name", "species_code", "scientific_name")
 WT_durMethTbl <- read.csv(file.path("./lookupTables/duration_method_codes.csv"), fileEncoding="UTF-8-BOM")
@@ -32,71 +25,78 @@ WT_distMethTbl <- read.csv(file.path("./lookupTables/distance_method_codes.csv")
 WT_durBandTbl <- read.csv(file.path("./lookupTables/duration_interval_codes.csv"), fileEncoding="UTF-8-BOM")
 WT_distBandTbl <- read.csv(file.path("./lookupTables/distance_band_codes.csv"), fileEncoding="UTF-8-BOM")
 
-#set working folder
+organization = "MNRFtemp"
+dataset_code = "MNRF"
+source_file <- "exportDataForBAM.xlsx"
+
+lu <- "./lookupTables"
+project <- file.path("./project", dataset_code)
+out_dir <- file.path("./out", dataset_code)    # where output dataframe will be exported
+if (!dir.exists(out_dir)) {
+  dir.create(out_dir)
+}
 project_dir <- file.path(wd, "project", dataset_code)
 if (!dir.exists(project_dir)) {
   dir.create(project_dir)
 }
-data_source <- file.path(project_dir, dat)
-if (!file.exists(data_source)) {
+data_db <- file.path(project_dir, source_file)
+if (!file.exists(data_db)) {
   #Download from GoogleDrive
-  drive_download(paste0("sourceData/", dat), path = data_source)
+  drive_download("sourceData/exportDataForBAM.xlsx", path = file.path(project_dir, source_file))
 }
-plot_source <- file.path(project_dir, plot)
-if (!file.exists(plot_source)) {
-  #Download from GoogleDrive
-  drive_download(paste0("sourceData/", plot), path = plot_source)
-}
-site_source <- file.path(project_dir, site)
-if (!file.exists(site_source)) {
-  #Download from GoogleDrive
-  drive_download(paste0("sourceData/", site), path = site_source)
-}
-pc_source <- file.path(project_dir, pc)
-if (!file.exists(pc_source)) {
-  #Download from GoogleDrive
-  drive_download(paste0("sourceData/", pc), path = pc_source)
-}
-
 out_dir <- file.path("./out", dataset_code)    # where output dataframe will be exported
 if (!dir.exists(out_dir)) {
   dir.create(out_dir)
 }
 
-site <- read.csv(site_source)
-plot <- read.csv(plot_source)
-pc <- read.csv(pc_source) 
-dat <- read.csv(data_source)
 
+#--------------------------------------------------------------
+#       LOAD
+#--------------------------------------------------------------
+s_data <- read_xlsx(data_db, sheet = "Sheet 1")
+
+                          
+temp <- s_data[!duplicated(s_data[,c("IDENT2","plotID","LATITUDE", "LONGITUDE")]), c("IDENT2","plotID","LATITUDE", "LONGITUDE")]
+
+
+length(unique(s_data$IDENT2))
+length(unique(s_data$plotID))
+
+temp[duplicated(temp[,c("LATITUDE", "LONGITUDE")]), c("LATITUDE", "LONGITUDE")]
+
+subset(temp, temp$LATITUDE == 49.94321 & temp$LONGITUDE ==-82.40988)
+
+#--------------------------------------------------------------
+#
+#       TRANSLATE
+#
+#--------------------------------------------------------------
 ############################
 #### LOCATION TABLE ####
 ############################
-
 #Read in template
-location.temp <- read_xlsx("template/Template-WT-1Location.xlsx")
-
-#Tidy raw data
-location.ok <- left_join(plot, site)
-
-#Reproject to lat long
-location.nad83 <- location.ok %>% 
-  st_as_sf(coords=c("UTM.E", "UTM.N"), crs=26911) %>% 
-  st_transform(crs=4326) %>% 
-  st_coordinates() %>% 
-  data.frame() %>% 
-  rename(longitude = X, latitude = Y)
-
-#Format
-location.all <- location.ok %>% 
-  cbind(location.nad83) %>% 
-  mutate(location = paste0("OKEDGE:", str_sub(Name, 1, 3), ":", Plot),
+location <- s_data  %>%
+  dplyr::group_by(LATITUDE, LONGITUDE, Ecoregion) %>%
+  dplyr::summarize(comments = paste(sort(unique(IDENT2)),collapse=", ")) %>%
+  dplyr::mutate(location = paste0('GEM:', 1:n()),
+         northing = NA,
+         easting = NA,
          elevationMeters = NA,
          bufferRadiusMeters = NA,
-         isHidden = FALSE,
-         trueCoordinates = TRUE,
-         comments = NA,
+         isHidden = NA,
+         trueCoordinates = NA,
          internal_wildtrax_id = NA,
-         internal_update_ts = NA)
+         internal_update_ts = NA) %>%
+  dplyr::rename(latitude = LATITUDE,
+                longitude = LONGITUDE) 
+
+
+#---LOCATION
+WTlocation <- c("location", "latitude", "longitude")
+
+# Remove duplicated location
+location_tbl <- location[!duplicated(location[,WTlocation]), WTlocation] 
+write.csv(location_tbl, file= file.path(out_dir, paste0(dataset_code,"_location.csv")), row.names = FALSE, na = "")
 
 ############################
 #### VISIT TABLE ####

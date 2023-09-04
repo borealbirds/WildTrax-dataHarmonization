@@ -1,0 +1,13 @@
+Fieldname,Mandatory field for WildTrax upload,Format,Description,Elligible value
+location,TRUE,Text,"The physical place on the landscape where the data was collected. Created using the concatenation of  [Dataset Code]:[SITE]:[Station], unless otherwise specified",
+surveyDateTime,TRUE,DateTime,"YYYY-MM-DD HH:MM:SS, Concatenation of  visitDate  survey_time; separated by space",
+durationMethod,TRUE,Text,The duration method used the count-remove species from the survey. Refer to duration_method_codes table ,
+distanceMethod,TRUE,Text,The distance band separation method used. Refer to distance_method_codes table ,
+observer,TRUE,Text,"The observer code who conducted the survey. When observer name are provided in the source data, we create a lookup table where observer name get a serial number assigned using this format:  [Dataset Code]_[serial number]",
+species,TRUE,Text,AOU code used by WildTrax. See species codes table,
+distanceband,TRUE,Text,The distance band the species was detected in. Refer to distance_band_codes table ,
+durationinterval,TRUE,Text,The duration interval the species was detected in. Refer to duration_interval_codes table ,
+abundance,TRUE,Number,"Number of individual of a species with the same date, time, observer, isHeard, isSeen, distanceband and durationinterval information",
+isHeard,TRUE,Text,"Was / were the bird(s) detected using a visual method (Yes, No or DNC). If no behaviour data, fill in as DNC except for NONE = null",
+isSeen,TRUE,Text,"Was / were the bird(s) detected using an auditory method (Yes, No or DNC). If no behaviour data, fill in as DNC except for NONE = null",
+comments,TRUE,Text,As needed,

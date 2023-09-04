@@ -1,0 +1,12 @@
+Fieldname,Mandatory field for WildTrax upload,Format,Description
+location,TRUE,Text,"The physical place on the landscape where the data was collected. Created using the concatenation of  [Dataset Code]:[SITE]:[Station], unless otherwise specified"
+visitDate,TRUE,Date,The date of the survey (YYYY-MM-DD)
+snowDepthMeters,TRUE,Number,Leave blank. ARUs field
+waterDepthMeters,TRUE,Number,Leave blank. ARUs field
+crew,TRUE,Text,Leave blank. ARUs field
+bait,TRUE,Text,"Use ""None"" for point count data"
+accessMethod,TRUE,Text,Leave blank. ARUs field
+landFeatures,TRUE,Text,Leave blank. ARUs field
+comments,TRUE,Text,As needed. Any comments related to visits
+wildtrax_internal_update_ts,TRUE,Text,Leave blank. Generated during the upload
+wildtrax_internal_lv_id,TRUE,Number,Leave blank. Generated during the upload
