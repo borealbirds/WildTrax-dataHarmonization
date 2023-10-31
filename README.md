@@ -120,9 +120,21 @@ Any detailed communication about the data sharing agreement should clearly refle
 <a name=Dataacquisition></a>
 ## Acquisition of source data and related documentation
 
-All data acquired and processed by BAM should be logged in the [project_integration table](https://docs.google.com/spreadsheets/d/1x5fCmUEPFigLrT-t1KcxGTCkfQTce1gF/edit#gid=651260019) as soon as it is received. Data processed by the data contributor himself do not need to be logged in the project_integration table. 
+All data acquired and processed by BAM should be stored on the BAM.SharedDrive under their organization/Preject name in the [sourceData folder](https://drive.google.com/drive/folders/1IGI0KLtCkGStspOBi_upXNaOpCz_sC5o). The folder structure of a project should look like :
+sourceData/  
+├─CWS-ON/  
+│ ├─ECCC-ON-Boreal-Eskers/  
+│ │ ├─archived/  
+│ │ ├─communication/    
+│ │ └─sourceData/  
+│ └─ECCC-ON-Between-Rivers/  
+│ │ ├─.../ 
+│ ├─.../
+├─CWS-QC/  
+│ ├─.../
+The project should also be logged in the [project_Integration table](https://docs.google.com/spreadsheets/d/1x5fCmUEPFigLrT-t1KcxGTCkfQTce1gF/edit#gid=651260019) as soon as it is received. 
 
-In the project_integration table: 
+In the project_Integration table: 
 * Make sure the Organization exists. If not, create an entry.
 * Create a new project entry. Marked it as NS (Not Started). 
 * Create a new PartnerContactInfo entry for the project
@@ -137,7 +149,7 @@ Overviewing the data includes verifying that:
 * Date and time is present.
 * Abundance is present.
 
-Once verification has taken place, the WT-status of the data can be changed from 'NS' (for 'not started') to IP, for 'in progress' in the [template](https://github.com/MelinaHoule/WT-Integration/blob/345282009ddcbd465f07789eca1cc0b8ba78e13a/project_Integration.xlsx).
+Once verification has taken place, the WT-status of the data can be changed from 'NS' (for 'not started') to IP, for 'in progress' in the [project_Integration table](https://docs.google.com/spreadsheets/d/1x5fCmUEPFigLrT-t1KcxGTCkfQTce1gF/edit#gid=651260019).
 
 <a name=Reformatting></a>
 ## Harmonization of the data into WildTrax format
