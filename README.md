@@ -36,17 +36,17 @@ The Directory folder of the working directory is presented below. Sub-folder "pr
 
 <a href="#Introduction">Introduction</a>
 
-<a href="#Identification">Identifying avian count data</a>
+<a href="#Identification">Identification of avian count data</a>
 
-<a href="#Communication">Communicating with the data contributor</a>
+<a href="#Communication">Communication with the data contributor</a>
 
-<a href="#Acquisition">Acquiring a data sharing agreement</a>
+<a href="#Acquisition">Acquisition of data sharing agreement</a>
 
-<a href="#Dataaquisition">Acquiring source data and related documentation that facilitates reformatting (step 4, below)</a>
+<a href="#Dataaquisition">Acquisition of source data and related documentation</a>
 
-<a href="#Reformatting">Reformatting the data for WildTrax</a>
+<a href="#Reformatting">Harmonization of the data into WildTrax format</a>
 
-<a href="#Uploading">Uploading the data to WildTrax</a>
+<a href="#Uploading">Upload process in WildTrax</a>
 
 
 <a name=Introduction></a>
@@ -57,7 +57,8 @@ The avian count data intake process involves six main steps (numbered 0-5). Here
 
 
 <a name=Identification></a>
-## Identifying avian count data.
+## Identification of avian count data
+
 The first main objective of the Boreal Avian Modelling Project (hereafter, BAM), is to assemble, harmonize, and archive standardized bird survey data. See more [here](https://borealbirds.ualberta.ca/about-us/vision-mission-values/). 
 
 **What kind of data does BAM assemble, harmonize, and archive?**
@@ -93,7 +94,7 @@ When reaching out to potentail data contributors, the following email templates 
 
 
 <a name=Acquisition></a>
-## Acquiring a data sharing agreement. 
+## Acquisition of data sharing agreement 
 
 A data sharing agreement must be signed prior to working with a data partner to upload their data to WildTrax. You can contact the data partner to share the data sharing agreement document using [this email template](https://docs.google.com/document/d/1wYuIfD_QzuIyFa36PDBem7sq_Y6t1v7PyQf1GmCLWnw) and attach the data sharing agreement the data partner need to fill and sign using this [template](https://docs.google.com/document/d/1wxYQldMbqgGW8wqHueOrnHFQ361n3TI9/edit#heading=h.gjdgxs)
 
@@ -117,7 +118,7 @@ In WildTrax, sharing can be either:
 Any detailed communication about the data sharing agreement should clearly reflect these options.
 
 <a name=Dataacquisition></a>
-## Source data and related documentation that facilitates reformatting (step 4, below).
+## Acquisition of source data and related documentation
 
 Historically for BAM, once a signed data sharing agreement has been acquired the data acquisition process can take place.
 
@@ -140,7 +141,8 @@ Overviewing the data includes verifying that:
 Once verification has taken place, the WT-status of the data can be changed from 'NS' (for 'not started') to IP, for 'in progress' in the [template](https://github.com/MelinaHoule/WT-Integration/blob/345282009ddcbd465f07789eca1cc0b8ba78e13a/project_Integration.xlsx).
 
 <a name=Reformatting></a>
-## Reformatting the data for WildTrax.
+## Harmonization of the data into WildTrax format
+
 Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing of code. 
 
 For data to be uploaded to WildTrax, three hierarchical files are needed.
@@ -373,7 +375,8 @@ Templates for each file can be found under [template](https://github.com/MelinaH
 Examples for each file can be found under [examples](https://github.com/MelinaHoule/WT-Integration/tree/main/examples).
 
 <a name=Uploading></a>
-## Uploading the data to WildTrax.
+## Upload process in WildTrax
+
 Order of operations: Several ordered steps are required prior to uploading formatted avian count data to WildTrax. Tutorials for these steps can be found on the WildTrax website [here](https://wildtrax.ca/home/resources/tutorials).
 1. Create an Account - This is the first step and is necessary prior to any other steps.
 2. Create an Organization - You must have a user account to add yourself to Organizations. You must be an administrator of at least one organization in order to create a project (below). If you are adding data from a new Organization to WildTrax, follow the guidance found on the WildTrax website [here](https://www.wildtrax.ca/home/resources/guide/organizations/organization-management.html).
