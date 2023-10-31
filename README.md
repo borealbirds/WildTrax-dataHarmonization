@@ -120,10 +120,9 @@ Any detailed communication about the data sharing agreement should clearly refle
 <a name=Dataacquisition></a>
 ## Acquisition of source data and related documentation
 
-Historically for BAM, once a signed data sharing agreement has been acquired the data acquisition process can take place.
+All data acquired and processed by BAM should be logged in the [project_integration table](https://docs.google.com/spreadsheets/d/1x5fCmUEPFigLrT-t1KcxGTCkfQTce1gF/edit#gid=651260019) as soon as it is received. Data processed by the data contributor himself do not need to be logged in the project_integration table. 
 
-All data acquired should be logged in the [template](https://github.com/MelinaHoule/WT-Integration/blob/345282009ddcbd465f07789eca1cc0b8ba78e13a/project_Integration.xlsx) as soon as it is received. 
-
+In the project_integration table: 
 * Make sure the Organization exists. If not, create an entry.
 * Create a new project entry. Marked it as NS (Not Started). 
 * Create a new PartnerContactInfo entry for the project
