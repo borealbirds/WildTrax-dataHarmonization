@@ -230,10 +230,10 @@ The **VISIT** attributes identify the date the survey was performed.
 | comments     | Text | Any comments related to visit. As needed | NO |
 | wildtrax_internal_update_ts     | Text | Generated during the upload. Leave it blank | NO |
 | wildtrax_internal_lv_id     | Text | Generated during the upload. Leave it blank | NO |
-| :------- | :-------------- | :-------------- | :---------------- |
 
 Common **location** field errors:
 * The location does not match any previously loaded locations. In this case, check that the location file was loaded first. If it was, check that the spelling of the location is correct in the visit table.
+  
 Common **visitDate** field errors:
 * When there is no year, day or month listed, change these to January 1st 1900 (e.g., 1900-01-01).
 * When date doesn't exist (2014-06-31), change these to January 1st 1900 (e.g., 1900-01-01).
