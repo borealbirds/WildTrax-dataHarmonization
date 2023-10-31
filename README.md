@@ -1,18 +1,18 @@
 # The Boreal Avian Modelling Project's WildTrax Integration Instructions for Processing Avian Count Data
 **** The documentation is in progress. Please feel free to add and edit text and sections. 
 
-# Citation
+## Citation
 When referencing any information from this repository or using data that was processed using this protocol, please cite this document.
 
 Citation: Mélina Houle, Maggie MacPherson, Ana Raymundo, Teegan Docherty. *The Boreal Avian Modelling Project's WildTrax Inegration Instructions for Processing Avian Count Data*. Version Number Scheme.
 
 IMPORTANT NOTE: If any authors are asked to give additional assistance, they should be invited to be listed co-authors on the product.
 
-# Version Number Scheme
+## Version Number Scheme
 The current version of these instructions are version 1.0 (Updated 08/02/2022).
 Minor improvements will increase the version number by a fraction of 0.1, while major updates trigger a whole number increase in version number.
 
-# Directory Structure
+## Directory Structure
 
 The Directory folder of the working directory is presented below. Sub-folder "project" and "out" aren't shared because they are often too large.  
 
