@@ -217,30 +217,10 @@ Common Location Table Errors for Unrequired Fields"
 This is the second level in the hierarchy at the project level. Visits occur at the date scale (YYYY-MM-DD). The location file has to come before the Visit file so that the visit can occur at the location. You cannot load to a location that has not previously been loaded to WildTrax. Each line in the visit file will have the location, written exactly as it appears in the location file, and the date in YYYY-MM-DD format.
 
 The **VISIT** attributes identify the date the survey was performed.
-The **location** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
 | location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
-
-Common **location** field errors:
-* The location does not match any previously loaded locations. In this case, check that the location file was loaded first. If it was, check that the spelling of the location is correct in the visit table.
-
-
-
-The **visitDate** field:
-| Field   | Format   | Description   | Required |
-| :------- | :-------------- | :-------------- | :---------------- |
 | visitDate     | Text | The date of the survey (YYYY-MM-DD) | YES |
-
-Common **visitDate** field errors:
-* When there is no year, day or month listed, change these to January 1st 1900 (e.g., 1900-01-01).
-* When date doesn't exist (2014-06-31), change these to January 1st 1900 (e.g., 1900-01-01).
-
-
-
-Visit table unrequired fields:
-| Field   | Format   | Description   | Required |
-| :------- | :-------------- | :-------------- | :---------------- |
 | snowDepthMeters     | Numeric | Generated during the upload. Leave it blank | NO |
 | waterDepthMeters     | Numeric | Generated during the upload. Leave it blank  | NO |
 | crew     | Text | Leave blank. ARUs field | NO |
@@ -250,8 +230,13 @@ Visit table unrequired fields:
 | comments     | Text | Any comments related to visit. As needed | NO |
 | wildtrax_internal_update_ts     | Text | Generated during the upload. Leave it blank | NO |
 | wildtrax_internal_lv_id     | Text | Generated during the upload. Leave it blank | NO |
+| :------- | :-------------- | :-------------- | :---------------- |
 
-Common Visit Table Errors for Unrequired Fields:
+Common **location** field errors:
+* The location does not match any previously loaded locations. In this case, check that the location file was loaded first. If it was, check that the spelling of the location is correct in the visit table.
+Common **visitDate** field errors:
+* When there is no year, day or month listed, change these to January 1st 1900 (e.g., 1900-01-01).
+* When date doesn't exist (2014-06-31), change these to January 1st 1900 (e.g., 1900-01-01).
 
 
 <a name=Survey></a>
