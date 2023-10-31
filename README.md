@@ -69,19 +69,21 @@ The BAM database was created by collating and harmonizing avian data from the Br
 If you have count data that you might want to contribute to BAM's projects, please [contact](mailto:bamp@ualberta.ca?subject=[GitHub]%20Count%20Data%20Contribution) BAM to discuss possible data contributions. To discuss contributing data from autonomous recording units (ARUs), please [contact](http://bioacoustic.abmi.ca/job-opportunities/contact/) the Bioacoustic Unit.
 
 <a name=Communication></a>
-## Communicating with the data contributor
+## Communication with the data contributor
 
 The majority of our communication  with data partners is by email. Although, many collaborations begin with in-person conversations at meetings. 
 
-When a discussion with a potential data contributor takes place, there should be a record of all commmunication with a data partner saved in BAM.SharedDrive/DataStuff/Avian.Data/WildTraxIntegration/Communications. All communications are stored in the same Google folder. This is so that any BAM staff and scientists can follow up with potential contributors so that data can be processed as efficiently as possible. 
+When a discussion with a potential data contributor takes place, there should be a record of all commmunication with a data partner saved in [BAM.SharedDrive](https://drive.google.com/drive/folders/1IC92Vg1Nrrw6astOXPZPoDUeRfHOy4IX). All communications are stored in the same Google folder. This is so that any BAM staff and scientists can follow up with potential contributors so that data can be processed as efficiently as possible. 
 
 For any spoken conversations, please keep a GoogleDoc record of the details, with the most recent conversation at the top of the document. 
 
+All communication saved on the BAM.SharedDrive should follow the *File naming protocol*:
 
-
-*File naming protocol* for documenting communication:
-
-The *file naming protocol* for these communications is to label them with the name of the organization, the word 'communication', and the date in MMDDYYYY format (e.g., United_States_Geological_Survey_communication_08012022). For GoogleDocs with multiple communications, use the MMDDYYYY format for the first date and then add a hyphen with the most recent communication date also in MMDDYYYY format (e.g., United_States_Geological_Survey_communication_08012022-08022022). Do not use short-forms because this creates room for error when any team members aren't familiar with a certain short form. When the data is coming from an individual, then the individual's full name should be used instead in the First_Last order (e.g., Elly Knight should be 'Elly_Knight'). Please take the time to upload every conversation on the day that it occrred, or as soon therafter as possible so that no information is lost.
+- Label the communication with the name of the organization, the word 'communication', and the date in MMDDYYYY format (e.g., United_States_Geological_Survey_communication_08012022).
+- For GoogleDocs with multiple communications, use the MMDDYYYY format for the first date and then add a hyphen with the most recent communication date also in MMDDYYYY format (e.g., United_States_Geological_Survey_communication_08012022-08022022).
+- Do not use short-forms because this creates room for error when any team members aren't familiar with a certain short form.
+- When the data is coming from an individual, the individual's full name should be used instead in the First_Last order (e.g., Elly Knight should be 'Elly_Knight').
+- Upload every conversation on the day that it occurred, or as soon therafter as possible so that no information is lost.
 
 When reaching out to potentail data contributors, the following email templates can be used:
 
