@@ -156,9 +156,13 @@ Once verification has taken place, the WT-status of the data can be changed from
 <a name=Reformatting></a>
 ## Harmonization of the data into WildTrax format
 
-Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing of code under the [script section](. 
+Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing of code under the [script section](https://github.com/borealbirds/WT-Integration/tree/main/script). 
 
-For data to be uploaded to WildTrax, three hierarchical files are needed.
+For data to be uploaded to WildTrax, three hierarchical files are needed:
+- <a href="#Location">Location table</a>
+- <a href="#Visit">Visit table</a>
+- <a href="#Survey">Survey table</a>
+
 
 Reformatting data for WildTrax can be challenging when data files are missing required fields, the fields are not filled in properly or are incomplete (according to WildTrax requirements), or the data was collected using a different documentation scheme. If data is being reformatted by BAM, team members communicate with the original data partner to acquire project metadata (e.g., documentation that can clarify how data was collected). 
 
@@ -166,6 +170,7 @@ NOTE: WildTrax does not yet provide space for the storage of project metadata. H
 
 Below, we describe what WildTrax is expecting in each of the three required files, the constraints that can cause upload errors and how to resolve them. 
 
+<a name=Location></a>
 ### 1. LOCATION TABLE
 The location table is the highest level in the hierarchy at the organization level. The location file comes first because it allows the organization to use the location for multiple projects without duplication. Each line in the location file will be the unique, and precise location for each point count station in TEXT format.
 
@@ -207,10 +212,7 @@ Common Location Table Errors for Unrequired Fields"
 
 
 
-
-
-
-
+<a name=Visit></a>
 ### 2. VISIT TABLE
 This is the second level in the hierarchy at the project level. Visits occur at the date scale (YYYY-MM-DD). The location file has to come before the Visit file so that the visit can occur at the location. You cannot load to a location that has not previously been loaded to WildTrax. Each line in the visit file will have the location, written exactly as it appears in the location file, and the date in YYYY-MM-DD format.
 
@@ -252,11 +254,7 @@ Visit table unrequired fields:
 Common Visit Table Errors for Unrequired Fields:
 
 
-
-
-
-
-
+<a name=Survey></a>
 ### 3. SURVEY TABLE
 This is the third file that includes the point count data. No fly-over data should be included in the data upload. 
 
