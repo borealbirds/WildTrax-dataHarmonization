@@ -37,17 +37,17 @@ The motivation for creating this repository was to share scripts, lookup tables 
 
 The avian count data intake process involves six main steps (numbered 0-5). Here, we introduce each step with text. When naming of projects, datasets, or files must occur, you will see *file naming protocol:* within each step. Please follow these file naming protocols precisely so that BAM can easily track and find all information easily and as needed. 
 
-<a href="#Identification">0. Identifying avian count data</a>
+<a href="#Identification">Identifying avian count data</a>
 
-<a href="#Communication">1. Communicating with the data contributor</a>
+<a href="#Communication">Communicating with the data contributor</a>
 
-<a href="#Acquisition">2. Acquiring a data sharing agreement</a>
+<a href="#Acquisition">Acquiring a data sharing agreement</a>
 
-<a href="#Dataaquisition">3. Acquiring source data and related documentation that facilitates reformatting (step 4, below)</a>
+<a href="#Dataaquisition">Acquiring source data and related documentation that facilitates reformatting (step 4, below)</a>
 
-<a href="#Reformatting">4. Reformatting the data for WildTrax</a>
+<a href="#Reformatting">Reformatting the data for WildTrax</a>
 
-<a href="#Uploading">5. Uploading the data to WildTrax</a>
+<a href="#Uploading">Uploading the data to WildTrax</a>
 
 
 <a name=Identification></a>
@@ -63,7 +63,7 @@ The BAM database was created by collating and harmonizing avian data from the Br
 If you have count data that you might want to contribute to BAM's projects, please [contact](mailto:bamp@ualberta.ca?subject=[GitHub]%20Count%20Data%20Contribution) BAM to discuss possible data contributions. To discuss contributing data from autonomous recording units (ARUs), please [contact](http://bioacoustic.abmi.ca/job-opportunities/contact/) the Bioacoustic Unit.
 
 <a name=Communication></a>
-# 1. Communicating with the data contributor
+## 1. Communicating with the data contributor
 
 The majority of our communication  with data partners is by email. Although, many collaborations begin with in-person conversations at meetings. 
 
@@ -85,7 +85,7 @@ When reaching out to potentail data contributors, the following email templates 
 
 
 <a name=Acquisition></a>
-# 2. Acquiring a data sharing agreement. 
+## 2. Acquiring a data sharing agreement. 
 
 A data sharing agreement must be signed prior to working with a data partner to upload their data to WildTrax. You can contact the data partner to share the data sharing agreement document using [this email template](https://docs.google.com/document/d/1wYuIfD_QzuIyFa36PDBem7sq_Y6t1v7PyQf1GmCLWnw) and attach the data sharing agreement the data partner need to fill and sign using this [template](https://docs.google.com/document/d/1wxYQldMbqgGW8wqHueOrnHFQ361n3TI9/edit#heading=h.gjdgxs)
 
@@ -109,7 +109,7 @@ In WildTrax, sharing can be either:
 Any detailed communication about the data sharing agreement should clearly reflect these options.
 
 <a name=Dataacquisition></a>
-# 3. Source data and related documentation that facilitates reformatting (step 4, below).
+## 3. Source data and related documentation that facilitates reformatting (step 4, below).
 
 Historically for BAM, once a signed data sharing agreement has been acquired the data acquisition process can take place.
 
@@ -132,7 +132,7 @@ Overviewing the data includes verifying that:
 Once verification has taken place, the WT-status of the data can be changed from 'NS' (for 'not started') to IP, for 'in progress' in the [template](https://github.com/MelinaHoule/WT-Integration/blob/345282009ddcbd465f07789eca1cc0b8ba78e13a/project_Integration.xlsx).
 
 <a name=Reformatting></a>
-# 4. Reformatting the data for WildTrax.
+## 4. Reformatting the data for WildTrax.
 Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing of code. 
 
 For data to be uploaded to WildTrax, three hierarchical files are needed.
@@ -143,7 +143,7 @@ NOTE: WildTrax does not yet provide space for the storage of project metadata. H
 
 Below, we describe what WildTrax is expecting in each of the three required files, the constraints that can cause upload errors and how to resolve them. 
 
-## 1. LOCATION TABLE
+### 1. LOCATION TABLE
 The location table is the highest level in the hierarchy at the organization level. The location file comes first because it allows the organization to use the location for multiple projects without duplication. Each line in the location file will be the unique, and precise location for each point count station in TEXT format.
 
 The **LOCATION** attributes identify the geographic extent of the site. 
@@ -188,7 +188,7 @@ Common Location Table Errors for Unrequired Fields"
 
 
 
-## 2. VISIT TABLE
+### 2. VISIT TABLE
 This is the second level in the hierarchy at the project level. Visits occur at the date scale (YYYY-MM-DD). The location file has to come before the Visit file so that the visit can occur at the location. You cannot load to a location that has not previously been loaded to WildTrax. Each line in the visit file will have the location, written exactly as it appears in the location file, and the date in YYYY-MM-DD format.
 
 The **VISIT** attributes identify the date the survey was performed.
@@ -234,7 +234,7 @@ Common Visit Table Errors for Unrequired Fields:
 
 
 
-## 3. SURVEY TABLE
+### 3. SURVEY TABLE
 This is the third file that includes the point count data. No fly-over data should be included in the data upload. 
 
 The **SURVEY** attributes identify protocols, species, abundance, and time of the observations.  
@@ -365,7 +365,7 @@ Templates for each file can be found under [template](https://github.com/MelinaH
 Examples for each file can be found under [examples](https://github.com/MelinaHoule/WT-Integration/tree/main/examples).
 
 <a name=Uploading></a>
-# 5. Uploading the data to WildTrax.
+## 5. Uploading the data to WildTrax.
 Order of operations: Several ordered steps are required prior to uploading formatted avian count data to WildTrax. Tutorials for these steps can be found on the WildTrax website [here](https://wildtrax.ca/home/resources/tutorials).
 1. Create an Account - This is the first step and is necessary prior to any other steps.
 2. Create an Organization - You must have a user account to add yourself to Organizations. You must be an administrator of at least one organization in order to create a project (below). If you are adding data from a new Organization to WildTrax, follow the guidance found on the WildTrax website [here](https://www.wildtrax.ca/home/resources/guide/organizations/organization-management.html).
