@@ -32,10 +32,8 @@ The Directory folder of the working directory is presented below. Sub-folder "pr
 ./template                              Example of output table structure, communication, ...
 </pre>
 
-# Introduction
-The motivation for creating this repository was to share scripts, lookup tables and templates that are needed for translating point count data into the WildTrax upload format. This document serves as a step-by-step guide for how to bring data into BAM's network of datasets that are uploaded to WildTrax. In other words, a cradle-to-WildTrax story of avian count data.
 
-The avian count data intake process involves six main steps (numbered 0-5). Here, we introduce each step with text. When naming of projects, datasets, or files must occur, you will see *file naming protocol:* within each step. Please follow these file naming protocols precisely so that BAM can easily track and find all information easily and as needed. 
+<a href="#Introduction">Introduction</a>
 
 <a href="#Identification">Identifying avian count data</a>
 
@@ -48,6 +46,13 @@ The avian count data intake process involves six main steps (numbered 0-5). Here
 <a href="#Reformatting">Reformatting the data for WildTrax</a>
 
 <a href="#Uploading">Uploading the data to WildTrax</a>
+
+
+<a name=Introduction></a>
+## Introduction
+The motivation for creating this repository was to share scripts, lookup tables and templates that are needed for translating point count data into the WildTrax upload format. This document serves as a step-by-step guide for how to bring data into BAM's network of datasets that are uploaded to WildTrax. In other words, a cradle-to-WildTrax story of avian count data.
+
+The avian count data intake process involves six main steps (numbered 0-5). Here, we introduce each step with text. When naming of projects, datasets, or files must occur, you will see *file naming protocol:* within each step. Please follow these file naming protocols precisely so that BAM can easily track and find all information easily and as needed. 
 
 
 <a name=Identification></a>
