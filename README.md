@@ -120,7 +120,8 @@ Any detailed communication about the data sharing agreement should clearly refle
 <a name=Dataacquisition></a>
 ## Acquisition of source data and related documentation
 
-All data acquired and processed by BAM should be stored on the BAM.SharedDrive under their organization/Preject name in the [sourceData folder](https://drive.google.com/drive/folders/1IGI0KLtCkGStspOBi_upXNaOpCz_sC5o). The folder structure of a project should look like :
+All data acquired and processed by BAM should be stored on the BAM.SharedDrive under their organization/Preject name in the [sourceData folder](https://drive.google.com/drive/folders/1IGI0KLtCkGStspOBi_upXNaOpCz_sC5o). The folder structure of a project should look like that (CWS-ON used as an example) :
+
 sourceData/  
 ├─CWS-ON/  
 │ ├─ECCC-ON-Boreal-Eskers/  
@@ -132,6 +133,7 @@ sourceData/
 │ ├─.../
 ├─CWS-QC/  
 │ ├─.../
+
 The project should also be logged in the [project_Integration table](https://docs.google.com/spreadsheets/d/1x5fCmUEPFigLrT-t1KcxGTCkfQTce1gF/edit#gid=651260019) as soon as it is received. 
 
 In the project_Integration table: 
@@ -154,7 +156,7 @@ Once verification has taken place, the WT-status of the data can be changed from
 <a name=Reformatting></a>
 ## Harmonization of the data into WildTrax format
 
-Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing of code. 
+Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing of code under the [script section](. 
 
 For data to be uploaded to WildTrax, three hierarchical files are needed.
 
