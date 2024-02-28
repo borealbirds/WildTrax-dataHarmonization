@@ -1,18 +1,18 @@
-# The Boreal Avian Modelling Project's WildTrax Inegration Instructions for Processing Avian Count Data
+# The Boreal Avian Modelling Project's WildTrax Integration Instructions for Processing Avian Count Data
 **** The documentation is in progress. Please feel free to add and edit text and sections. 
 
-# Citation
+## Citation
 When referencing any information from this repository or using data that was processed using this protocol, please cite this document.
 
 Citation: Mélina Houle, Maggie MacPherson, Ana Raymundo, Teegan Docherty. *The Boreal Avian Modelling Project's WildTrax Inegration Instructions for Processing Avian Count Data*. Version Number Scheme.
 
 IMPORTANT NOTE: If any authors are asked to give additional assistance, they should be invited to be listed co-authors on the product.
 
-# Version Number Scheme
+## Version Number Scheme
 The current version of these instructions are version 1.0 (Updated 08/02/2022).
 Minor improvements will increase the version number by a fraction of 0.1, while major updates trigger a whole number increase in version number.
 
-# Directory Structure
+## Directory Structure
 
 The Directory folder of the working directory is presented below. Sub-folder "project" and "out" aren't shared because they are often too large.  
 
@@ -32,25 +32,33 @@ The Directory folder of the working directory is presented below. Sub-folder "pr
 ./template                              Example of output table structure, communication, ...
 </pre>
 
-# Introduction
+## Table of Contents
+
+<a href="#Introduction">Introduction</a>
+
+<a href="#Identification">Identification of avian count data</a>
+
+<a href="#Communication">Communication with the data contributor</a>
+
+<a href="#Acquisition">Acquisition of data sharing agreement</a>
+
+<a href="#Dataaquisition">Acquisition of source data and related documentation</a>
+
+<a href="#Reformatting">Harmonization of the data into WildTrax format</a>
+
+<a href="#Uploading">Upload process in WildTrax</a>
+
+
+<a name=Introduction></a>
+## Introduction
 The motivation for creating this repository was to share scripts, lookup tables and templates that are needed for translating point count data into the WildTrax upload format. This document serves as a step-by-step guide for how to bring data into BAM's network of datasets that are uploaded to WildTrax. In other words, a cradle-to-WildTrax story of avian count data.
 
 The avian count data intake process involves six main steps (numbered 0-5). Here, we introduce each step with text. When naming of projects, datasets, or files must occur, you will see *file naming protocol:* within each step. Please follow these file naming protocols precisely so that BAM can easily track and find all information easily and as needed. 
 
-0. Identifying avian count data.
 
-1. Communicating with the data contributor.
+<a name=Identification></a>
+## Identification of avian count data
 
-2. Acquiring a data sharing agreement.
-
-3. Acquiring source data and related documentation that facilitates revormatting (step 4, below).
-
-4. Reformatting the data for WildTrax.
-
-5. Uploading the data to WildTrax.
-
-
-# 0. Identifying avian count data.
 The first main objective of the Boreal Avian Modelling Project (hereafter, BAM), is to assemble, harmonize, and archive standardized bird survey data. See more [here](https://borealbirds.ualberta.ca/about-us/vision-mission-values/). 
 
 **What kind of data does BAM assemble, harmonize, and archive?**
@@ -61,98 +69,34 @@ The BAM database was created by collating and harmonizing avian data from the Br
 
 If you have count data that you might want to contribute to BAM's projects, please [contact](mailto:bamp@ualberta.ca?subject=[GitHub]%20Count%20Data%20Contribution) BAM to discuss possible data contributions. To discuss contributing data from autonomous recording units (ARUs), please [contact](http://bioacoustic.abmi.ca/job-opportunities/contact/) the Bioacoustic Unit.
 
-# 1. Communicating with the data contributor
+<a name=Communication></a>
+## Communication with the data contributor
 
 The majority of our communication  with data partners is by email. Although, many collaborations begin with in-person conversations at meetings. 
 
-When a discussion with a potential data contributor takes place, there should be a record of all commmunication with a data partner saved in BAM.SharedDrive/DataStuff/Avian.Data/WildTraxIntegration/Communications. All communications are stored in the same Google folder. This is so that any BAM staff and scientists can follow up with potential contributors so that data can be processed as efficiently as possible. 
+When a discussion with a potential data contributor takes place, there should be a record of all commmunication with a data partner saved in [BAM.SharedDrive](https://drive.google.com/drive/folders/1IC92Vg1Nrrw6astOXPZPoDUeRfHOy4IX). All communications are stored in the same Google folder. This is so that any BAM staff and scientists can follow up with potential contributors so that data can be processed as efficiently as possible. 
 
 For any spoken conversations, please keep a GoogleDoc record of the details, with the most recent conversation at the top of the document. 
 
+All communication saved on the BAM.SharedDrive should follow the *File naming protocol*:
 
+- Label the communication with the name of the organization, the word 'communication', and the date in MMDDYYYY format (e.g., United_States_Geological_Survey_communication_08012022).
+- For GoogleDocs with multiple communications, use the MMDDYYYY format for the first date and then add a hyphen with the most recent communication date also in MMDDYYYY format (e.g., United_States_Geological_Survey_communication_08012022-08022022).
+- Do not use short-forms because this creates room for error when any team members aren't familiar with a certain short form.
+- When the data is coming from an individual, the individual's full name should be used instead in the First_Last order (e.g., Elly Knight should be 'Elly_Knight').
+- Upload every conversation on the day that it occurred, or as soon therafter as possible so that no information is lost.
 
-*File naming protocol* for documenting communication:
+When reaching out to potentail data contributors, the following email templates can be used:
 
-The *file naming protocol* for these communications is to label them with the name of the organization, the word 'communication', and the date in MMDDYYYY format (e.g., United_States_Geological_Survey_communication_08012022). For GoogleDocs with multiple communications, use the MMDDYYYY format for the first date and then add a hyphen with the most recent communication date also in MMDDYYYY format (e.g., United_States_Geological_Survey_communication_08012022-08022022). Do not use short-forms because this creates room for error when any team members aren't familiar with a certain short form. When the data is coming from an individual, then the individual's full name should be used instead in the First_Last order (e.g., Elly Knight should be 'Elly_Knight'). Please take the time to upload every conversation on the day that it occrred, or as soon therafter as possible so that no information is lost.
-
-When reaching out to potentail data contributors, the following email templates can be used.
-
-
-
-GENERAL COLD CALL EMAIL
-
-Below is an example template that can be used when reaching out to a potential data contributor in the 'cold call' fashion. This is done, for example, when we're requesting data that we found out about from a third party, like by reading a journal article.
-
-From : [your institutional email address]
-Cc: bamp@ualberta.ca; houle.melina@gmail.com; tdochert@ualberta.ca; 
-
-Subject: Adding your avian count data to the Boreal Avian Modelling Project's platform on WildTrax
-
-Dear [data partner’s name], 
-
-I am contacting you to inquire about sharing your avian count data with the Boreal Avian Modelling (BAM) Project. We are an international scientific collaboration that develops and disseminates reliable, data-driven and model-based science and products to support migratory bird management and conservation across the boreal region of North America (read more [here](https://borealbirds.ca/about-us/)). My name is [your name], and I am a representative of BAM. I discovered your data [briefly, in one sentence, describe how data was discovered]. Data like yours has contributed to many important data products and research such as BAM's [large-scale bird density models](https://borealbirds.github.io/). **Would you be willing to share your avian count data with BAM?**
-
-BAM has recently developed a new data platform on [WildTrax](https://www.wildtrax.ca/home) to host avian point count data. WildTrax allows you, the data owner, to manage and access your data in real time. It also gives data owners tools to make the most of their data and integrate it with other data sets and data types (e.g., ARU data). WildTrax supports advanced data sharing options and you can make your data as private or public as you like. We can help you upload your data yourself or we can upload it for you, whatever is your preference.
-
-While BAM encourages open access, we understand the constraints of data sharing and realize that this is not always possible. BAM is part of a new initiative called [*CanAvian: the Canadian Network for Open Avian Data*](http://canavian.ca/), which is a collaboration among BAM, Environment and Climate Change Canada, Birds Canada, the Alberta Biodiversity Monitoring Institute (ABMI), and the Bioacoustic Unit. We are working to network Avian Data Portals across North America to support data access and sharing. Learn more about BAM’s open data initiative [here](TBD). 
-
-What is the next step? If you are willing to share your avian count data with BAM, we will make sure that it is stored and shared appropriately using a data sharing agreement. As we strive to efficiently encorporate count data, we would appreciate your response by [give the date 1 week from when email is sent] and we will send you our data sharing agreement to review before advancing with adding your data to WildTrax. 
-
-Sincerely, and on behalf of BAM,
-
-[your name]
-
-
-COLD CALL EMAIL FOR A PARTICULAR PROJECT
-
-Below is an example template that can be used when reaching out to a potential data contributor for a specific project in the 'cold call' fashion. 
-
-From : [your institutional email address]
-Cc: bamp@ualberta.ca; houle.melina@gmail.com; tdochert@ualberta.ca; 
-
-Subject: Inquiry about Bird Point Count Data
-
-Dear [data partner’s name], 
-
-I am writing to you from the Boreal Avian Modelling (BAM) Project. BAM is a collaborative research project that has spent years assembling a large avian point count database to support the development of avian population estimates, research and conservation in North America (read more [here](https://borealbirds.ca/about-us/)). However, we still have some important data gaps in our harmonized database. **We are currently looking for data from [the region their data is from] to support projects related to the [name of specific project focus; e.g., Eastern Habitat Joint Venture].** 
-
-BAM has a data mission to advance avian conservation and knowledge by enhancing data sharing, centralization and collaboration. We have recently moved our database to the [WildTrax](https://www.wildtrax.ca/home) data platform where it is now hosted on the “[point count sensor](https://www.wildtrax.ca/home/projects/data-discover.html)”. This platform provides enhanced data access, security, and management. WildTrax also allows for the processing and hosting of acoustic data (e.g., ARU data). This allows for the integration of ARU and point count data for analyses. BAM is working with data owners like yourself to get their data onto WildTrax. You can share your data as *publicly* or as *privately* as you wish. Private options range from fully private (i.e., only you can access it), to sharing with select individuals, to hiding records of species at risk. BAM can manage your data for you on WildTrax or you can manage it yourself, which gives you the ability to update your sharing preferences in real time. Let us know if you would like to know more about WildTrax or visit [WildTrax](https://www.wildtrax.ca/home). 
-
-**If you have data that you would be interested in sharing with BAM and/or placing on WildTrax then please let us know.** We have a team who can standardize the data so that it is in the right format to upload to WildTrax. We can accept data in most formats and from any year; however, it must be point count data and must have spatial coordinates. 
-
-Sincerely, and on behalf of BAM,
-
-[your name]
+- [GENERAL COLD CALL EMAIL](https://docs.google.com/document/d/1jmX8El6lT4MDDdXJQ__hjmn1jP5SSgcvhb1hf4VDWng)
+- [COLD CALL EMAIL FOR A PARTICULAR PROJECT](https://docs.google.com/document/d/1FE1UM77VAwtK3o7NJrjvebT2YVWt9Cby42RdFA_Cx54)
 
 
 
-DATA SHARING AGREEMENT EMAIL
+<a name=Acquisition></a>
+## Acquisition of data sharing agreement 
 
-Below is an example template that can be used when responding to the potential data contributor with the data sharing agreement. This is done, when the data partner requests to see the agreement or has elected to share their data. 
-
-From : [your institutional email address]
-Cc: bamp@ualberta.ca; houle.melina@gmail.com; tdochert@ualberta.ca; 
-
-Subject: BAM's data sharing agreement
-
-Dear [data partner’s name], 
-
-Thank you for your interest in sharing your avian count data with BAM! Please find attached the data sharing agreement [attach DataSharingAgreementTemplate.docx found in BAM.SharedDrive/DataStuff/Avian.Data/WildTraxIntegration/Communications]. 
-
-Once the signed data sharing agreement is returned, we can move forward with helping you to add your avian count data to WildTrax. :)
-
-Sincerely, and on behalf of BAM,
-
-[your name]
-
-
-
-
-# 2. Acquiring a data sharing agreement. 
-
-*****A template of Sharing agreement should be found in Template. 
-
-A data sharing agreement must be signed prior to working with a data partner to upload their data to WildTrax. 
+A data sharing agreement must be signed prior to working with a data partner to upload their data to WildTrax. You can contact the data partner to share the data sharing agreement document using [this email template](https://docs.google.com/document/d/1wYuIfD_QzuIyFa36PDBem7sq_Y6t1v7PyQf1GmCLWnw) and attach the data sharing agreement the data partner need to fill and sign using this [template](https://docs.google.com/document/d/1wxYQldMbqgGW8wqHueOrnHFQ361n3TI9/edit#heading=h.gjdgxs)
 
 Once we have a signed data sharing agreement with a data partner, this should be saved as a PDF at BAM.SharedDrive/DataStuff/Avian.Data/Contributions.Sharing using the following *file naming protocol*.
 
@@ -173,13 +117,26 @@ In WildTrax, sharing can be either:
 
 Any detailed communication about the data sharing agreement should clearly reflect these options.
 
+<a name=Dataacquisition></a>
+## Acquisition of source data and related documentation
 
-# 3. Source data and related documentation that facilitates reformatting (step 4, below).
+All data acquired and processed by BAM should be stored on the BAM.SharedDrive under their organization/Preject name in the [sourceData folder](https://drive.google.com/drive/folders/1IGI0KLtCkGStspOBi_upXNaOpCz_sC5o). The folder structure of a project should look like that (CWS-ON used as an example) :
 
-Historically for BAM, once a signed data sharing agreement has been acquired the data acquisition process can take place.
+sourceData/  
+├─CWS-ON/  
+│ ├─ECCC-ON-Boreal-Eskers/  
+│ │ ├─archived/  
+│ │ ├─communication/    
+│ │ └─sourceData/  
+│ └─ECCC-ON-Between-Rivers/  
+│ │ ├─.../ 
+│ ├─.../
+├─CWS-QC/  
+│ ├─.../
 
-All data acquired should be logged in the [template](https://github.com/MelinaHoule/WT-Integration/blob/345282009ddcbd465f07789eca1cc0b8ba78e13a/project_Integration.xlsx) as soon as it is received. 
+The project should also be logged in the [project_Integration table](https://docs.google.com/spreadsheets/d/1x5fCmUEPFigLrT-t1KcxGTCkfQTce1gF/edit#gid=651260019) as soon as it is received. 
 
+In the project_Integration table: 
 * Make sure the Organization exists. If not, create an entry.
 * Create a new project entry. Marked it as NS (Not Started). 
 * Create a new PartnerContactInfo entry for the project
@@ -194,12 +151,18 @@ Overviewing the data includes verifying that:
 * Date and time is present.
 * Abundance is present.
 
-Once verification has taken place, the WT-status of the data can be changed from 'NS' (for 'not started') to IP, for 'in progress' in the [template](https://github.com/MelinaHoule/WT-Integration/blob/345282009ddcbd465f07789eca1cc0b8ba78e13a/project_Integration.xlsx).
+Once verification has taken place, the WT-status of the data can be changed from 'NS' (for 'not started') to IP, for 'in progress' in the [project_Integration table](https://docs.google.com/spreadsheets/d/1x5fCmUEPFigLrT-t1KcxGTCkfQTce1gF/edit#gid=651260019).
 
-# 4. Reformatting the data for WildTrax.
-Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing of code. 
+<a name=Reformatting></a>
+## Harmonization of the data into WildTrax format
 
-For data to be uploaded to WildTrax, three hierarchical files are needed.
+Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing of code under the [script section](https://github.com/borealbirds/WT-Integration/tree/main/script). 
+
+For data to be uploaded to WildTrax, three hierarchical files are needed:
+- <a href="#Location">Location table</a>
+- <a href="#Visit">Visit table</a>
+- <a href="#Survey">Survey table</a>
+
 
 Reformatting data for WildTrax can be challenging when data files are missing required fields, the fields are not filled in properly or are incomplete (according to WildTrax requirements), or the data was collected using a different documentation scheme. If data is being reformatted by BAM, team members communicate with the original data partner to acquire project metadata (e.g., documentation that can clarify how data was collected). 
 
@@ -207,7 +170,8 @@ NOTE: WildTrax does not yet provide space for the storage of project metadata. H
 
 Below, we describe what WildTrax is expecting in each of the three required files, the constraints that can cause upload errors and how to resolve them. 
 
-## 1. LOCATION TABLE
+<a name=Location></a>
+### 1. LOCATION TABLE
 The location table is the highest level in the hierarchy at the organization level. The location file comes first because it allows the organization to use the location for multiple projects without duplication. Each line in the location file will be the unique, and precise location for each point count station in TEXT format.
 
 The **LOCATION** attributes identify the geographic extent of the site. 
@@ -248,38 +212,15 @@ Common Location Table Errors for Unrequired Fields"
 
 
 
-
-
-
-
-## 2. VISIT TABLE
+<a name=Visit></a>
+### 2. VISIT TABLE
 This is the second level in the hierarchy at the project level. Visits occur at the date scale (YYYY-MM-DD). The location file has to come before the Visit file so that the visit can occur at the location. You cannot load to a location that has not previously been loaded to WildTrax. Each line in the visit file will have the location, written exactly as it appears in the location file, and the date in YYYY-MM-DD format.
 
 The **VISIT** attributes identify the date the survey was performed.
-The **location** field:
 | Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
 | location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
-
-Common **location** field errors:
-* The location does not match any previously loaded locations. In this case, check that the location file was loaded first. If it was, check that the spelling of the location is correct in the visit table.
-
-
-
-The **visitDate** field:
-| Field   | Format   | Description   | Required |
-| :------- | :-------------- | :-------------- | :---------------- |
 | visitDate     | Text | The date of the survey (YYYY-MM-DD) | YES |
-
-Common **visitDate** field errors:
-* When there is no year, day or month listed, change these to January 1st 1900 (e.g., 1900-01-01).
-* When date doesn't exist (2014-06-31), change these to January 1st 1900 (e.g., 1900-01-01).
-
-
-
-Visit table unrequired fields:
-| Field   | Format   | Description   | Required |
-| :------- | :-------------- | :-------------- | :---------------- |
 | snowDepthMeters     | Numeric | Generated during the upload. Leave it blank | NO |
 | waterDepthMeters     | Numeric | Generated during the upload. Leave it blank  | NO |
 | crew     | Text | Leave blank. ARUs field | NO |
@@ -290,15 +231,16 @@ Visit table unrequired fields:
 | wildtrax_internal_update_ts     | Text | Generated during the upload. Leave it blank | NO |
 | wildtrax_internal_lv_id     | Text | Generated during the upload. Leave it blank | NO |
 
-Common Visit Table Errors for Unrequired Fields:
+Common **location** field errors:
+* The location does not match any previously loaded locations. In this case, check that the location file was loaded first. If it was, check that the spelling of the location is correct in the visit table.
+  
+Common **visitDate** field errors:
+* When there is no year, day or month listed, change these to January 1st 1900 (e.g., 1900-01-01).
+* When date doesn't exist (2014-06-31), change these to January 1st 1900 (e.g., 1900-01-01).
 
 
-
-
-
-
-
-## 3. SURVEY TABLE
+<a name=Survey></a>
+### 3. SURVEY TABLE
 This is the third file that includes the point count data. No fly-over data should be included in the data upload. 
 
 The **SURVEY** attributes identify protocols, species, abundance, and time of the observations.  
@@ -428,5 +370,19 @@ Common Survey Table Errors for Unrequired Fields:
 Templates for each file can be found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
 Examples for each file can be found under [examples](https://github.com/MelinaHoule/WT-Integration/tree/main/examples).
 
+<a name=Uploading></a>
+## Upload process in WildTrax
 
-# 5. Uploading the data to WildTrax.
+Order of operations: Several ordered steps are required prior to uploading formatted avian count data to WildTrax. Tutorials for these steps can be found on the WildTrax website [here](https://wildtrax.ca/home/resources/tutorials).
+1. Create an Account - This is the first step and is necessary prior to any other steps.
+2. Create an Organization - You must have a user account to add yourself to Organizations. You must be an administrator of at least one organization in order to create a project (below). If you are adding data from a new Organization to WildTrax, follow the guidance found on the WildTrax website [here](https://www.wildtrax.ca/home/resources/guide/organizations/organization-management.html).
+3. Create a Project - Projects can only belong to a single Organization, and you must be an administrator of an Organization to be able to create a Project. With the project in "active" mode, you can set the project to "Private" or "Public", and give access to specific individuals as either 'Administrators' or 'Read Only Access'.
+
+Once your Project is created, you can upload the three required .csv files detailed in Section 4 (above).
+
+As described in Section 4 on reformatting data for WildTrax, WildTrax is expecting 3 files: 1) the Location Table, 2) the Visit Table, and 3) the Survey Table. 
+
+Click on the 'Manage' button within your Project and select 'Upload Surveys' to begin uploading the 3 required .csv files. 
+
+Once the data is uploaded, a 'QA Project Data' button will turn green. You must click this button for WildTrax to check that the data you're uploading fits the WildTrax standards. When you run into errors, see Section 4 (above) for a list of common issues that cause files to not meet the standards that WildTrax is expecting. 
+
