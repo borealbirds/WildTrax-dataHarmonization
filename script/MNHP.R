@@ -10,27 +10,30 @@ library(dplyr) # mutate, %>%
 #library(utils) #read.csv
 #library(readxl) #read_excel
 #library(stringr) #str_replace_all
-#library(sf) #st_crs, st_as_sf, st_transform, st_drop_geometry
+library(sf) #st_crs, st_as_sf, st_transform, st_drop_geometry
 #library(purrr) #map
 #library(plyr) #rbind.fill
 library(googledrive) #drive_get, drive_mkdir, drive_ls, drive_upload
+library(googlesheets4)
 
 ## Initialize variables
 wd <- "E:/MelinaStuff/BAM/WildTrax/WT-Integration"
 setwd(wd)
 
-WT_spTbl <- read.csv(file.path("./lookupTables/species_codes.csv"))
-colnames(WT_spTbl) <- c("species_common_name", "species_code", "scientific_name")
-WT_durMethTbl <- read.csv(file.path("./lookupTables/duration_method_codes.csv"), fileEncoding="UTF-8-BOM")
-WT_distMethTbl <- read.csv(file.path("./lookupTables/distance_method_codes.csv"), fileEncoding="UTF-8-BOM")
-WT_durBandTbl <- read.csv(file.path("./lookupTables/duration_interval_codes.csv"), fileEncoding="UTF-8-BOM")
-WT_distBandTbl <- read.csv(file.path("./lookupTables/distance_band_codes.csv"), fileEncoding="UTF-8-BOM")
-
 organization <- "MSU"
 dataset <- "Michigan Northern Hardwood Project"
 dataset_code <- "MNHP"
+
+# Lookup Table
+WTpj_Tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1fqifS_E5O_IpW1B-UG_xthr9hzY6FIek-nFjCrt1G0w", sheet = "project")
 lu <- "./lookupTables"
-project <- file.path("./project", dataset_code)
+WT_spTbl <- read.csv(file.path(lu, "species_codes.csv"))
+colnames(WT_spTbl) <- c("species_common_name", "species_code", "scientific_name")
+WT_durMethTbl <- read.csv(file.path(lu, "duration_method_codes.csv"), fileEncoding="UTF-8-BOM")
+WT_distMethTbl <- read.csv(file.path(lu, "distance_method_codes.csv"), fileEncoding="UTF-8-BOM")
+WT_durBandTbl <- read.csv(file.path(lu, "duration_interval_codes.csv"), fileEncoding="UTF-8-BOM")
+WT_distBandTbl <- read.csv(file.path(lu, "distance_band_codes.csv"), fileEncoding="UTF-8-BOM")
+
 out_dir <- file.path("./out", dataset_code)    # where output dataframe will be exported
 if (!dir.exists(out_dir)) {
   dir.create(out_dir)
@@ -39,43 +42,59 @@ project_dir <- file.path(wd, "project", dataset_code)
 if (!dir.exists(project_dir)) {
   dir.create(project_dir)
 }
-data_db <- file.path(project_dir, "all_sites_xy.rds")
-if (!file.exists(data_db)) {
-  #Download from GoogleDrive
-  drive_download("sourceData/all_sites_xy.rds", path = file.path(project_dir, "all_sites_xy.rds"))
-  drive_download("sourceData/survey_data.rds", path = file.path(project_dir, "survey_data.rds"))
-  drive_download("sourceData/spp_codes.rds", path = file.path(project_dir, "spp_codes.rds"))
-  drive_download("sourceData/detection_data.rds", path = file.path(project_dir, "detection_data.rds"))
-  
-}
-out_dir <- file.path("./out", dataset_code)    # where output dataframe will be exported
-if (!dir.exists(out_dir)) {
-  dir.create(out_dir)
-}
 
 #--------------------------------------------------------------
 #       LOAD
 #--------------------------------------------------------------
+if (length(list.files(project_dir)) ==0) {
+  pid <- WTpj_Tbl %>%
+    filter(dataset_code =="MNHP") %>%
+    select("GSharedDrive location")
+  #Download from GoogleDrive
+  gd.list <- drive_ls(as.character(pid))
+  location_id <- gd.list %>%
+    filter(name =="all_sites_xy.rds") %>%
+    select("id")
+  drive_download(as_id(as.character(location_id)), path = file.path(project_dir, "all_sites_xy.rds"))
+  detection_id <- gd.list %>%
+    filter(name =="detection_data.rds") %>%
+    select("id")
+  drive_download(as_id(as.character(detection_id)), path = file.path(project_dir, "detection_data.rds"))
+  species_id <- gd.list %>%
+    filter(name =="spp_codes.rds") %>%
+    select("id")
+  drive_download(as_id(as.character(species_id)), path = file.path(project_dir, "spp_codes.rds"))
+  observer_id <- gd.list %>%
+    filter(name =="survey_data.rds") %>%
+    select("id")
+  drive_download(as_id(as.character(observer_id)), path = file.path(project_dir, "survey_data.rds"))
+}
+
 raw_location <- readRDS(file.path(project_dir, "all_sites_xy.rds"))
 raw_survey <- readRDS(file.path(project_dir, "detection_data.rds"))
 lu_observer <- readRDS(file.path(project_dir, "survey_data.rds"))
 lu_species <- readRDS(file.path(project_dir, "spp_codes.rds"))
-
 
 #--------------------------------------------------------------
 #
 #       TRANSLATE
 #
 #--------------------------------------------------------------
+# Transform
+# WildTrax CRS (EPSG: 4326)
+crs_WT <- st_crs(4326)
+
+raw_location_DD <- st_transform(raw_location, crs_WT)
+
 ############################
 #### LOCATION TABLE ####
 ############################
 #Format
-pc_location <- raw_location %>% 
+pc_location <- raw_location_DD %>% 
   select(Site, X_coord, Y_coord)  %>%
-  dplyr::rename(latitude = Y_coord,
-                longitude = X_coord) %>%
-  mutate(location = paste(dataset_code, Site, sep= "_"),
+  mutate(location = paste(dataset_code, Site, sep= ":"),
+         latitude = unlist(map(raw_location_DD$geometry,2)),
+         longitude = unlist(map(raw_location_DD$geometry,1)),
          station = Site,
          easting = NA,
          northing = NA,
@@ -100,7 +119,8 @@ pc_visit <- lu_observer %>%
                               rawObserver == "MIKE"  ~ "MNHP_obs05",
                               rawObserver == "EMM"  ~ "MNHP_obs06",
                               rawObserver == "CHANTALE" ~ "MNHP_obs07",
-                              rawObserver == "MELISSA" ~ "MNHP_obs08"),
+                              rawObserver == "MELISSA" ~ "MNHP_obs08",
+                              TRUE ~ "MNHP_obsunk"),
          time = as.character(format(as.POSIXct(sprintf("%04.0f", Time), format='%H%M'), format = "%H:%M:%S")),
          snowDepthMeters= NA,
          waterDepthMeters = NA,
@@ -127,12 +147,13 @@ data_flat <- merge(s_data, pc_visit, by = c("Site", "Date"), all = TRUE)
 data_flat <- subset(data_flat, !(is.na(longitude)))
 
 pc_survey <- data_flat %>% 
-  rename(site = Site) %>%
+  dplyr::rename(site = Site) %>%
   mutate(organization = organization,
          project = dataset,
          original_species = Speccode,
          visitDate = ifelse(is.na(surveyDate), "1900-01-01", as.character(surveyDate)),
          survey_time = ifelse(is.na(time), "00:00:01", time),
+         observer = ifelse(is.na(observer),"MNHP_obsunk", observer),
          pkey_dt = paste(location, paste0(gsub("-", "", as.character(Date)),"_", gsub(":", "", survey_time)), observer, sep=":"),
          surveyDateTime = paste(visitDate, survey_time),
          species = ifelse(Speccode %in% c("SPEC1", "SPEC2", "SPEC3"), "UNBI",
@@ -206,7 +227,7 @@ print(unique(pc_survey$durationinterval[!(pc_survey$durationinterval %in% WT_dur
 #       EXPORT
 #
 #--------------------------------------------------------------
-dr<- drive_get(paste0("toUpload/",organization))
+dr<- drive_get(paste0("toUpload/",organization), shared_drive = "BAM_Core")
 #Set GoogleDrive id
 if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
   dr_dataset_code <-drive_mkdir(dataset_code, path = as_id(dr), overwrite = NA)
@@ -260,16 +281,16 @@ extended_out <- file.path(out_dir, paste0(dataset_code,"_extended.csv"))
 drive_upload(media = extended_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_extended.csv"), overwrite = TRUE) 
   
 #---PROCESSING STATS
-write_lines(paste0("Organization: ", organization), file.path(out_dir, paste0(x, "_stats.csv")))
-write_lines(paste0("Project: ", x), file.path(out_dir, paste0(x, "_stats.csv")), append= TRUE)
+write_lines(paste0("Organization: ", organization), file.path(out_dir, paste0(dataset_code, "_stats.csv")))
+write_lines(paste0("Project: ", dataset_code), file.path(out_dir, paste0(dataset_code, "_stats.csv")), append= TRUE)
 nrow_location <- paste0("Number of locations: ", nrow(location_tbl))
-write_lines(nrow_location, file.path(out_dir, paste0(x, "_stats.csv")), append= TRUE)
+write_lines(nrow_location, file.path(out_dir, paste0(dataset_code, "_stats.csv")), append= TRUE)
 nrow_visit <- paste0("Number of visit: ", nrow(visit_tbl))
-write_lines(nrow_visit, file.path(out_dir, paste0(x, "_stats.csv")), append= TRUE)
+write_lines(nrow_visit, file.path(out_dir, paste0(dataset_code, "_stats.csv")), append= TRUE)
 nrow_survey <- paste0("Number of survey: ", nrow(survey_tbl))
-write_lines(nrow_survey, file.path(out_dir, paste0(x, "_stats.csv")), append= TRUE)
+write_lines(nrow_survey, file.path(out_dir, paste0(dataset_code, "_stats.csv")), append= TRUE)
 nrow_extended <- paste0("Number of extended: ", nrow(extended_tbl))
-write_lines(nrow_extended, file.path(out_dir, paste0(x, "_stats.csv")), append= TRUE)
+write_lines(nrow_extended, file.path(out_dir, paste0(dataset_code, "_stats.csv")), append= TRUE)
 
 
 
