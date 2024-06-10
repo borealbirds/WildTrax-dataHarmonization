@@ -5,8 +5,8 @@
 # Note on translation:
 # -- SpeciesID ==ZERO: No species observe. Delete 4 obs.
 # -- Some species aren't define in the species list provided by the FBMP, but are described in other documentation and they fit the WildTrax definition. 
-# -- in source data, Count is underestimate. Some column split the count into protocol. Protocol columns are filled but the total count haven't been reported in the count colum. 
-# -- That do not affect our translation of count since when protocol is present, count is derived from the proper protocol column. 
+# -- Count is sometimes underestimate. When possible, use Protocol columns to extract count. 
+# -- 73 obs have species with Count of 0. Those were deleted as we couldn't get info from the data owner. 
 
 #update.packages()
 library(googlesheets4)
@@ -15,6 +15,7 @@ library(terra)
 library(googledrive) #drive_get, drive_mkdir, drive_ls, drive_upload
 library(stringr)
 library(readr)
+library(tidyr)
 
 ## Initialize variables
 wd <- "E:/MelinaStuff/BAM/WildTrax/WT-Integration"
@@ -83,16 +84,13 @@ speciesList <- read.csv(file.path(project_dir, "FBMP_species_list.csv"), fileEnc
 #       Fix species list
 #
 #--------------------------------------------------------------
-# create specieslist
-spIDdetect <- unique(detection$SpeciesID) 
-
-spToCheck <- subset(spIDdetect, !(spIDdetect %in% speciesList$SpeciesID))
-#"GBHE" "NESP" "GRHE" "RNEP" "NOFL" "UNBU"  
-
+#
 species_check <- merge(speciesList, WT_spTbl, by.x ="SpeciesID", by.y ="species_code", all.x = TRUE)
 species_diff <- species_check %>%
   filter(English_Name != species_common_name | is.na(species_common_name)) %>%
   select(SpeciesID, English_Name, species_common_name)
+print(species_diff)
+#GNBH GTBH RPHE  SCJU  STSP  YSFL ZERO       
 
 # Fix detection prior to strat processing
 detection <- detection %>%
@@ -124,18 +122,21 @@ spLocation_pj <- as.data.frame(project(spLocation,"EPSG:4326"),  geom = "XY") # 
 pc_location <- spLocation_pj %>%
   dplyr::rename(longitude = x,
                 latitude = y) %>%
-  mutate(location = paste(dataset_code, SiteNumb_Station, sep= ":"))
+  mutate(location = paste0(dataset_code, ":", SiteID, StationID))
 
 ############################
 #### VISIT TABLE ####
 ############################
 pc_visit <- pc_location %>% 
-  select(location, longitude, latitude, Station, SiteNumber, Easting, Northing, UTM_Zone, Date, Time, VolunteerID, SpeciesID, Count, First5_In, First5_Out, Second5_In, Second5_Out, Year) %>% 
+  select(location, longitude, latitude, StationID, SiteID, Easting, Northing, UTM_Zone, Date, Time, VolunteerID, SpeciesID, Count, First5_In, First5_Out, Second5_In, Second5_Out, Year) %>% 
+  separate(Time, c("hour", "min", "sec"), sep = ":") %>%
   mutate(visitDate = as.character(Date),
          rawObserver = as.character(VolunteerID),
          observer = paste0("obs",VolunteerID),
-         time2 = as.character(as.POSIXct(Time, format = "%H:%M:%S")),
-         survey_time = format(as.POSIXct(time2), format = "%H:%M:%S"),
+         hour2 = sprintf("%02d", as.numeric(hour)),
+         min2 = sprintf("%02d", as.numeric(min)),
+         sec2 = ifelse(is.na(sec), "00", sprintf("%02d", as.numeric(sec))),
+         survey_time = paste(as.character(hour2), as.character(min2), as.character(sec2), sep=":"),
          snowDepthMeters= NA,
          waterDepthMeters = NA,
          crew = NA,
@@ -178,38 +179,33 @@ pc_survey_noinfo <- survey %>%
 pc_survey_noinfo <- pc_survey_noinfo %>% 
   mutate(durationinterval = "UNKNOWN",
          distanceband = "UNKNOWN",
-         ind_count = Count
-  ) 
+         ind_count = Count,
+         raw_distance_code = "UNKNOWN",
+         raw_duration_code = "UNKNOWN"
+  ) %>%
+  filter(ind_count >0)
 
 # with protocol
 pc_survey_winfo <- survey %>%
-  filter(First5_In !=0 | First5_Out !=0 | Second5_In !=0 | Second5_Out !=0)
+  filter(First5_In !=0 | First5_Out !=0 | Second5_In !=0 | Second5_Out !=0) %>%
+  pivot_longer(cols = c("First5_In","First5_Out","Second5_In","Second5_Out"), 
+             names_to = c("Variable")) %>% 
+  mutate(ind_count = as.numeric(value),
+         distanceband = case_when(Variable == "First5_In" & ind_count >= 1 ~ "0m-100m",
+                                      Variable == "First5_Out" & ind_count >= 1 ~ "100m-INF",
+                                      Variable == "Second5_In" & ind_count >= 1 ~ "0m-100m",
+                                      Variable == "Second5_Out" & ind_count >= 1 ~ "100m-INF"), 
+         durationinterval = case_when(Variable == "First5_In" & ind_count >= 1 ~ "0-5min",
+                                      Variable == "First5_Out" & ind_count >= 1 ~ "0-5min",
+                                      Variable == "Second5_In" & ind_count >= 1 ~ "5-10min",
+                                      Variable == "Second5_Out" & ind_count >= 1 ~ "5-10min"),
+         raw_distance_code = Variable,
+         raw_duration_code = Variable) %>% 
+  filter(ind_count >0)
 
+data_bind <- rbind.fill(pc_survey_noinfo, pc_survey_winfo)
 
-ff<- pc_survey_winfo %>% 
-  mutate(test = First5_In + First5_Out + Second5_In + Second5_Out) %>%
-  select(pkey_dt, species, Count, test) %>%
-  filter(Count != test)
-
-subset(detection, detection$SiteNumb_Station =="FBMP_248_1" & detection$Date =="2018-06-06" & detection$SpeciesID =="SCTA")
-
-
-
-
-detection_expanded <- melt(as.data.table(pc_survey_winfo), measure.vars = c("First5_In","First5_Out", "Second5_In","Second5_Out"), value.name = "ind_count")
-detection_expanded <- subset(detection_expanded, detection_expanded$ind_count>0)
-detection_expanded <- detection_expanded %>%
-  mutate(durationinterval = case_when(variable == "First5_In" ~ "0-5min",
-                                      variable == "First5_Out" ~ "0-5min",
-                                      variable == "Second5_In" ~ "5-10min",
-                                      variable == "Second5_Out" ~ "5-10min"),
-         distanceband = case_when(variable == "First5_In" ~ "0m-100m",
-                                  variable == "First5_Out" ~ "100m-INF",
-                                  variable == "Second5_In" ~ "0m-100m",
-                                  variable == "Second5_Out" ~ "100m-INF"))
 #-- Extended 
-data_bind <- rbind.fill(pc_survey_noinfo, detection_expanded)
-
 pc_survey <- data_bind %>%
   mutate(originalBehaviourData = NA,
          age = NA,
@@ -222,13 +218,11 @@ pc_survey <- data_bind %>%
          pc_vt_detail = NA,
          behaviourother = NA,
          comments = NA,
-         site = SiteNumber,
-         station = Station,
+         site = SiteID,
+         station = StationID,
          easting= Easting ,
          northing = Northing,
          original_species= NA,
-         raw_distance_code = variable,
-         raw_duration_code=variable, 
          originalBehaviourData= NA)
 
 ## CHECK
@@ -245,7 +239,7 @@ print(unique(pc_survey$distanceband[!(pc_survey$distanceband %in% WT_distBandTbl
 #       EXPORT
 #
 #--------------------------------------------------------------
-dr<- drive_get(paste0("toUpload/",organization), shared_drive= "BAM_Core")
+dr<- drive_get(paste0("DataTransfered/",organization), shared_drive= "BAM_Core")
 
 #Set GoogleDrive id
 if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
@@ -276,6 +270,7 @@ visit_out <- file.path(out_dir, paste0(dataset_code,"_visit.csv"))
 drive_upload(media = visit_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_visit.csv"), overwrite = TRUE) 
 
 #---SURVEY
+#WTsurvey <- c("location", "surveyDateTime", "durationMethod", "distanceMethod", "observer", "species", "distanceband", "durationinterval", "isHeard", "isSeen", "comments")
 survey_tbl <- pc_survey %>% 
   group_by(location, surveyDateTime, durationMethod, distanceMethod, observer, species, distanceband, durationinterval, isHeard, isSeen, comments) %>%
   dplyr::summarise(abundance = sum(ind_count), .groups= "keep")
@@ -293,9 +288,9 @@ extended_tbl <- pc_survey %>%
            displaytype, nestevidence, behaviourother) %>%
   dplyr::summarise(abundance = sum(ind_count), .groups= "keep")
 
-write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_extended.csv")), quote = FALSE, row.names = FALSE, na = "")
-extended_out <- file.path(out_dir, paste0(dataset_code,"_extended.csv"))
-drive_upload(media = extended_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_extended.csv"), overwrite = TRUE) 
+write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_behavior.csv")), quote = FALSE, row.names = FALSE, na = "")
+extended_out <- file.path(out_dir, paste0(dataset_code,"_behavior.csv"))
+drive_upload(media = extended_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_behavior.csv"), overwrite = TRUE) 
 
 #---PROCESSING STATS
 write_lines(paste0("Organization: ", organization), file.path(out_dir, paste0(dataset_code, "_stats.csv")))
@@ -309,16 +304,3 @@ write_lines(nrow_survey, file.path(out_dir, paste0(dataset_code, "_stats.csv")),
 nrow_extended <- paste0("Number of extended: ", nrow(extended_tbl))
 write_lines(nrow_extended, file.path(out_dir, paste0(dataset_code, "_stats.csv")), append= TRUE)
 
-
-WTextended <- c("organization", "project","location", "surveyDateTime", "species", "ind_count", 
-                "distanceband", "durationinterval", "site", "station", "utmZone", "easting", 
-                "northing", "time_zone", "data_origin", "missinginvisit", "pkey_dt", "survey_time",
-                "survey_year", "rawObserver", "original_species", "scientificname", "raw_distance_code", 
-                "raw_duration_code",  "originalBehaviourData", "missingindetections", "pc_vt", 
-                "pc_vt_detail","age", "fm", "group", "flyover", "displaytype", "nestevidence", "behaviourother")
-
-bbb <- pc_survey[duplicated(pc_survey[,WTextended]), WTextended]
-
-subset (pc_survey, pc_survey$pkey_dt =="ONFBMP1987-19:FBMP_210_1:20180531_NA:obs62" & pc_survey$species == "REVI")
-subset (survey, survey$pkey_dt =="ONFBMP1987-19:FBMP_210_1:20180531_NA:obs62" & survey$species == "REVI")
-subset(detection, detection$Date == "2018-05-31" & detection$SiteNumb_Station == "FBMP_210_1" & detection$SpeciesID=="REVI")

@@ -103,8 +103,8 @@ locations <- location  %>%
                                      FreqXY >1 & grepl(".*[A-Za-z]$", plotID) ~ paste("ONGEM", substr(plotID, 1, nchar(plotID)-1), sep = ":"),
                                      FreqXY >1 & !grepl(".*[A-Za-z]$", plotID) ~ paste("ONGEM", IDENT2, sep = ":"),
                                      FreqPlotID >1 ~ paste("ONGEM", IDENT2, sep=":")),
-                northing = NA,
-                easting = NA,
+                northing = LATITUDE,
+                easting = LONGITUDE,
                 elevationMeters = NA,
                 bufferRadiusMeters = NA,
                 isHidden = NA,
@@ -196,7 +196,7 @@ print(survey[is.na(survey$species),])
 ## EXPORT ####
 ############################
 #Extract GoogleDrive id to store output
-dr<- drive_get(paste0("toUpload/",organization), shared_drive = "BAM_Core")
+dr<- drive_get(paste0("DataTransfered/",organization), shared_drive = "BAM_Core")
 
 if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
   dr_dataset_code <-drive_mkdir(dataset_code, path = as_id(dr), overwrite = NA)
@@ -252,9 +252,9 @@ Extended <- c("organization", "project", "location", "surveyDateTime", "species"
               "originalBehaviourData", "missingindetections", "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", 
               "displaytype", "nestevidence", "behaviourother","comments")
 extended_tbl <- pc_extended[!duplicated(pc_extended[,Extended]), Extended] 
-write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_extended.csv")), quote = FALSE, row.names = FALSE)
-extended_out <- file.path(out_dir, paste0(dataset_code,"_extended.csv"))
-drive_upload(media = extended_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_extended.csv"), overwrite = TRUE) 
+write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_behavior.csv")), quote = FALSE, row.names = FALSE)
+extended_out <- file.path(out_dir, paste0(dataset_code,"_behavior.csv"))
+drive_upload(media = extended_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_behavior.csv"), overwrite = TRUE) 
 
 #---PROCESSING STATS
 write_lines(paste0("Organization: ", organization), file.path(out_dir, paste0(dataset_code, "_stats.csv")))

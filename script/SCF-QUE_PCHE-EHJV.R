@@ -8,26 +8,31 @@
 #1. Bruno Drolet fixed the old file and created three new files with the right project assignation. 
 #2. We only fixed some issues with dates and separated the tables into 8 tables that correspond to each of the projects.  
 # ---
-# --- FIX DETAILS
-# --- 
-
-
-
+# --- CAN'T UPLOAD ON GOOGLE DRIVE FROM SCRIPT. SUSPICIOUS SPECIAL CHARACTER IN NAME
+# --- SEEMS TO BE THE CAUSE. MANUAL UPLOAD FROM LOCAL CSV. 
+#
 # Load libraries ----------------------------------------------------------
-update.packages()
-library(pacman)
+#update.packages()
+#library(pacman)
 library(tidyr) #separate
-p_load(dplyr,hms, googledrive,glue, lubridate, purrr, readxl, sf)
+library(dplyr)
+library(hms)
+library(googledrive)
+library(googlesheets4)
+library(readxl)
+library(sf)
+#p_load(,, ,glue, lubridate, purrr, , )
 
 # Initialize variables ----------------------------------------------------
 # working directory 
 wd <- getwd()
 setwd(wd)
 
-organization <- "CWS-QUE"
+organization <- "SCF-QUE"
 dataset_code <- "PCHE-EHJV"
-source_data <- c('PCHE_EHJV_location_BD.csv','PCHE_EHJV_survey_BD.csv','PCHE_EHJV_visit_BD.csv')
+#source_data <- c('PCHE_EHJV_location_BD.csv','PCHE_EHJV_survey_BD.csv','PCHE_EHJV_visit_BD.csv')
 
+WTpj_Tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1fqifS_E5O_IpW1B-UG_xthr9hzY6FIek-nFjCrt1G0w", sheet = "project")
 lu <- "./lookupTables"
 WT_spTbl <- read.csv(file.path("./lookupTables/species_codes.csv"))
 WT_durMethTbl <- read.csv(file.path("./lookupTables/duration_method_codes.csv"), fileEncoding="UTF-8-BOM")
@@ -35,27 +40,49 @@ WT_distMethTbl <- read.csv(file.path("./lookupTables/distance_method_codes.csv")
 WT_durBandTbl <- read.csv(file.path("./lookupTables/duration_interval_codes.csv"), fileEncoding="UTF-8-BOM")
 WT_distBandTbl <- read.csv(file.path("./lookupTables/distance_band_codes.csv"), fileEncoding="UTF-8-BOM")
 
-# Set working folder  ---------------------------------------------------
+# Set working folder  --
 project_dir <- file.path(wd, "project", dataset_code)
 if (!dir.exists(project_dir)) {
   dir.create(project_dir)
-}
-data_db <- file.path(project_dir, source_data)
-if (!file.exists(data_db)) {
-  #Download from GoogleDrive
-  drive_download(paste0("sourceData/", source_data), path = data_db)
 }
 out_dir <- file.path("./out", dataset_code)    # where output dataframe will be exported
 if (!dir.exists(out_dir)) {
   dir.create(out_dir)
 }
 
+#--------------------------------------------------------------
+#       LOAD
+#--------------------------------------------------------------
+if (length(list.files(project_dir)) ==0) {
+  pid <- WTpj_Tbl %>%
+    filter(dataset_code =="PCHE-EHJV") %>%
+    select("GSharedDrive location") %>%
+    distinct()
+ 
+  #Download from GoogleDrive
+  gd.list <- drive_ls(as.character(pid))
+  detection_id <- gd.list %>%
+    filter(name =="PCHE-EHJV_location_BD.csv") %>%
+    select("id")
+  drive_download(as_id(as.character(detection_id)), path = file.path(project_dir, "PCHE-EHJV_location_BD.csv"), overwrite = TRUE)
+  visit_id <- gd.list %>%
+    filter(name =="PCHE-EHJV_visit_BD.csv") %>%
+    select("id")
+  drive_download(as_id(as.character(visit_id)), path = file.path(project_dir, "PCHE-EHJV_visit_BD.csv"), overwrite = TRUE)
+  survey_id <- gd.list %>%
+    filter(name =="PCHE-EHJV_survey_BD.csv") %>%
+    select("id")
+  drive_download(as_id(as.character(survey_id)), path = file.path(project_dir, "PCHE_EHJV_survey_BD.csv"), overwrite = TRUE)
+}
+
+location_raw <- read.csv(file.path(project_dir, "PCHE-EHJV_location_BD.csv"))
+visit_raw <- read.csv(file.path(project_dir, "PCHE-EHJV_visit_BD.csv"))
+survey_raw <- read.csv(file.path(project_dir, "PCHE_EHJV_survey_BD.csv"))
+
+
 ############################
 #### LOCATION TABLE ####
 ############################
-#Import raw data 
-location_raw <- read.csv(glue('{project_dir}/PCHE-EHJV_location_BD.csv'))
-
 #Format
 location_all <- location_raw %>% 
   dplyr::rename(organization = Wildtrax_Organization,
@@ -72,9 +99,6 @@ location_all <- location_raw %>%
 ############################
 #### VISIT TABLE ####
 ############################
-#Import raw data
-visit_raw <- read.csv(glue('{project_dir}/PCHE-EHJV_visit_BD.csv'))
-
 #Format
 pc_visit <- visit_raw %>% 
   dplyr::rename(location = location_New) %>% 
@@ -93,12 +117,10 @@ pc_visit <- merge(pc_visit, location_all, by = 'location')
 #### SURVEY TABLE ####
 ############################
 #Import raw data
-survey_raw <- read.csv(glue('{project_dir}/PCHE-EHJV_survey_BD.csv'))
 pc_survey <- survey_raw %>% 
               dplyr::rename(location = Location_New,
                             visitDate = surveyDateTime,
-                            survey_time = surveyTime,
-                            original_species = Species)
+                            survey_time = surveyTime)
 pc_detection <- merge(pc_survey, pc_visit, by = c('location', 'visitDate', 'survey_time'))
                      
 pc_detection <- pc_detection %>%
@@ -116,7 +138,8 @@ pc_detection <- pc_detection %>%
          #                    Scientific.Name == "Meleagris gallopavo" ~ "WITU",
          #                    Scientific.Name == "Tympanuchus phasianellus" ~ "STGR",
           #                   .default = Species),
-         species = original_species,
+         original_species = species,
+         #species = original_species,
          scientificname = WT_spTbl$scientific_name[match(species, WT_spTbl$species_code)],
          distanceMethod = "0m-INF",
          distanceband = "0m-INF",
@@ -150,17 +173,17 @@ print(unique(pc_detection$durationMethod[!(pc_detection$durationMethod %in% WT_d
 print(unique(pc_detection$species[!(pc_detection$species %in% WT_spTbl$species_code)]))
 # Fix species 
 pc_detection <- pc_detection  %>%
-  mutate(species = ifelse(original_species == "UDEJ", "DEJU",
-                    ifelse(original_species == "CAGO", "CANG",
-                      ifelse(original_species == "BDOW", "BADO",
-                        ifelse(original_species == "UDAN", "UDAB",
-                            ifelse(Scientific.Name == "Colaptes auratus", "NOFL",
-                              ifelse(Scientific.Name == "Lagopus lagopus", "WIPT",
-                                ifelse(Scientific.Name == "Bonasa umbellus", "RUGR",
-                                  ifelse(Scientific.Name == "Empidonax sp.", "UEFL",
-                                    ifelse(Scientific.Name == "Vireo sp.", "UNVI",
-                                      ifelse(Scientific.Name == "Meleagris gallopavo", "WITU",
-                                        ifelse(Scientific.Name == "Tympanuchus phasianellus", "STGR", species))))))))))),
+  mutate(species = ifelse(species == "UDEJ", "DEJU",
+                    ifelse(species == "CAGO", "CANG",
+                      ifelse(species == "BDOW", "BADO",
+                        ifelse(species == "UDAN", "UDAB",
+                            ifelse(scientificname == "Colaptes auratus", "NOFL",
+                              ifelse(scientificname == "Lagopus lagopus", "WIPT",
+                                ifelse(scientificname == "Bonasa umbellus", "RUGR",
+                                  ifelse(scientificname == "Empidonax sp.", "UEFL",
+                                    ifelse(scientificname == "Vireo sp.", "UNVI",
+                                      ifelse(scientificname == "Meleagris gallopavo", "WITU",
+                                        ifelse(scientificname == "Tympanuchus phasianellus", "STGR", species))))))))))),
          scientificname = WT_spTbl$scientific_name[match(species, WT_spTbl$species_code)],
  )
 print(unique(pc_detection$species[!(pc_detection$species %in% WT_spTbl$species_code)]))
@@ -179,15 +202,16 @@ location_pc <- subset(location_all,location_all$location %in% pc_detection$locat
 visit_pc <- subset(pc_visit,pc_visit$location %in% pc_detection$location)
 
 dataset_code <- unique(pc_detection$project)
-dr<- drive_get(paste0("toUpload/",organization))
+dr<- drive_get(paste0("DataTransfered/",organization), shared_drive= "BAM_Core")
+
 for (x in dataset_code) {
   #Set GoogleDrive id
-  #if (nrow(drive_ls(as_id(dr), pattern = x)) == 0){
-  #  dr_dataset_code <-drive_mkdir(x, path = as_id(dr), overwrite = NA)
-  #} else {
-  #  dr_dataset_code <- drive_ls(as_id(dr), pattern = x)
-  #}
-  #dr_ls <- drive_ls(as_id(dr), pattern = x)
+  if (nrow(drive_ls(as_id(dr), pattern = x)) == 0){
+    dr_dataset_code <-drive_mkdir(x, path = as_id(dr), overwrite = NA)
+  } else {
+    dr_dataset_code <- drive_ls(as_id(dr), pattern = x)
+  }
+  dr_ls <- drive_ls(as_id(dr), pattern = x)
   
   #---LOCATION
   location <- location_pc[location_pc$project==x,]
@@ -200,7 +224,7 @@ for (x in dataset_code) {
   write.csv(location_tbl, file= file.path(out_dir, paste0(x,"_location.csv")), row.names = FALSE, na = "")
   #location_out <- file.path(out_dir, paste0(x,"_location.csv"))
   #drive_upload(media = location_out, path = as_id(dr_dataset_code), name = paste0(x,"_location.csv"), overwrite = TRUE) 
-  
+
   #---VISIT
   visit <- visit_pc[visit_pc$project==x,]
   WTvisit <- c("location", "visitDate", "snowDepthMeters", "waterDepthMeters", "crew", "bait", "accessMethod", "landFeatures", "comments", 
@@ -218,7 +242,8 @@ for (x in dataset_code) {
 
   WTsurvey <- c("location", "surveyDateTime", "durationMethod", "distanceMethod", "observer", "species", "distanceband",
                 "durationinterval", "abundance", "isHeard", "isSeen", "comments")
-  write.csv(survey_tbl, file= file.path(out_dir, paste0(x,"_survey.csv")), row.names = FALSE, na = "")
+  survey_out <- survey_tbl[,WTsurvey]
+  write.csv(survey_out, file= file.path(out_dir, paste0(x,"_survey.csv")), row.names = FALSE, na = "")
   #survey_out <- file.path(out_dir, paste0(x,"_survey.csv"))
   #drive_upload(media = survey_out, path = as_id(dr_dataset_code), name = paste0(x,"_survey.csv"), overwrite = TRUE) 
   

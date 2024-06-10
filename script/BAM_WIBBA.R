@@ -15,6 +15,7 @@ library(dplyr)
 library(readxl)
 library(googledrive)
 library(readr)
+library(googlesheets4)
 
 ## Initialize variables
 wd <- "E:/MelinaStuff/BAM/WildTrax/WT-Integration"
@@ -22,10 +23,12 @@ setwd(wd)
 
 organization = "BAM"
 dataset_code = "WIBBA"
+project_name <- "Wisconsin Breeding Bird Atlas"
 source_data <- "PointCountsMerged161718_09112020_noemails_withmetadatatab.xlsx"
 species <- "IBP-AOS-LIST22.csv"
 beh <- "breedingcode.xlsx"
 
+WTpj_Tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1fqifS_E5O_IpW1B-UG_xthr9hzY6FIek-nFjCrt1G0w", sheet = "project")
 lu <- "./lookupTables"
 WT_spTbl <- read.csv(file.path("./lookupTables/species_codes.csv"))
 colnames(WT_spTbl) <- c("species_common_name", "species_code", "scientific_name")
@@ -44,24 +47,38 @@ lookup_dir <- file.path(project_dir, "lookupTable")
 if (!dir.exists(lookup_dir)) {
   dir.create(lookup_dir)
 }
-data_db <- file.path(project_dir, source_data)
-if (!file.exists(data_db)) {
-  #Download from GoogleDrive
-  drive_download(paste0("sourceData/",source_data), path = data_db)
-  drive_download(paste0("sourceData/lookupTable/", lu_species), path = data_db)
-}
 out_dir <- file.path("./out", dataset_code)    # where output dataframe will be exported
 if (!dir.exists(out_dir)) {
   dir.create(out_dir)
 }
-#######################################################
-##                    Connect
-#######################################################
+#--------------------------------------------------------------
+#       LOAD
+#--------------------------------------------------------------
+if (length(list.files(project_dir)) ==0) {
+  pid <- WTpj_Tbl %>%
+    filter(dataset_code =="WIBBA") %>%
+    select("GSharedDrive location")
+  #Download from GoogleDrive
+  gd.list <- drive_ls(as.character(pid))
+  detection_id <- gd.list %>%
+    filter(name =="PointCountsMerged161718_09112020_noemails_withmetadatatab.xlsx") %>%
+    select("id")
+  drive_download(as_id(as.character(detection_id)), path = file.path(project_dir, "PointCountsMerged161718_09112020_noemails_withmetadatatab.xlsx"))
+  lookup_id <- gd.list %>%
+    filter(name =="IBP-AOS-LIST22.csv") %>%
+    select("id")
+  drive_download(as_id(as.character(lookup_id)), path = file.path(project_dir, "IBP-AOS-LIST22.csv"), overwrite = TRUE)
+  beh_id <- gd.list %>%
+    filter(name =="breedingcode.xlsx") %>%
+    select("id")
+  drive_download(as_id(as.character(beh_id)), path = file.path(project_dir, "breedingcode.xlsx"), overwrite = TRUE)
+}
+
 #Connecte and load tables
 #Read in template
-data_flat <- read_xlsx(data_db, sheet=1)
-lu_species <-  read.csv(file.path(lookup_dir, species))
-lu_beh <- read_xlsx(file.path(lookup_dir, beh), sheet=1)
+data_flat <- read_xlsx(file.path(project_dir, "PointCountsMerged161718_09112020_noemails_withmetadatatab.xlsx"), sheet=1)
+lu_species <-  read.csv(file.path(project_dir, "IBP-AOS-LIST22.csv"))
+lu_beh <- read_xlsx(file.path(project_dir, "breedingcode.xlsx"), sheet=1)
 #--------------------------------------------------------------
 #
 #       TRANSLATE
@@ -76,7 +93,7 @@ lu_beh <- read_xlsx(file.path(lookup_dir, beh), sheet=1)
 
 data_flat <- data_flat %>% 
   mutate(organization = organization ,
-         project = dataset_code,
+         project = project_name,
          location = paste(dataset_code, pointid, sep= "_"),
          # If exists in source data
          site = NA,
@@ -192,7 +209,7 @@ print(survey_pc[is.na(survey_pc$species),])
 #
 #--------------------------------------------------------------
 #Extract GoogleDrive id to store output
-dr<- drive_get(paste0("toUpload/",organization))
+dr<- drive_get(paste0("DataTransfered/",organization), shared_drive= "BAM_Core")
 
 if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
   dr_dataset_code <-drive_mkdir(dataset_code, path = as_id(dr), overwrite = NA)
@@ -246,9 +263,9 @@ Extended <- c("organization", "project", "location", "surveyDateTime", "species"
               "survey_year", "rawObserver", "original_species", "scientificname", "raw_distance_code", "raw_duration_code", 
               "originalBehaviourData", "missingindetections", "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", 
               "displaytype", "nestevidence", "behaviourother", "comments")
-write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_extended.csv")), quote = FALSE, row.names = FALSE)
-extended_out <- file.path(out_dir, paste0(dataset_code,"_extended.csv"))
-drive_upload(media = extended_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_extended.csv"), overwrite = TRUE) 
+write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_behavior.csv")), quote = FALSE, row.names = FALSE)
+extended_out <- file.path(out_dir, paste0(dataset_code,"_behavior.csv"))
+drive_upload(media = extended_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_behavior.csv"), overwrite = TRUE) 
 
 #---PROCESSING STATS
 write_lines(paste0("Organization: ", organization), file.path(out_dir, paste0(dataset_code, "_stats.csv")))

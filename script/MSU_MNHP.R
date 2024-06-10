@@ -7,14 +7,12 @@
 
 #update.packages()
 library(dplyr) # mutate, %>%
-#library(utils) #read.csv
-#library(readxl) #read_excel
-#library(stringr) #str_replace_all
+library(utils) #read.csv, write.csv
 library(sf) #st_crs, st_as_sf, st_transform, st_drop_geometry
-#library(purrr) #map
-#library(plyr) #rbind.fill
+library(purrr) #map
 library(googledrive) #drive_get, drive_mkdir, drive_ls, drive_upload
-library(googlesheets4)
+library(googlesheets4) #read_sheet
+library(readr) # write_line
 
 ## Initialize variables
 wd <- "E:/MelinaStuff/BAM/WildTrax/WT-Integration"
@@ -195,6 +193,7 @@ pc_survey <- data_flat %>%
 print(unique(pc_survey$distanceMethod[!(pc_survey$distanceMethod %in% WT_distMethTbl$distance_method_type)]))
 print(unique(pc_survey$durationMethod[!(pc_survey$durationMethod %in% WT_durMethTbl$duration_method_type)]))
 print(unique(pc_survey$species[!(pc_survey$species %in% WT_spTbl$species_code)]))
+#Check species codes again
 print(unique(pc_survey$Speccode[!(pc_survey$species %in% WT_spTbl$species_code)]))
 #"SASP"  "NOOR"  "NOWT"  "BLWA"  "TRSW"  "CAGO"  "SCJU"  "WHIP"  "BAOW"  "CAGO " "REVI "
 # Fix or fill missing species
@@ -227,7 +226,7 @@ print(unique(pc_survey$durationinterval[!(pc_survey$durationinterval %in% WT_dur
 #       EXPORT
 #
 #--------------------------------------------------------------
-dr<- drive_get(paste0("toUpload/",organization), shared_drive = "BAM_Core")
+dr<- drive_get(paste0("DataTransfered/",organization), shared_drive = "BAM_Core")
 #Set GoogleDrive id
 if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
   dr_dataset_code <-drive_mkdir(dataset_code, path = as_id(dr), overwrite = NA)
@@ -276,9 +275,9 @@ Extended <- c("organization", "project","location", "surveyDateTime", "species",
               "originalBehaviourData", "missingindetections", "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", 
               "displaytype", "nestevidence", "behaviourother")
 extended_tbl <- pc_survey[!duplicated(pc_survey[,Extended]), Extended] 
-write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_extended.csv")), quote = FALSE, row.names = FALSE, na = "")
-extended_out <- file.path(out_dir, paste0(dataset_code,"_extended.csv"))
-drive_upload(media = extended_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_extended.csv"), overwrite = TRUE) 
+write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_behavior.csv")), quote = FALSE, row.names = FALSE, na = "")
+extended_out <- file.path(out_dir, paste0(dataset_code,"_behavior.csv"))
+drive_upload(media = extended_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_behavior.csv"), overwrite = TRUE) 
   
 #---PROCESSING STATS
 write_lines(paste0("Organization: ", organization), file.path(out_dir, paste0(dataset_code, "_stats.csv")))

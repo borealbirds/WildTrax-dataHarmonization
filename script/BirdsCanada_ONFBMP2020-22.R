@@ -19,7 +19,7 @@ wd <- "E:/MelinaStuff/BAM/WildTrax/WT-Integration"
 setwd(wd)
 
 organization <- "Birds Canada"
-dataset_code <- "ONFBMP2020"
+dataset_code <- "ONFBMP2020-22"
 
 project_dir <- file.path("./project", dataset_code)
 if (!dir.exists(project_dir)) {
@@ -45,7 +45,7 @@ WT_distBandTbl <- read.csv(file.path(lu, "distance_band_codes.csv"), fileEncodin
 #--------------------------------------------------------------
 if (length(list.files(project_dir)) ==0) {
   pid <- WTpj_Tbl %>%
-    filter(dataset_code =="ONFBMP2020") %>% 
+    filter(dataset_code =="ONFBMP2020-22") %>% 
     select("GSharedDrive location")
   #Download from GoogleDrive
   gd.list <- drive_ls(as.character(pid))
@@ -90,13 +90,13 @@ spLocation_pj <- as.data.frame(project(spLocation,"EPSG:4326"),  geom = "XY") # 
 pc_location <- spLocation_pj %>%
   dplyr::rename(longitude = x,
                 latitude = y) %>%
-  mutate(location = paste0(dataset_code, ":", SiteID, "_", StationNum ))
+  mutate(location = paste0(dataset_code, ":", SiteID, StationID, "_", index_vis ))
 
 ############################
 #### VISIT TABLE ####
 ############################
 pc_visit <- pc_location %>% 
-  select(location, longitude, latitude, StationNum, SiteID, UtmEasting, UtmNorthing, UtmZone, Date, Time, VolunteerID, SpeciesEnglishName, TotalCount) %>% 
+  select(location, longitude, latitude, StationID, SiteID, UtmEasting, UtmNorthing, UtmZone, Date, Time, VolunteerID, SpeciesEnglishName, TotalCount) %>% 
   mutate(visitDate = format(as.Date(Date, format = "%m/%d/%Y"), "%Y-%m-%d"),
          rawObserver = as.character(VolunteerID),
          observer = paste0("obs",as.character(VolunteerID)),
@@ -153,7 +153,7 @@ pc_survey <- survey %>%
          behaviourother = NA,
          comments = NA,
          site = SiteID,
-         station = StationNum,
+         station = StationID,
          easting= UtmEasting ,
          northing = UtmNorthing,
          original_species= NA,
@@ -174,7 +174,7 @@ print(unique(pc_survey$distanceband[!(pc_survey$distanceband %in% WT_distBandTbl
 #       EXPORT
 #
 #--------------------------------------------------------------
-dr<- drive_get(paste0("toUpload/",organization), shared_drive= "BAM_Core")
+dr<- drive_get(paste0("DataTransfered/",organization), shared_drive= "BAM_Core")
 
 #Set GoogleDrive id
 if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
@@ -221,9 +221,9 @@ extended_tbl <- pc_survey %>%
            displaytype, nestevidence, behaviourother) %>%
   dplyr::summarise(abundance = sum(abundance), .groups= "keep")
 
-write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_extended.csv")), quote = FALSE, row.names = FALSE, na = "")
-extended_out <- file.path(out_dir, paste0(dataset_code,"_extended.csv"))
-drive_upload(media = extended_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_extended.csv"), overwrite = TRUE) 
+write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_behavior.csv")), quote = FALSE, row.names = FALSE, na = "")
+extended_out <- file.path(out_dir, paste0(dataset_code,"_behavior.csv"))
+drive_upload(media = extended_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_behavior.csv"), overwrite = TRUE) 
 
 #---PROCESSING STATS
 write_lines(paste0("Organization: ", organization), file.path(out_dir, paste0(dataset_code, "_stats.csv")))
@@ -238,15 +238,5 @@ nrow_extended <- paste0("Number of extended: ", nrow(extended_tbl))
 write_lines(nrow_extended, file.path(out_dir, paste0(dataset_code, "_stats.csv")), append= TRUE)
 
 
-WTextended <- c("organization", "project","location", "surveyDateTime", "species", "ind_count", 
-                "distanceband", "durationinterval", "site", "station", "utmZone", "easting", 
-                "northing", "time_zone", "data_origin", "missinginvisit", "pkey_dt", "survey_time",
-                "survey_year", "rawObserver", "original_species", "scientificname", "raw_distance_code", 
-                "raw_duration_code",  "originalBehaviourData", "missingindetections", "pc_vt", 
-                "pc_vt_detail","age", "fm", "group", "flyover", "displaytype", "nestevidence", "behaviourother")
 
-bbb <- pc_survey[duplicated(pc_survey[,WTextended]), WTextended]
 
-subset (pc_survey, pc_survey$pkey_dt =="ONFBMP1987-19:FBMP_210_1:20180531_NA:obs62" & pc_survey$species == "REVI")
-subset (survey, survey$pkey_dt =="ONFBMP1987-19:FBMP_210_1:20180531_NA:obs62" & survey$species == "REVI")
-subset(detection, detection$Date == "2018-05-31" & detection$SiteNumb_Station == "FBMP_210_1" & detection$SpeciesID=="REVI")

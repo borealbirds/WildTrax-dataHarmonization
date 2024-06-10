@@ -237,7 +237,7 @@ print(unique(pc_survey$distanceband[!(pc_survey$distanceband %in% WT_distBandTbl
 #       EXPORT
 #
 #--------------------------------------------------------------
-dr<- drive_get(paste0("toUpload/",organization), shared_drive= "BAM_Core")
+dr<- drive_get(paste0("DataTransfered/",organization), shared_drive= "BAM_Core")
 
 #Set GoogleDrive id
 if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
@@ -288,9 +288,9 @@ extended_tbl <- pc_behavior %>%
            displaytype, nestevidence, behaviourother) %>%
   dplyr::summarise(abundance = sum(ind_count), .groups= "keep")
 
-write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_extended.csv")), quote = FALSE, row.names = FALSE, na = "")
+write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_behavior.csv")), quote = FALSE, row.names = FALSE, na = "")
 extended_out <- file.path(out_dir, paste0(dataset_code,"_extended.csv"))
-drive_upload(media = extended_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_extended.csv"), overwrite = TRUE) 
+drive_upload(media = extended_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_behavior.csv"), overwrite = TRUE) 
 
 #---PROCESSING STATS
 write_lines(paste0("Organization: ", organization), file.path(out_dir, paste0(dataset_code, "_stats.csv")))
