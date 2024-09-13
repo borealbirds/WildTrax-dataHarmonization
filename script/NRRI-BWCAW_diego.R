@@ -24,7 +24,7 @@ library(sf)
 ## Initialize variables
 wd <- "C:/Users/asito/Desktop/ModellingProject/#BAM/WildTrax_Integration"
 organization = "NRRI"
-dataset_code = "NRRI-BWCAW"
+dataset_code = "BWCAW"
 setwd(file.path(wd))
 
 
