@@ -5,7 +5,7 @@
 # Note on translation:
 # Original projection of data set: EPSG 32615
 # 48 rows not joinable with species values "Unidentified non-passerine" 
-# Line 242 i group their abundance value, into a new column 'total abundance', also delete the second duplicates -> but then the behaviour of the 2nd duplicates would be deleted
+# Line 242 i group their abundance value, into a new column 'total abundance', also delete the second duplicates -> but then the behavior of the 2nd duplicates would be deleted
 
 library(googledrive)
 library(tidyr)
@@ -247,25 +247,35 @@ data_flat <- data_flat %>%
   ungroup() %>%
   select(-isDuplicate) # Optional: Remove the 'isDuplicate' column if no longer needed
 
-# View(data_flat[data_flat$total_abundance != data_flat$abundance, ]) # visualised rows with grouped abundance
+# nrow(data_flat) : 14461
+# View(data_flat[data_flat$total_abundance != data_flat$abundance, ]) # visualise rows with grouped abundance ***abundance < total abundance
 
+
+# delete the rows with non-valid species code: "Unidentified non-passerine" , 'species' is NA, 48 rows deleted
+data_flat <- data_flat[!is.na(data_flat$species), ]
+# nrow(data_flat) : 14413 
 
 
 
 # Delete duplicated in the eye of the survey table *total abundance is used
 WTsurvey <- c("location", "surveyDateTime", "durationMethod", "distanceMethod", "observer", "species", "distanceband",
               "durationinterval", "total_abundance", "isHeard", "isSeen", "comments")
-survey_tbl <- data_flat[!duplicated(data_flat[,WTsurvey]), WTsurvey] 
+survey_tbl <- data_flat[!duplicated(data_flat[,WTsurvey]), WTsurvey]
+
+
+# change the column name 'total_abundance' to 'abundance' for better regonisising by WT
+colnames(survey_tbl)[colnames(survey_tbl) == "total_abundance"] <- "abundance"
+
 # check NULL result by, colSums(is.na(survey_tbl)) > 0
 # print(data_flat[is.na(data_flat$species), ])
-# survey_tbl[survey_tbl$total_abundance ==0, ], <0 rows>
-
-
+# survey_tbl[survey_tbl$abundance ==0, ], <0 rows>
 
 
 ############################
 ##EXPORT
 ############################
+
+# print(data_flat[!is.na(data_flat$comments), ]) # No comments in the source files
 
 write.csv(survey_tbl, file= file.path(out_dir, paste0(dataset_code,"_survey.csv")), na = "", row.names = FALSE)
 # survey_out <- file.path(out_dir, paste0(dataset_code,"_survey.csv"))
@@ -295,6 +305,25 @@ write.csv(location_tbl, file= file.path(out_dir, paste0(dataset_code,"_location.
 
 
 #---EXTENDED
+
+data_flat$rawObserver <- data_flat$Observer
+data_flat$original_species <- data_flat$Species_Common
+data_flat$scientificname <- WT_spTbl$scientific_name[match(data_flat$species, WT_spTbl$species_code)]
+data_flat$raw_distance_code <- data_flat$Distance_Observed
+data_flat$raw_duration_code <- data_flat$Interval_Observed
+data_flat$originalBehaviourData <- data_flat$Behaviour
+data_flat$missingindetections <- "NONE"
+data_flat$pc_vt <- "NONE"
+data_flat$pc_vt_detail <- "NONE"
+data_flat$age <- "NONE"
+data_flat$fm <- "NONE"
+data_flat$group <- "NONE"
+data_flat$flyover <- data_flat$flyover <- ifelse(data_flat$Behaviour == "Flyover", "Yes", "") 
+data_flat$displaytype <- "NONE"
+data_flat$nestevidence <- "NONE"
+data_flat$behaviourother <- data_flat$flyover <- ifelse(data_flat$Behaviour == "Flyover", data_flat$Behaviour, "") 
+data_flat$atlas_breeding_code <- "NONE"
+
 Extended <- c("organization", "project","location", "surveyDateTime", "species", "distanceband", "durationinterval", "site", 
               "station", "utmZone", "easting", "northing", "missinginlocations", "time_zone", "data_origin", 
               "missinginvisit", "pkey_dt", "survey_time", "survey_year", "rawObserver", "original_species", 
@@ -304,12 +333,6 @@ Extended <- c("organization", "project","location", "surveyDateTime", "species",
 
 extended_tbl <- data_flat[!duplicated(data_flat[,Extended]), Extended] 
 write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_extended.csv")), na = "", row.names = FALSE)
-
-
-
-
-
-
 
 
 
