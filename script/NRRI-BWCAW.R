@@ -15,19 +15,20 @@ library(readxl)
 library(plyr) #rbind.fill
 library(dplyr)
 library(sf)
-
+library(googlesheets4)
 
 ## URL
 #url <- "https://drive.google.com/drive/u/2/folders/1xIHrlaJ7-gmtYw18iXjfWMkop1JtKJb4"
 
 
 ## Initialize variables
-wd <- "C:/Users/asito/Desktop/ModellingProject/#BAM/WildTrax_Integration"
+#wd <- "C:/Users/asito/Desktop/ModellingProject/#BAM/WildTrax_Integration"
+wd <- "E:/MelinaStuff/BAM/WildTrax/WT-Integration"
 organization = "NRRI"
 dataset_code = "BWCAW"
 setwd(file.path(wd))
 
-
+WTpj_Tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1fqifS_E5O_IpW1B-UG_xthr9hzY6FIek-nFjCrt1G0w", sheet = "project")
 lu <- "./lookupTables"
 WT_spTbl <- read.csv(file.path(lu, "species_codes.csv"))
 colnames(WT_spTbl) <- c("species_common_name", "species_code", "scientific_name")
@@ -37,17 +38,36 @@ WT_durBandTbl <- read.csv(file.path(lu, "duration_interval_codes.csv"), fileEnco
 WT_distBandTbl <- read.csv(file.path(lu, "distance_band_codes.csv"), fileEncoding="UTF-8-BOM")
 
 project <- file.path("./project", dataset_code)
-dataDir <- file.path(wd,"project",dataset_code,"data")   # where files would be downloaded
-out_dir <- file.path(wd, "out", dataset_code)    # where output dataframe will be exported
-if (!dir.exists(out_dir)) {
-  dir.create(out_dir)
+if (!dir.exists(project)) {
+  dir.create(project)
+}
+dataDir <- file.path("./out", dataset_code)   
+if (!dir.exists(dataDir)) {
+  dir.create(dataDir)
 }
 
-XYtbl <- file.path(dataDir,"BWCAW_Data_BAM_6_2020.xlsx")
-location <- read_excel(XYtbl, sheet = 1)
-survey <- read_excel(XYtbl, sheet = 2)
-observation <- read_excel(XYtbl, sheet = 3)
 
+#--------------------------------------------------------------
+#       LOAD
+#--------------------------------------------------------------
+if (length(list.files(project)) ==0) {
+  pid <- WTpj_Tbl %>%
+    filter(dataset_code =="BWCAW") %>%
+    select("GSharedDrive location")
+  #Download from GoogleDrive
+  gd.list <- drive_ls(as.character(pid))
+  data_id <- gd.list %>%
+    filter(name =="BWCAW_Data_BAM_6_2020.xlsx") %>%
+    select("id")
+  drive_download(as_id(as.character(data_id)), path = file.path(project, "BWCAW_Data_BAM_6_2020.xlsx"))
+}
+
+data_tbl <- read_excel(file.path(project_dir, "BWCAW_Data_BAM_6_2020.xlsx"))
+
+alltbl <- file.path(dataDir, data_tbl)
+location <- read_excel(alltbl, sheet = 1)
+survey <- read_excel(alltbl, sheet = 2)
+observation <- read_excel(alltbl, sheet = 3)
 
 #--------------------------------------------------------------
 #
