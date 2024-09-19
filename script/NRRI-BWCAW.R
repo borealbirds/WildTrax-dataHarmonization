@@ -62,9 +62,9 @@ if (length(list.files(project)) ==0) {
   drive_download(as_id(as.character(data_id)), path = file.path(project, "BWCAW_Data_BAM_6_2020.xlsx"))
 }
 
-data_tbl <- read_excel(file.path(project_dir, "BWCAW_Data_BAM_6_2020.xlsx"))
+data_tbl <- read_excel(file.path(project, "BWCAW_Data_BAM_6_2020.xlsx"))
 
-alltbl <- file.path(dataDir, data_tbl)
+alltbl <- file.path(project, "BWCAW_Data_BAM_6_2020.xlsx")
 location <- read_excel(alltbl, sheet = 1)
 survey <- read_excel(alltbl, sheet = 2)
 observation <- read_excel(alltbl, sheet = 3)
@@ -78,14 +78,13 @@ observation <- read_excel(alltbl, sheet = 3)
 ############################
 #### LOCATION TABLE ####
 ############################
-location <- read_excel(XYtbl, sheet = 1)
-
 data_flat <- location
-
 data_flat$organization <- organization
 data_flat$project <- dataset_code
 data_flat$site <- sub("([^\\.]+)\\..*", "\\1", data_flat$'Station Name')
 data_flat$station <- sub("^[^\\.]*\\.(.*)$", "\\1", data_flat$`Station Name`)
+data_flat$station <- gsub("\\.", "", data_flat$station)
+data_flat$location <- paste(dataset_code, data_flat$site, data_flat$station, sep=":")
 
 # Not exist in source data
 data_flat$elevationMeters <- NA
@@ -107,13 +106,12 @@ xy_sf <- st_as_sf(data_flat, coords = c("easting", "northing"))
 xy_sf <- st_set_crs(xy_sf, 32615)
 xy_sf_4269 <- st_transform(xy_sf, crs = 4269)
 xy_4269 <- st_coordinates(xy_sf_4269) 
-data_flat$`longitude` <- round(xy_4269[,1], 5)
-data_flat$`latitude` <- round(xy_4269[,2], 5)
+data_flat$longitude <- round(xy_4269[,1], 5)
+data_flat$latitude <- round(xy_4269[,2], 5)
 
-#---LOCATION
-data_flat$location <- paste(dataset_code, data_flat$site, data_flat$station, sep=":")
-WTlocation <- c("location", "longitude", "latitude")
-location_tbl <- data_flat[!duplicated(data_flat[,WTlocation]), WTlocation] 
+# Plot location on top of canada boundary using utils
+# - DONE
+
 
 # options(digits = 7)
 # View(location_tbl)
@@ -121,7 +119,6 @@ location_tbl <- data_flat[!duplicated(data_flat[,WTlocation]), WTlocation]
 ############################
 #### VISIT TABLE ####
 ############################
-survey <- read_excel(XYtbl, sheet = 2)
 head(data_flat)
 head(survey)
 data_flat <- merge(data_flat, survey, by.x= 'Station Name', by.y= 'Sation Name')
@@ -146,85 +143,77 @@ data_flat$survey_time <- sub(".*\\s", "", data_flat$Time)
 data_flat$surveyDateTime <- paste(data_flat$visitDate, data_flat$survey_time)
 
 ##Observer (internal ID number): unique(data_flat$Observer)
-data_flat$observer <- case_when(data_flat$Observer == "ez"  ~ "NRRI-BWCAW_01",
-                                data_flat$Observer == "cl"  ~ "NRRI-BWCAW_02",
-                                data_flat$Observer == "jdb"  ~ "NRRI-BWCAW_03")
+data_flat$observer <- case_when(data_flat$Observer == "ez"  ~ "obs01",
+                                data_flat$Observer == "cl"  ~ "obs02",
+                                data_flat$Observer == "jdb"  ~ "obs03")
 
 data_flat$pkey_dt<- paste(data_flat$location, paste0(gsub("-", "", as.character(data_flat$visitDate)),"_", gsub(":", "", data_flat$survey_time)), data_flat$observer, sep=":")
 head(data_flat$pkey_dt)
 
 
-WTvisit <- c("location", "visitDate", "snowDepthMeters", "waterDepthMeters", "crew", "bait", "accessMethod", "landFeatures", "comments", 
-             "wildtrax_internal_update_ts", "wildtrax_internal_lv_id")
-
-#Delete duplicated based on WildtTrax attributes (double observer on the same site, same day). 
-data_flat <- data_flat[!duplicated(data_flat[,WTvisit]),] 
-visit_tbl <- data_flat
-
 ############################
 #### SURVEY TABLE ####
 ############################
-
-observation <- read_excel(XYtbl, sheet = 3)
-observation$visitDate <- as.character(as.Date(observation$Date, format = "%Y-%m-%d"))
-observation$survey_time <- sub(".*\\s", "", observation$Time)
-head(observation)
-data_flat <- merge(data_flat, observation, by.x= c("Station Name", "visitDate", "survey_time"), by.y= c("Station Name", "visitDate", "survey_time"))
+data_flat <- merge(data_flat, observation, by= c("Station Name", "Date", "Time"))
 head(data_flat)
-colSums(is.na(data_flat)) > 0 # 'Species_Abbreviation' should be FALSE
-
+isTRUE(is.na(data_flat$Species_Abbreviation)) # 'Should be FALSE
 
 # determine appropriate 'distanceMethod' by unique(data_flat$Distance_Observed)
 data_flat$distanceMethod <- "0m-50m-100m-INF"
-
-# Initialize to empty strings if not already existing
-if(is.null(data_flat$distanceband)) {
-  data_flat$distanceband <- rep("", nrow(data_flat))
-}
-data_flat$distanceband <- ifelse(grepl(".*50.*", data_flat$Distance_Observed), "0m-50m", data_flat$distanceband)
-data_flat$distanceband <- ifelse(grepl(".*100.*", data_flat$Distance_Observed), "100m-INF", data_flat$distanceband)
-data_flat$distanceband <- ifelse(grepl(".*50-100.*", data_flat$Distance_Observed), "50m-100m", data_flat$distanceband)
-# check result unique(paste(data_flat$Distance_Observed, data_flat$distanceband))
-print(unique(data_flat$distanceband[(data_flat$distanceband %in% WT_distBandTbl$distance_band_type)]))
-
-
-
 # determine appropriate 'distanceMethod' by unique(data_flat$Interval_Observed)
 data_flat$durationMethod<- "0-2-3-4-5-6-7-8-9-10min"
 
-# Initialize to empty strings if not already existing
-if(is.null(data_flat$durationinterval)) {
-  data_flat$durationinterval <- rep("", nrow(data_flat))
-}
-data_flat$durationinterval <- ifelse(grepl(".*0-2.*", data_flat$Interval_Observed), "0-2min", data_flat$durationinterval)
-data_flat$durationinterval <- ifelse(grepl(".*2-3.*", data_flat$Interval_Observed), "2-3min", data_flat$durationinterval)
-data_flat$durationinterval <- ifelse(grepl(".*3-4.*", data_flat$Interval_Observed), "3-4min", data_flat$durationinterval)
-data_flat$durationinterval <- ifelse(grepl(".*4-5.*", data_flat$Interval_Observed), "4-5min", data_flat$durationinterval)
-data_flat$durationinterval <- ifelse(grepl(".*5-6.*", data_flat$Interval_Observed), "5-6min", data_flat$durationinterval)
-data_flat$durationinterval <- ifelse(grepl(".*6-7.*", data_flat$Interval_Observed), "6-7min", data_flat$durationinterval)
-data_flat$durationinterval <- ifelse(grepl(".*7-8.*", data_flat$Interval_Observed), "7-8min", data_flat$durationinterval)
-data_flat$durationinterval <- ifelse(grepl(".*8-9.*", data_flat$Interval_Observed), "8-9min", data_flat$durationinterval)
-data_flat$durationinterval <- ifelse(grepl(".*9-10.*", data_flat$Interval_Observed), "9-10min", data_flat$durationinterval)
-# check result unique(paste(data_flat$Interval_Observed, data_flat$durationinterval))
-print(unique(data_flat$durationinterval[(data_flat$durationinterval %in% WT_durBandTbl$duration_interval_type)]))
+data_flat <- data_flat %>%
+  mutate(distanceband = case_when(Distance_Observed == "detected outside 100m circle"  ~ "100m-INF",
+                                  Distance_Observed == "detected within 50 meters of central point"  ~ "0m-50m",
+                                  Distance_Observed == "detected between 50-100 meters from central point"  ~ "50m-100m",
+                                  Distance_Observed == "dectected between 50-100 meters from central point"  ~ "50m-100m",
+                                  TRUE ~ "UNKNOWN"),
+         durationinterval= case_when(Interval_Observed == "detected within 0-2 minutes of survey" ~ "0-2min",
+                                     Interval_Observed == "2-3 minutes" ~ "2-3min",
+                                     Interval_Observed == "3-4 minutes" ~ "3-4min",
+                                     Interval_Observed == "4-5 minutes" ~ "4-5min",
+                                     Interval_Observed == "5-6 minutes" ~ "5-6min",
+                                     Interval_Observed == "6-7 minutes" ~ "6-7min",
+                                     Interval_Observed == "7-8 minutes" ~ "7-8min",
+                                     Interval_Observed == "8-9 minutes" ~ "8-9min",
+                                     Interval_Observed == "9-10 minutes" ~ "9-10min",
+                                     TRUE ~ "UNKNOWN")
+         )
 
-
-
-# determine appropriate species by unique(data_flat$Species_Abbreviation)
-# length(unique(data_flat$Species_Abbreviation[(data_flat$Species_Abbreviation %in% WT_spTbl$species_code)])) # 101 in the list 
+# Visual check on meaning of "Species_Abbreviation"
+check_species <- merge(WT_spTbl, data_flat[,c("Species_Common", "Species_Abbreviation")], by.x="species_code", by.y = "Species_Abbreviation")
+check_species[!duplicated(check_species),]
+#-- ALL abbreviation has the same meaning
+#Translate
 data_flat$species <- WT_spTbl$species_code[match(data_flat$Species_Abbreviation, WT_spTbl$species_code)]
 
-# length(unique(data_flat$Species_Abbreviation[!(data_flat$Species_Abbreviation %in% WT_spTbl$species_code)])) # 14 not in list, most of them are 'unidentified, 1 suspected typo
-# unique(data_flat$Species_Common[!(data_flat$Species_Abbreviation %in% WT_spTbl$species_code)]) # among the 14 code not in list, the 'common name' are shown
-# join is performed by removing special characters and case effects
-data_flat_cleaned <- tolower(gsub("[^[:alnum:]]", "", data_flat$Species_Common))
-WT_spTbl_cleaned <- tolower(gsub("[^[:alnum:]]", "", WT_spTbl$species_common_name))
-data_flat$species <- WT_spTbl$species_code[match(data_flat_cleaned, WT_spTbl_cleaned)]
+# extract abbreviation with no match
+missABV <- unique(data_flat$Species_Abbreviation[!(data_flat$Species_Abbreviation %in% WT_spTbl$species_code)])
+# "UPBD" "UWPR" "UWAR" "USPA" "UTHR" "UDUC" "UNPS" "UOWL" "UFLY" "UVIR" "WPWA" "URAP" "UBLB" "UGUL"
 
-print(length(data_flat$Species_Common[is.na(data_flat$Species_Abbreviation)])) # 0
-print(length(data_flat$Species_Common[is.na(data_flat$species)])) # 48 rows not joinable with values "Unidentified non-passerine"
-# data_flat$species[is.na(data_flat$species)] <- "NONE" # For these records we call it "NONE"
+miss_species <- data_flat %>%
+  filter(Species_Abbreviation %in% missABV) %>%
+  distinct(Species_Common, Species_Abbreviation)
+print(miss_species)
 
+data_flat <- data_flat %>%
+  mutate(species = case_when(Species_Abbreviation == "UPBD"  ~ "UNPA",
+                             Species_Abbreviation == "UWPR"  ~ "UNWO",
+                             Species_Abbreviation == "UWAR"  ~ "UNWA",
+                             Species_Abbreviation == "USPA"  ~ "UNSP",
+                             Species_Abbreviation == "UTHR"  ~ "UNTH",
+                             Species_Abbreviation == "UDUC"  ~ "UNDU",
+                             Species_Abbreviation == "UNPS"  ~ "UNBI",
+                             Species_Abbreviation == "UOWL"  ~ "UNOW",
+                             Species_Abbreviation == "UFLY"  ~ "UNFI",
+                             Species_Abbreviation == "UVIR"  ~ "UNVI",
+                             Species_Abbreviation == "WPWA"  ~ "PAWA",
+                             Species_Abbreviation == "URAP"  ~ "URPT",
+                             Species_Abbreviation == "UBLB"  ~ "UNBL",
+                             Species_Abbreviation == "UGUL"  ~ "UNGU",
+                             TRUE ~ species)
+  )
 
 
 # determine appropriate behaviour by unique(data_flat$Behaviour)
@@ -234,8 +223,10 @@ if(is.null(data_flat$isHeard)) {
 data_flat$isHeard <- ifelse(grepl(".*Singing.*", data_flat$Behaviour), "Yes", data_flat$isHeard)
 data_flat$isHeard <- ifelse(grepl(".*Calling.*", data_flat$Behaviour), "Yes", data_flat$isHeard)
 data_flat$isHeard <- ifelse(grepl(".*Drumming.*", data_flat$Behaviour), "Yes", data_flat$isHeard)
-data_flat$isHeard <- ifelse(grepl(".*Flyover.*", data_flat$Behaviour), "Yes", data_flat$isHeard)
+data_flat$isHeard <- ifelse(grepl(".*Flyover.*", data_flat$Behaviour), "DNC", data_flat$isHeard)
 data_flat$isHeard <- ifelse(grepl(".*Simultaneous.*", data_flat$Behaviour), "Yes", data_flat$isHeard)
+data_flat$isHeard <- ifelse(grepl(".*Observed.*", data_flat$Behaviour), "No", data_flat$isHeard)
+
 # check result unique(paste(data_flat$Behaviour, data_flat$isHeard))
 
 if(is.null(data_flat$isSeen)) {
@@ -243,121 +234,126 @@ if(is.null(data_flat$isSeen)) {
 }
 data_flat$isSeen <- ifelse(grepl(".*Observed.*", data_flat$Behaviour), "Yes", data_flat$isSeen)
 data_flat$isSeen <- ifelse(grepl(".*Simultaneous.*", data_flat$Behaviour), "Yes", data_flat$isSeen)
+data_flat$isSeen <- ifelse(grepl(".*Flyover.*", data_flat$Behaviour), "DNC", data_flat$isSeen)
+
 # check result unique(paste(data_flat$Behaviour, data_flat$isSeen))
 
 
 # determine appropriate species by unique(data_flat$Count), any(is.na(data_flat$Count))
-data_flat$abundance <-data_flat$Count
+data_flat$ind_count <-data_flat$Count
 # any(is.na(data_flat$abundance))
 
-
+#### Are they real duplicates
 # create 'isDuplicate' column for signaling the duplicated column 
 WTspecies <- c("surveyDateTime", "location", "species", "distanceband", "durationinterval")
 duplicates <- duplicated(data_flat[WTspecies]) | duplicated(data_flat[WTspecies], fromLast = TRUE)
 data_flat$isDuplicate <- duplicates
-print(data_flat[data_flat$isDuplicate == TRUE, c("surveyDateTime", "location", "distanceband", "durationinterval", "Species_Abbreviation", "observer", "abundance", "isDuplicate")])
+print(data_flat[data_flat$isDuplicate == TRUE, c("surveyDateTime", "location", "distanceband", "durationinterval", "Species_Abbreviation", "observer", "ind_count", "isDuplicate")])
 print(nrow(data_flat[data_flat$isDuplicate == TRUE, ])) # 1725 duplicated record # View(data_flat)
+#extract 1 to check
+data_flat[data_flat$surveyDateTime =="2011-05-25 09:05:00" & data_flat$species=="WTSP"& data_flat$distanceband=="100m-INF" & data_flat$durationinterval=="0-2min",]
+head(observation)
+observation[observation$Species_Abbreviation=="WTSP"& 
+              observation$Distance_Observed=="detected outside 100m circle" & 
+              observation$Interval_Observed=="detected within 0-2 minutes of survey",]
 
-
-# group the abundance value of duplicated rows, into a new column 'total abundance', also delete the second duplicates 
-data_flat <- data_flat %>%
-  group_by(surveyDateTime, location, species, distanceband, durationinterval) %>%
-  mutate(total_abundance = ifelse(isDuplicate == TRUE, sum(abundance), abundance)) %>%
-  filter(!duplicated(paste(surveyDateTime, location, species, distanceband, durationinterval))) %>%
-  ungroup() %>%
-  select(-isDuplicate) # Optional: Remove the 'isDuplicate' column if no longer needed
-
-# nrow(data_flat) : 14461
-# View(data_flat[data_flat$total_abundance != data_flat$abundance, ]) # visualise rows with grouped abundance ***abundance < total abundance
-
-
-# delete the rows with non-valid species code: "Unidentified non-passerine" , 'species' is NA, 48 rows deleted
-data_flat <- data_flat[!is.na(data_flat$species), ]
-# nrow(data_flat) : 14413 
-
-
-
-# Delete duplicated in the eye of the survey table *total abundance is used
-WTsurvey <- c("location", "surveyDateTime", "durationMethod", "distanceMethod", "observer", "species", "distanceband",
-              "durationinterval", "total_abundance", "isHeard", "isSeen", "comments")
-survey_tbl <- data_flat[!duplicated(data_flat[,WTsurvey]), WTsurvey]
-
-
-# change the column name 'total_abundance' to 'abundance' for better regonisising by WT
-colnames(survey_tbl)[colnames(survey_tbl) == "total_abundance"] <- "abundance"
-
-# check NULL result by, colSums(is.na(survey_tbl)) > 0
-# print(data_flat[is.na(data_flat$species), ])
-# survey_tbl[survey_tbl$abundance ==0, ], <0 rows>
-
-
-############################
-##EXPORT
-############################
-
-# print(data_flat[!is.na(data_flat$comments), ]) # No comments in the source files
-
-write.csv(survey_tbl, file= file.path(out_dir, paste0(dataset_code,"_survey.csv")), na = "", row.names = FALSE)
-# survey_out <- file.path(out_dir, paste0(dataset_code,"_survey.csv"))
-# drive_upload(media = survey_out, path = as_id(dr_ls), name = paste0(dataset_code,"_survey.csv"), overwrite = TRUE) 
-
-
-#Only select visit with observation
-WTvisit <- c("location", "visitDate", "snowDepthMeters", "waterDepthMeters", "crew", "bait", "accessMethod", "landFeatures", "comments", 
-             "wildtrax_internal_update_ts", "wildtrax_internal_lv_id")
-visit_tbl <- visit_tbl[visit_tbl$pkey_dt %in% data_flat$pkey_dt, WTvisit]
-write.csv(visit_tbl, file= file.path(out_dir, paste0(dataset_code,"_visit.csv")), na = "", row.names = FALSE)
-# visit_out <- file.path(out_dir, paste0(dataset_code,"_visit.csv"))
-# drive_upload(media = visit_out, path = as_id(dr_ls), name = paste0(dataset_code,"_visit.csv"), overwrite = TRUE) 
-
-
-location_tbl <- subset(location_tbl,location_tbl$location %in% survey_tbl$location)
-write.csv(location_tbl, file= file.path(out_dir, paste0(dataset_code,"_location.csv")), na = "", row.names = FALSE)
-# location_out <- file.path(out_dir, paste0(dataset_code,"_location.csv"))
-# drive_upload(media = location_out, path = as_id(dr_ls), name = paste0(dataset_code,"_location.csv"), overwrite = TRUE) 
-
-
-
-
-
-
-
-
+# Validation 
+print(unique(data_flat$species[!(data_flat$species %in% WT_spTbl$species_code)]))
+print(unique(data_flat$durationinterval[!(data_flat$durationinterval %in% WT_durBandTbl$duration_interval_type)]))
+print(unique(data_flat$distanceband[!(data_flat$distanceband %in% WT_distBandTbl$distance_band_type)]))
+print(unique(data_flat$durationinterval[!(data_flat$durationinterval %in% WT_durBandTbl$duration_interval_type)]))
 
 #---EXTENDED
-
 data_flat$rawObserver <- data_flat$Observer
 data_flat$original_species <- data_flat$Species_Common
 data_flat$scientificname <- WT_spTbl$scientific_name[match(data_flat$species, WT_spTbl$species_code)]
 data_flat$raw_distance_code <- data_flat$Distance_Observed
 data_flat$raw_duration_code <- data_flat$Interval_Observed
 data_flat$originalBehaviourData <- data_flat$Behaviour
-data_flat$missingindetections <- "NONE"
-data_flat$pc_vt <- "NONE"
-data_flat$pc_vt_detail <- "NONE"
-data_flat$age <- "NONE"
-data_flat$fm <- "NONE"
-data_flat$group <- "NONE"
-data_flat$flyover <- data_flat$flyover <- ifelse(data_flat$Behaviour == "Flyover", "Yes", "") 
-data_flat$displaytype <- "NONE"
-data_flat$nestevidence <- "NONE"
-data_flat$behaviourother <- data_flat$flyover <- ifelse(data_flat$Behaviour == "Flyover", data_flat$Behaviour, "") 
-data_flat$atlas_breeding_code <- "NONE"
+data_flat$missingindetections <- "DNC"
+data_flat$age <- "DNC"
+data_flat$fm <- "DNC"
+data_flat$group <- "DNC"
+data_flat$flyover <- ifelse(data_flat$Behaviour == "Flyover", "Yes", "No") 
+data_flat$displaytype <- "DNC"
+data_flat$nestevidence <- "DNC"
+data_flat$behaviourother <- "DNC"
+data_flat$atlas_breeding_code <- "DNC"
 
-Extended <- c("organization", "project","location", "surveyDateTime", "species", "distanceband", "durationinterval", "site", 
-              "station", "utmZone", "easting", "northing", "missinginlocations", "time_zone", "data_origin", 
-              "missinginvisit", "pkey_dt", "survey_time", "survey_year", "rawObserver", "original_species", 
-              "scientificname", "raw_distance_code", "raw_duration_code", "originalBehaviourData", 
-              "missingindetections", "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", 
-              "displaytype", "nestevidence", "behaviourother", "atlas_breeding_code")
+data_flat <- data_flat %>%
+  mutate(pc_vt = case_when(Behaviour =="Singing" ~ "Song",
+                           Behaviour =="Calling" ~ "Song",
+                           Behaviour =="Drumming" ~ "Non-Vocal",
+                           Behaviour =="Observed" ~ "NA",
+                           Behaviour =="Simultaneous" ~ "S-C",
+                           TRUE ~ "DNC" ),
+         pc_vt_detail= case_when(Behaviour =="Drumming" ~ "Drumming",
+                                 TRUE ~ "NA" ))
+  
+#--------------------------------------------------------------
+#
+#       EXPORT
+#
+#--------------------------------------------------------------
+dr<- drive_get(paste0("toUpload/",organization), shared_drive = "BAM_Core")
+#Set GoogleDrive id
+if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
+  dr_dataset_code <-drive_mkdir(dataset_code, path = as_id(dr), overwrite = NA)
+} else {
+  dr_dataset_code <- drive_ls(as_id(dr), pattern = dataset_code)
+}
+dr_ls <- drive_ls(as_id(dr), pattern = dataset_code)
 
+#---LOCATION
+no_flyover<- data_flat %>%
+  filter(!flyover == "Yes")
+
+WTlocation <- c("location", "latitude", "longitude")
+
+# Remove duplicated location
+location_tbl <- no_flyover[!duplicated(no_flyover[,WTlocation]), WTlocation] 
+write.csv(location_tbl, file= file.path(dataDir, paste0(dataset_code,"_location.csv")), row.names = FALSE, na = "")
+location_out <- file.path(dataDir, paste0(dataset_code,"_location.csv"))
+drive_upload(media = location_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_location.csv"), overwrite = TRUE) 
+
+#---VISIT
+WTvisit <- c("location", "visitDate", "snowDepthMeters", "waterDepthMeters", "crew", "bait", "accessMethod", "landFeatures", "comments", 
+             "wildtrax_internal_update_ts", "wildtrax_internal_lv_id")
+
+#Delete duplicated based on WildtTrax attributes (double observer on the same site, same day). 
+visit_tbl <- no_flyover[!duplicated(no_flyover[,WTvisit]), WTvisit] # 
+
+write.csv(visit_tbl, file= file.path(dataDir, paste0(dataset_code,"_visit.csv")), row.names = FALSE, na = "")
+visit_out <- file.path(dataDir, paste0(dataset_code,"_visit.csv"))
+drive_upload(media = visit_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_visit.csv"), overwrite = TRUE) 
+
+#---SURVEY
+survey_tbl <- no_flyover %>% 
+  group_by(location, surveyDateTime, durationMethod, distanceMethod, observer, species, distanceband, durationinterval, isHeard, isSeen, comments) %>%
+  dplyr::summarise(abundance = sum(ind_count), .groups= "keep")
+
+WTsurvey <- c("location", "surveyDateTime", "durationMethod", "distanceMethod", "observer", "species", "distanceband",
+              "durationinterval", "abundance", "isHeard", "isSeen", "comments")
+survey_tbl <- survey_tbl[!duplicated(survey_tbl[,WTsurvey]), WTsurvey] # 
+
+write.csv(survey_tbl, file= file.path(dataDir, paste0(dataset_code,"_survey.csv")), row.names = FALSE, na = "")
+survey_out <- file.path(dataDir, paste0(dataset_code,"_survey.csv"))
+drive_upload(media = survey_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_survey.csv"), overwrite = TRUE) 
+
+#---EXTENDED
+Extended <- c("organization", "project","location", "surveyDateTime", "species", "ind_count", "distanceband", "durationinterval", "site", "station", "utmZone", "easting", 
+              "northing", "missinginlocations", "time_zone", "data_origin", "missinginvisit", "pkey_dt", "survey_time",
+              "survey_year", "rawObserver", "original_species", "scientificname", "raw_distance_code", "raw_duration_code", 
+              "originalBehaviourData", "missingindetections", "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", 
+              "displaytype", "nestevidence", "behaviourother")
 extended_tbl <- data_flat[!duplicated(data_flat[,Extended]), Extended] 
-write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_extended.csv")), na = "", row.names = FALSE)
-
+write.csv(extended_tbl, file.path(dataDir, paste0(dataset_code, "_behavior.csv")), quote = FALSE, row.names = FALSE, na = "")
+extended_out <- file.path(dataDir, paste0(dataset_code,"_behavior.csv"))
+drive_upload(media = extended_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_behavior.csv"), overwrite = TRUE) 
 
 
 # ---PROCESSING STATS, no. of locations, visits, and surveys
-file_name <- file.path(out_dir, paste0(dataset_code, "_stats.csv"))
+file_name <- file.path(dataDir, paste0(dataset_code, "_stats.csv"))
 con <- file(file_name, open = "a")
 writeLines(paste0("Organization: ", organization), con)
 writeLines(paste0("Project: ", dataset_code), con)
@@ -368,20 +364,3 @@ writeLines(nrow_visit, con)
 nrow_survey <- paste0("Number of survey: ", nrow(survey_tbl))
 writeLines(nrow_survey, con)
 close(con)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
