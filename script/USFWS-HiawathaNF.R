@@ -15,6 +15,8 @@ library(readxl)
 library(plyr) 
 library(dplyr)
 library(sf)
+library(googlesheets4)
+library(stringr)
 
 
 ## URL
@@ -22,12 +24,12 @@ url <- "https://drive.google.com/drive/u/1/folders/155udOBe8meqCYNXZ8JGkt2xgiIGt
 
 
 ## Initialize variables
-wd <- "C:/Users/asito/Desktop/ModellingProject/#BAM/WildTrax_Integration"
+wd <- getwd()
 organization = "USFWS"
-dataset_code = "MI_HiawathaNF"
+dataset_code = "HiawathaNF"
 setwd(file.path(wd))
 
-
+WTpj_Tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1fqifS_E5O_IpW1B-UG_xthr9hzY6FIek-nFjCrt1G0w", sheet = "project")
 lu <- "./lookupTables"
 WT_spTbl <- read.csv(file.path(lu, "species_codes.csv"))
 colnames(WT_spTbl) <- c("species_common_name", "species_code", "scientific_name")
@@ -57,21 +59,23 @@ if (!dir.exists(out_dir)) {
 #       LOAD
 #
 #--------------------------------------------------------------
-
-drive_auth()
-folder_id <- sub(".*folders/", "", url)
-files_in_folder <- drive_ls(as_id(folder_id))
-
-
-# Download each CSV file and load it into variables a, b, and c
-a <- read.csv(drive_download(files_in_folder$id[2], overwrite = TRUE)$local_path)
-b <- read.csv(drive_download(files_in_folder$id[1], overwrite = TRUE)$local_path)
-c <- read.csv(drive_download(files_in_folder$id[3], overwrite = TRUE)$local_path)
-
-# file id may change between b and c
-location <- b
-observation <- c
-
+if (length(list.files(dataDir)) ==0) {
+  pid <- WTpj_Tbl %>%
+    filter(dataset_code =="HiawathaNF") %>%
+    select("GSharedDrive location")
+  #Download from GoogleDrive
+  gd.list <- drive_ls(as.character(pid))
+  location <- gd.list %>%
+    filter(name =="Hiawatha National Forest Sampling Units_lklocation.csv") %>%
+    select("id")
+  drive_download(as_id(as.character(location)), path = file.path(dataDir, "Hiawatha National Forest Sampling Units_lklocation.csv"))
+  observation <- gd.list %>%
+    filter(name =="Hiawatha National Forest Point Count Data.csv") %>%
+    select("id")
+  drive_download(as_id(as.character(observation)), path = file.path(dataDir, "Hiawatha National Forest Point Count Data.csv"))
+}
+observation <- read.csv(file.path(dataDir, "Hiawatha National Forest Point Count Data.csv"))
+location <- read.csv(file.path(dataDir, "Hiawatha National Forest Sampling Units_lklocation.csv"))
 
 #--------------------------------------------------------------
 #
@@ -85,12 +89,16 @@ observation <- c
 data_flat <- observation
 data_flat <- merge(data_flat, location, by.x= 'Point', by.y= 'Short.Name')
 
-data_flat$organization <- organization
-data_flat$project <- dataset_code
-data_flat$site <- data_flat$Transect
-data_flat$station <- data_flat$Point
+data_flat <- data_flat %>%
+  mutate(organization = organization, 
+         project = dataset_code,
+         site = Transect,
+         station = str_remove(Point, Transect),
+         utmZone = '16N',
+         easting = Longitude,
+         northing = Latitude)
 
-# Not exist in source data
+# Not in data
 data_flat$elevationMeters <- NA
 data_flat$bufferRadiusMeters <- NA
 data_flat$isHidden <- NA
@@ -98,9 +106,6 @@ data_flat$trueCoordinates <- NA
 data_flat$comments <- NA
 data_flat$internal_wildtrax_id <- NA
 data_flat$internal_update_ts <- NA
-data_flat$utmZone	<- '16N'
-data_flat$easting	<- data_flat$`Longitude`
-data_flat$northing	<- data_flat$`Latitude`
 data_flat$missinginlocations <- NA
 
 # correct projection from EPSG 32615 to EPSG 4269, and save them back to the original dataframe (data_flat)
@@ -122,21 +127,10 @@ data_flat$location <- paste(dataset_code, data_flat$site, data_flat$station, sep
 ############################
 #### VISIT TABLE ####
 ############################
-
-#survey attributes
 data_flat$visitDate <- data_flat$Date
-data_flat$snowDepthMeters <- NA
-data_flat$waterDepthMeters <- NA
-data_flat$crew <- NA
 data_flat$bait <- "None"
 data_flat$accessMethod <- data_flat$Detection.Cue
-data_flat$landFeatures <- NA
-data_flat$comments <- NA
-data_flat$wildtrax_internal_update_ts <- NA
-data_flat$wildtrax_internal_lv_id <- NA
-data_flat$time_zone <- NA
 data_flat$data_origin <- dataset_code
-data_flat$missinginvisit <- NA
 data_flat$survey_year <- sub("\\-.*", "", data_flat$visitDate) 
 data_flat$survey_time <- sub(".*\\s", "", data_flat$Start.Time)
 data_flat$surveyDateTime <- paste(data_flat$visitDate, data_flat$survey_time)
@@ -146,6 +140,15 @@ data_flat$observer <- case_when(data_flat$Researcher == "Kearns, Laura"  ~ "obs0
 
 data_flat$pkey_dt<- paste(data_flat$location, paste0(gsub("-", "", as.character(data_flat$visitDate)),"_", gsub(":", "", data_flat$survey_time)), data_flat$observer, sep=":")
 head(data_flat$pkey_dt)
+data_flat$snowDepthMeters <- NA
+data_flat$waterDepthMeters <- NA
+data_flat$crew <- NA
+data_flat$landFeatures <- NA
+data_flat$comments <- NA
+data_flat$wildtrax_internal_update_ts <- NA
+data_flat$wildtrax_internal_lv_id <- NA
+data_flat$time_zone <- NA
+data_flat$missinginvisit <- NA
 
 
 ############################
@@ -155,7 +158,7 @@ head(data_flat$pkey_dt)
 colSums(is.na(data_flat)) > 0 # 'Spp' should be FALSE
 
 # determine appropriate 'distanceMethod' by unique(data_flat$Distance.Bin)
-data_flat$distanceMethod <- "0m-25m-50m-100m-INF"
+data_flat$distanceMethod <- "0m-25m-50m-100m"
 
 # Initialize to empty strings if not already existing
 if(is.null(data_flat$distanceband)) {
@@ -164,7 +167,7 @@ if(is.null(data_flat$distanceband)) {
 data_flat$distanceband <- ifelse(grepl(".*<25.*", data_flat$Distance.Bin), "0m-25m", data_flat$distanceband)
 data_flat$distanceband <- ifelse(grepl(".*25 to 50.*", data_flat$Distance.Bin), "25m-50m", data_flat$distanceband)
 data_flat$distanceband <- ifelse(grepl(".*50 to 100.*", data_flat$Distance.Bin), "50m-100m", data_flat$distanceband)
-data_flat$distanceband <- ifelse(grepl(".*<1000.*", data_flat$Distance.Bin), "100m-INF", data_flat$distanceband)
+data_flat$distanceband <- ifelse(grepl(".*<1000.*", data_flat$Distance.Bin), "UNKNOWN", data_flat$distanceband)
 # check result unique(paste(data_flat$Distance.Bin, data_flat$distanceband))
 print(unique(data_flat$distanceband[(data_flat$distanceband %in% WT_distBandTbl$distance_band_type)]))
 
@@ -262,26 +265,17 @@ data_flat$missingindetections <- "DNC"
 data_flat$age <- "DNC"
 data_flat$fm <- "DNC"
 data_flat$group <- "DNC"
-data_flat$flyover <- "DNC"
+data_flat$flyover <- ifelse(data_flat$Distance.Bin.ID=="FLY", "Yes", "No")
 data_flat$displaytype <- "DNC"
 data_flat$nestevidence <- "DNC"
 data_flat$behaviourother <- "DNC"
 data_flat$atlas_breeding_code <- "DNC"
-
-data_flat <- data_flat %>%
-  mutate(pc_vt = case_when(Behaviour =="Singing" ~ "Song",
-                           Behaviour =="Calling" ~ "Song",
-                           Behaviour =="Observed" ~ "NA",
-                           Behaviour =="Visual" ~ "NA",
-                           TRUE ~ "DNC" ),
-         pc_vt_detail= case_when(TRUE ~ "NA" ))
-
-
+data_flat$pc_vt <- "DNC"
+data_flat$pc_vt_detail <- "DNC"
 
 ############################
 ##EXPORT
 ############################
-
 
 # Create sub folder in 'toUpload' with the organization name
 dr<- drive_get("toUpload/", shared_drive = "BAM_Core")
@@ -307,10 +301,7 @@ if (nrow(folder_list[folder_list$name == dataset_code, ]) == 0){
 no_flyover<- data_flat %>%
   filter(!flyover == "Yes")
 
-print(no_flyover)
-
-
-
+#print(no_flyover)
 
 #---LOCATION
 # Remove duplicated location
@@ -346,34 +337,17 @@ survey_out <- file.path(out_dir, paste0(dataset_code,"_survey.csv"))
 drive_upload(media = survey_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_survey.csv"), overwrite = TRUE) 
 
 
-
-# check NULL result by, colSums(is.na(survey_tbl)) > 0
-# survey_tbl[survey_tbl$abundance ==0, ], should be 0
-
-
-# below lines to highlight the grouped lines, which are not selected in survey_tbl 
-# x <- no_flyover %>%
-#   group_by(surveyDateTime, location, species, distanceband, durationinterval, isHeard, isSeen, comments) %>%
-#   mutate(abundance = ifelse(isDuplicate == TRUE, sum(ind_count), ind_count)) %>%
-#   filter(!duplicated(paste(surveyDateTime, location, species, distanceband, durationinterval))) %>%
-#   ungroup()
-# View(x[x$abundance != x$ind_count, ]) # visualized rows with grouped ind_count
-
-
-
 #---EXTENDED
-# "atlas_breeding_code" still kept
-# the operation of grouping "ind_count" into "abundance" is not done
-# Extended <- c("organization", "project", "location", "surveyDateTime", "species", "ind_count", "distanceband", "durationinterval", "site", "station", "utmZone", "easting",
-#               "northing", "missinginlocations", "time_zone", "data_origin", "missinginvisit", "pkey_dt", "survey_time",
-#               "survey_year", "rawObserver", "original_species", "scientificname", "raw_distance_code", "raw_duration_code",
-#               "originalBehaviourData", "missingindetections", "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", 
-#               "displaytype", "nestevidence", "behaviourother", "atlas_breeding_code")
-# 
-# extended_tbl <- data_flat[!duplicated(data_flat[,Extended]), Extended] 
-# write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_behavior.csv")), na = "", row.names = FALSE)
-# extended_out <- file.path(out_dir, paste0(dataset_code,"_behavior.csv"))
-# drive_upload(media = extended_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_behavior.csv"), overwrite = TRUE) 
+Extended <- c("organization", "project", "location", "surveyDateTime", "species", "ind_count", "distanceband", "durationinterval", "site", "station", "utmZone", "easting",
+               "northing", "missinginlocations", "time_zone", "data_origin", "missinginvisit", "pkey_dt", "survey_time",
+               "survey_year", "rawObserver", "original_species", "scientificname", "raw_distance_code", "raw_duration_code",
+               "originalBehaviourData", "missingindetections", "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", 
+               "displaytype", "nestevidence", "behaviourother", "atlas_breeding_code")
+ 
+extended_tbl <- data_flat[!duplicated(data_flat[,Extended]), Extended] 
+write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_behavior.csv")), na = "", row.names = FALSE)
+extended_out <- file.path(out_dir, paste0(dataset_code,"_behavior.csv"))
+drive_upload(media = extended_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_behavior.csv"), overwrite = TRUE) 
 
 
 
