@@ -32,7 +32,11 @@ WT_durBandTbl <- read.csv(file.path("./lookupTables/duration_interval_codes.csv"
 WT_distBandTbl <- read.csv(file.path("./lookupTables/distance_band_codes.csv"), fileEncoding="UTF-8-BOM")
 
 organization <- "CWS-NOR"
-dataset_code = "NTBMS2019"
+dataset_code <- "NTBMS2019"
+pcode <- "NTBMS2019"
+source_data <-"NTBMS_HumanPC_Data_working.csv"
+source_beh <- "NTBMS-LV-LookUpTables-HB.xlsx"
+
 lu <- "./lookupTables"
 project <- file.path("./project", dataset_code)
 out_dir <- file.path("./out", dataset_code)    # where output dataframe will be exported
@@ -56,7 +60,26 @@ if (!dir.exists(out_dir)) {
 
 
 #--------------------------------------------------------------
-#       LOAD
+#       LOAD SOURCE FILE 
+#--------------------------------------------------------------
+WTpj_Tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1fqifS_E5O_IpW1B-UG_xthr9hzY6FIek-nFjCrt1G0w", sheet = "project")
+if (length(list.files(project_dir)) ==0) {
+  pid <- WTpj_Tbl %>%
+    filter(dataset_code ==pcode) %>%
+    select("GSharedDrive location")
+  #Download from GoogleDrive
+  gd.list <- drive_ls(as.character(pid))
+  data_id <- gd.list %>%
+    filter(name ==source_data) %>%
+    select("id")
+  drive_download(as_id(as.character(data_id)), path = file.path(project_dir, source_data))
+  beh_id <- gd.list %>%
+    filter(name ==source_beh) %>%
+    select("id")
+  drive_download(as_id(as.character(beh_id)), path = file.path(project_dir, source_beh))
+}
+#--------------------------------------------------------------
+#       Connect
 #--------------------------------------------------------------
 data_flat <- read.csv(file.path(project, "NTBMS_HumanPC_Data_working.csv"))
 lu_observer <- read_excel(file.path(project, "NTBMS-LV-LookUpTables-HB.xlsx"), sheet = "ListObserver")

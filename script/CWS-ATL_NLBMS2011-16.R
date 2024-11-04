@@ -29,6 +29,7 @@ library(reshape2) # melt
 library(readxl)
 library(googledrive)
 library(RODBC)
+library(googlesheets4)
 
 ## Initialize variables
 wd <- "E:/MelinaStuff/BAM/WildTrax/WT-Integration"
@@ -36,6 +37,8 @@ setwd(wd)
 
 organization = "CWS-ATL"
 dataset_code = "NLBMS2011-16"
+pcode = "NLBMS2011-16"
+
 source_data <- "Landbird_Surveys_2016.mdb"
 lu <- "./lookupTables"
 WT_spTbl <- read.csv(file.path("./lookupTables/species_codes.csv"))
@@ -58,6 +61,21 @@ if (!file.exists(data_db)) {
 out_dir <- file.path("./out", dataset_code)    # where output dataframe will be exported
 if (!dir.exists(out_dir)) {
   dir.create(out_dir)
+}
+#--------------------------------------------------------------
+#       LOAD SOURCE FILE 
+#--------------------------------------------------------------
+WTpj_Tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1fqifS_E5O_IpW1B-UG_xthr9hzY6FIek-nFjCrt1G0w", sheet = "project")
+if (length(list.files(project_dir)) ==0) {
+  pid <- WTpj_Tbl %>%
+    filter(dataset_code ==pcode) %>%
+    select("GSharedDrive location")
+  #Download from GoogleDrive
+  gd.list <- drive_ls(as.character(pid))
+  data_id <- gd.list %>%
+    filter(name ==source_data) %>%
+    select("id")
+  drive_download(as_id(as.character(data_id)), path = file.path(project_dir, source_data))
 }
 #######################################################
 ##                    Connect
@@ -239,7 +257,7 @@ print(survey[is.na(survey$species),])
 #
 #--------------------------------------------------------------
 #Extract GoogleDrive id to store output
-dr<- drive_get(paste0("toUpload/",organization))
+dr<- drive_get(paste0("toUpload/",organization), shared_drive = "BAM_Core")
 
 if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
   dr_dataset_code <-drive_mkdir(dataset_code, path = as_id(dr), overwrite = NA)
