@@ -203,23 +203,25 @@ print(length(data_flat$species[is.na(data_flat$Spp)]))  # 0, the original column
 
 
 # determine appropriate behaviour by unique(data_flat$'Detection.Cue')
-if(is.null(data_flat$isHeard)) {
-  data_flat$isHeard <- rep("DNC", nrow(data_flat))
-}
-data_flat$isHeard <- ifelse(grepl(".*S.*", data_flat$Detection.Cue), "Yes", data_flat$isHeard)
-data_flat$isHeard <- ifelse(grepl(".*C.*", data_flat$Detection.Cue), "Yes", data_flat$isHeard)
-data_flat$isHeard <- ifelse(grepl(".*O.*", data_flat$Detection.Cue), "No", data_flat$isHeard)
-data_flat$isHeard <- ifelse(grepl(".*NR.*", data_flat$Detection.Cue), "DNC", data_flat$isHeard)
+data_flat <- data_flat %>%
+  mutate(isHeard = case_when(
+    grepl(".*S.*", Detection.Cue) ~ "Yes",
+    grepl(".*C.*", Detection.Cue) ~ "Yes",
+    grepl(".*O.*", Detection.Cue) ~ "No",
+    grepl(".*NR.*", Detection.Cue) ~ "DNC",
+    TRUE ~ "DNC"
+  ))
 # check result unique(paste(data_flat$Detection.Cue, data_flat$isHeard))
 
 
-if(is.null(data_flat$isSeen)) {
-  data_flat$isSeen <- rep("DNC", nrow(data_flat))
-}
-data_flat$isHeard <- ifelse(grepl(".*S.*", data_flat$Detection.Cue), "No", data_flat$isSeen)
-data_flat$isHeard <- ifelse(grepl(".*C.*", data_flat$Detection.Cue), "No", data_flat$isSeen)
-data_flat$isHeard <- ifelse(grepl(".*O.*", data_flat$Detection.Cue), "Yes", data_flat$isSeen)
-data_flat$isHeard <- ifelse(grepl(".*NR.*", data_flat$Detection.Cue), "DNC", data_flat$isSeen)
+data_flat <- data_flat %>%
+  mutate(isSeen = case_when(
+    grepl(".*S.*", Detection.Cue) ~ "No",
+    grepl(".*C.*", Detection.Cue) ~ "No",
+    grepl(".*O.*", Detection.Cue) ~ "Yes",
+    grepl(".*NR.*", Detection.Cue) ~ "DNC",
+    TRUE ~ "DNC"
+  ))
 # check result unique(paste(data_flat$Detection.Cue, data_flat$isSeen))
 
 
