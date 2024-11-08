@@ -3,7 +3,7 @@
 # author: Siu Chung WU, Diego
 # date: "October 30, 2024"
 # Note on translation:
-# 
+# 2 species code "BADO" "HOWR" not in WildTrax, translated to "BAOW' and "NHWR" by their scienticfic names
 
 
 library(googledrive)
@@ -167,33 +167,59 @@ any(is.na(data_flat$Spp)) # Should be FALSE
 data_flat$distanceMethod <- "0m-50m-100m-INF"
 
 # Initialize to empty strings if not already existing
-if(is.null(data_flat$distanceband)) {
-  data_flat$distanceband <- rep("", nrow(data_flat))
-}
-data_flat$distanceband <- ifelse(grepl(".*<50.*", data_flat$Distance.Bin), "0m-50m", data_flat$distanceband)
-data_flat$distanceband <- ifelse(grepl(".*50 to 100.*", data_flat$Distance.Bin), "50m-100m", data_flat$distanceband)
-data_flat$distanceband <- ifelse(grepl(".*>100.*", data_flat$Distance.Bin), "100m-INF", data_flat$distanceband)
+data_flat <- data_flat %>%
+  mutate(distanceband = case_when(
+    grepl(".*<50.*", Distance.Bin) ~ "0m-50m",
+    grepl(".*50 to 100.*", Distance.Bin) ~ "50m-100m",
+    grepl(".*>100.*", Distance.Bin) ~ "100m-INF",
+    TRUE ~ ""
+  ))
 # check result unique(paste(data_flat$Distance.Bin, data_flat$distanceband))
 print(unique(data_flat$distanceband[(data_flat$distanceband %in% WT_distBandTbl$distance_band_type)]))
+
 
 
 # determine appropriate 'distanceMethod' by unique(data_flat$Time.Bin)
 data_flat$durationMethod<- "0-3-5-10min"
 
 # Initialize to empty strings if not already existing
-if(is.null(data_flat$durationinterval)) {
-  data_flat$durationinterval <- rep("", nrow(data_flat))
-}
-data_flat$durationinterval <- ifelse(grepl(".*0_3min.*", data_flat$'Time.Bin'), "0-3min", data_flat$durationinterval)
-data_flat$durationinterval <- ifelse(grepl(".*3_5min.*", data_flat$'Time.Bin'), "3-5min", data_flat$durationinterval)
-data_flat$durationinterval <- ifelse(grepl(".*5_10min.*", data_flat$'Time.Bin'), "5-10min", data_flat$durationinterval)
+data_flat <- data_flat %>%
+  mutate(durationinterval = case_when(
+    grepl(".*0_3min.*", Time.Bin) ~ "0-3min",
+    grepl(".*3_5min.*", Time.Bin) ~ "3-5min",
+    grepl(".*5_10min.*", Time.Bin) ~ "5-10min",
+    TRUE ~ ""
+  ))
 # check result unique(paste(data_flat$Time.Bin, data_flat$durationinterval))
 print(unique(data_flat$durationinterval[(data_flat$durationinterval %in% WT_durBandTbl$duration_interval_type)]))
 
 
-# unique(data_flat$Spp[!(data_flat$Spp %in% WT_spTbl$species_code)])
+
+
+# unique(data_flat$Spp[(data_flat$Spp %in% WT_spTbl$species_code)]) 
 data_flat$species <- WT_spTbl$species_code[match(data_flat$Spp, WT_spTbl$species_code)]
 
+# extract abbreviation with no match - "BADO" "HOWR"
+missABV <- unique(data_flat$Spp[!(data_flat$Spp %in% WT_spTbl$species_code)])
+
+# extract the common name and scientific name of unmatched species code
+miss_species <- data_flat %>%
+  filter(Spp %in% missABV) %>%
+  distinct(Common.Name, Scientific.Name)
+print(miss_species)
+
+# search matched common name and scientific name in WildTrax species list
+print(WT_spTbl %>% filter(species_common_name %in% miss_species$Common.Name)) 
+print(WT_spTbl %>% filter(scientific_name %in% miss_species$Scientific.Name)) 
+
+# applied correct codes to miss_species
+data_flat <- data_flat %>%
+  mutate(species = case_when(Spp == "BADO"  ~ "BAOW",
+                             Spp == "HOWR"  ~ "NHWR",
+                             TRUE ~ species)
+  )
+
+# Check
 print(length(data_flat$species[is.na(data_flat$species)])) # 0, the newly build column
 print(length(data_flat$species[is.na(data_flat$Scientific.Name)])) # 0, the original column holding species Scientific Name
 print(length(data_flat$species[is.na(data_flat$Spp)]))  # 0, the original column holding species code
@@ -400,4 +426,3 @@ writeLines(nrow_visit, con)
 nrow_survey <- paste0("Number of survey: ", nrow(survey_tbl))
 writeLines(nrow_survey, con)
 close(con)
-
