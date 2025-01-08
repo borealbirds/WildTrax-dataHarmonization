@@ -84,8 +84,7 @@ SiteDescription_ori <- read.csv(file.path(dataDir, "AllSiteDescription.csv"))
 ############################
 #### LOCATION TABLE ####
 ############################
-data_flat <- BirdCounts_ori 
-data_flat <- merge(data_flat, SiteDescription_ori, 
+data_flat <- merge(BirdCounts_ori, SiteDescription_ori, 
                    by = c('Site', 'X_dd', 'Y_dd', 'Age', 'Type', 'Min_Edge_m', 'Date', 'Crew', 'Comments'), 
                    all.x = TRUE)
 
@@ -96,27 +95,26 @@ data_flat <- merge(data_flat, SiteDescription_ori,
 data_flat <- data_flat %>%
   mutate(organization = organization,
          project = dataset_code,
-         station = NA) %>%
-  rename(site = Site)
+         station = NA,
+         location = paste(dataset_code, Site, sep=":"),
+         longitude = X_dd,
+         latitude = Y_dd) %>%
+  rename(site = Site,
+         comments = Comments)
      
 
 # Not exist in source data will be set NA
-data_flat$elevationMeters <- NA
-data_flat$bufferRadiusMeters <- NA
-data_flat$isHidden <- NA
-data_flat$trueCoordinates <- NA
-data_flat$comments <- data_flat$Comments
-data_flat$internal_wildtrax_id <- NA
-data_flat$internal_update_ts <- NA
-data_flat$utmZone	<- NA
-data_flat$easting	<- NA
-data_flat$northing	<- NA
-data_flat$missinginlocations <- NA
-data_flat$longitude <- data_flat$X_dd
-data_flat$latitude <- data_flat$Y_dd
-
-#---LOCATION
-data_flat$location <- paste(dataset_code, data_flat$site, data_flat$station, sep=":")
+data_flat <- data_flat %>%
+  mutate(elevationMeters = NA,
+         bufferRadiusMeters = NA,
+         isHidden = NA,
+         trueCoordinates = NA,
+         internal_wildtrax_id = NA,
+         internal_update_ts = NA,
+         utmZone	= NA,
+         easting	= NA,
+         northing	= NA,
+         missinginlocations = NA)
 
 # options(digits = 7)
 # View(location_tbl)
