@@ -200,12 +200,12 @@ if(nrow(new_rows)>1){
 ############################
 #### SURVEY TABLE ####
 ############################
-#pivot table to split protocal band
+#pivot table to split protocol band
 data_expanded <- melt(data_flat, measure.vars = c("Within.50","X51.100","Over.100","Outside.Time"), value.name = "ind_count")
 data_expanded$ind_count <- as.numeric(data_expanded$ind_count)
 
 data_expanded <- data_expanded %>%
-  filter(ind_count>0 & variable != "Outside.Time") %>%
+  filter(ind_count>0 & variable != "Outside.Time") %>% #delete false 0 created by melt and obs recorded outside of survey
   mutate(distanceMethod = "0m-50m-100m-INF",
          distanceband = case_when(variable == "Within.50" ~ "0m-50m",
                                   variable == "X51.100" ~ "50m-100m", 
@@ -224,49 +224,16 @@ data_expanded <- data_expanded %>%
                              Status == "N" ~ "No",
                              Status == "DD" ~ "No",
                              Status == "F" ~ "No",
-                             NA ~ "DNC")
+                             NA ~ "DNC"),
+         isSeen = case_when(Status == "S" ~ "No",
+                            Status == "C" ~ "No",
+                            Status == "O" ~ "Yes",
+                            Status == "D" ~ "Yes",
+                            Status == "N" ~ "Yes",
+                            Status == "DD" ~ "Yes",
+                            Status == "F" ~ "Yes",
+                            NA ~ "DNC")
          )
-
-data_flat <- data_flat %>%
-  mutate(isSeen = case_when(
-    grepl(".*S.*", Status) ~ "No",
-    grepl(".*C.*", Status) ~ "No",
-    grepl(".*O.*", Status) ~ "Yes",
-    grepl(".*D.*", Status) ~ "Yes",
-    grepl(".*N.*", Status) ~ "Yes",
-    grepl(".*DD.*", Status) ~ "Yes",
-    grepl(".*F.*", Status) ~ "Yes",
-    NA ~ "DNC", 
-    TRUE ~ "DNC"
-  ))
-# check result unique(paste(data_flat$Status, data_flat$isSeen))
-
-
-# ind_count
-# Ensure all the distance band columns are numeric
-data_flat <- data_flat %>%
-  mutate(
-    Within.50 = as.numeric(Within.50),
-    X51.100 = as.numeric(X51.100),
-    Over.100 = as.numeric(Over.100),
-    Outside.Time = as.numeric(Outside.Time)
-  )
-
-# Update ind_count
-data_flat <- data_flat %>%
-  mutate(ind_count = case_when(
-    Within.50 != 0 ~ Within.50,
-    X51.100 != 0 ~ X51.100,
-    Over.100 != 0 ~ Over.100,
-    Outside.Time != 0 ~ Outside.Time,
-    TRUE ~ 0
-  ))
-
-# any(is.na(data_flat$ind_count))
-# Print rows where ind_count > 1
-#rows_with_ind_count_gt_1 <- data_flat %>% filter(ind_count > 1)
-# print(rows_with_ind_count_gt_1)
-
 
 # # create 'isDuplicate' column for signaling the duplicated column , *For information only
 # WTspecies <- c("surveyDateTime", "location", "species", "distanceband", "durationinterval")
@@ -275,97 +242,69 @@ data_flat <- data_flat %>%
 # print(data_flat[data_flat$isDuplicate == TRUE, c("surveyDateTime", "location", "distanceband", "durationinterval", "species", "observer", "ind_count", "isDuplicate")])
 # print(nrow(data_flat[data_flat$isDuplicate == TRUE, ])) # 1532 duplicated record
 
-
-# Delete duplicated in the eye of the survey table *abundance is used
-# WTsurvey <- c("location", "surveyDateTime", "durationMethod", "distanceMethod", "observer", "species", "distanceband",
-#               "durationinterval", "abundance", "isHeard", "isSeen", "comments")
-# survey_tbl <- data_flat[!duplicated(data_flat[,WTsurvey]), WTsurvey]
-# check NULL result by, colSums(is.na(survey_tbl)) > 0
-# print(data_flat[is.na(data_flat$species), ])
-# survey_tbl[survey_tbl$abundance ==0, ], should be 0
-
-
 # Validations: species code, duration band, distance band, all in specification
-print(unique(data_flat$species[!(data_flat$species %in% WT_spTbl$species_code)]))
-print(unique(data_flat$durationinterval[!(data_flat$durationinterval %in% WT_durBandTbl$duration_interval_type)]))
-print(unique(data_flat$distanceband[!(data_flat$distanceband %in% WT_distBandTbl$distance_band_type)]))
-print(unique(data_flat$durationinterval[!(data_flat$durationinterval %in% WT_durBandTbl$duration_interval_type)]))
+print(unique(data_expanded$species[!(data_expanded$species %in% WT_spTbl$species_code)]))
+print(unique(data_expanded$durationinterval[!(data_expanded$durationinterval %in% WT_durBandTbl$duration_interval_type)]))
+print(unique(data_expanded$distanceband[!(data_expanded$distanceband %in% WT_distBandTbl$distance_band_type)]))
+print(unique(data_expanded$durationinterval[!(data_expanded$durationinterval %in% WT_durBandTbl$duration_interval_type)]))
 
 
 ############################
-#### SURVEY TABLE ####
+#### BEHAVIOR TABLE ####
 ############################
-
-#---EXTENDED
-data_flat$rawObserver <- data_flat$Crew
-data_flat$original_species <- data_flat$Species.Code
-data_flat$scientificname <- WT_spTbl$scientific_name[match(data_flat$species, WT_spTbl$species_code)]
-data_flat$raw_distance_code <- NA
-data_flat$raw_duration_code <- NA
-data_flat$originalBehaviourData <- data_flat$Status
-data_flat$missingindetections <- "DNC"
-# data_flat$age <- NA
-data_flat$age <- ifelse(
-  grepl("FEMALE", data_flat$Comments, ignore.case = TRUE), 
-  "Adult", 
-  ifelse(
-    grepl("MALE", data_flat$Comments, ignore.case = TRUE), 
-    "Adult", 
-    ifelse(
-      grepl("YOUNG", data_flat$Comments, ignore.case = TRUE), 
-      "Juvenile", 
-      "DNC"
-    )
-  )
-)
-# data_flat$fm <- NA
-data_flat$fm <- ifelse(
-  grepl("FEMALE", data_flat$Comments, ignore.case = TRUE), 
-  "Female", 
-  ifelse(
-    grepl("MALE", data_flat$Comments, ignore.case = TRUE), 
-    "Male", 
-    "DNC"
-  )
-)
-data_flat$group <- ifelse(grepl("flock", data_flat$Comments, ignore.case = TRUE), "flock", "No")
-data_flat$flyover <- "DNC"
-# data_flat$displaytype <- "DNC"
-data_flat$displaytype <- ifelse(
-  grepl("\\bD\\b|\\bDD\\b", data_flat$Status, ignore.case = TRUE), 
-  "Yes", 
-  "DNC"
-)
-# data_flat$nestevidence <- "DNC"
-data_flat$nestevidence <- ifelse(
-  grepl("N", data_flat$Status, ignore.case = TRUE), 
-  "Yes", 
-  "DNC"
-  )
-data_flat$behaviourother <- "DNC"
-data_flat$atlas_breeding_code <- "DNC"
-# unique(data_flat$Comments) 
-
-data_flat <- data_flat %>%
-  mutate(
-    pc_vt = case_when(
-      grepl(".*S.*", Status) ~ "Sing",
-      grepl(".*C.*", Status) ~ "Calls",
-      grepl(".*O.*", Status) ~ "None-vocal",
-      grepl(".*D.*", Status) ~ "None-vocal",
-      grepl(".*N.*", Status) ~ "None-vocal",
-      grepl(".*DD.*", Status) ~ "None-vocal",
-      grepl(".*F.*", Status) ~ "None-vocal",
-      TRUE ~ "DNC"  
-    ),
-    pc_vt_detail = "NA"  
+data_expanded <- data_expanded %>%
+  mutate(rawObserver  = Crew,
+         original_species = Species.Code,
+         scientificname = WT_spTbl$scientific_name[match(data_flat$species, WT_spTbl$species_code)],
+         raw_distance_code = variable,
+         raw_duration_code = NA,
+         originalBehaviourData = Status,
+         missingindetections = "DNC",
+         pc_vt = case_when(
+           Status == "S" ~ "Song",
+           Status == "C" ~ "Call",
+           Status == "O" ~ "None-vocal",
+           Status == "D" ~ "None-vocal",
+           Status == "N" ~ "None-vocal",
+           Status == "NA" ~ "None-vocal",
+           Status == "NB" ~ "None-vocal",
+           Status == "DD" ~ "None-vocal",
+           Status == "F" ~ "None-vocal",
+           TRUE ~ "DNC"), 
+         pc_vt_detail = "DNC",
+         age = case_when(
+           grepl("FEMALE", comments, ignore.case = TRUE) ~ "Adult",
+           grepl("MALE", comments, ignore.case = TRUE) ~ "Adult",
+           grepl("YOUNG", comments, ignore.case = TRUE) ~ "Juvenile",
+           grepl("FLEDGLINGS", comments, ignore.case = TRUE) ~ "Juvenile",
+           TRUE ~ "DNC" # Default value if none of the above conditions are met
+         ),
+         fm = case_when(comments == "FEMALE CARRYING FOOD" ~ "Female",
+                        comments == "MALE AND FEMALE" ~ "Male and female",
+                        comments == "CARRYING FOOD; MALE" ~ "Male",
+                        comments == "FEMALE" ~ "Female",
+                        TRUE ~ "DNC"
+         ),
+         group = case_when(
+           grepl("FLOCK", data_flat$comments, ignore.case = TRUE) ~ "Flock", 
+           comments == "MALE AND FEMALE" ~ "Pair",
+           TRUE ~ "DNC"),
+         flyover = "DNC",
+         displaytype = case_when(Status == "D" ~ "Display",
+                                 Status == "DD" ~ "Display",
+                                 TRUE ~ "No"),
+         nestevidence = case_when(Status == "NB" ~ "Yes",
+                                  Status == "NA" ~ "Yes",
+                                  Status == "F" ~ "Yes",
+                                  Status == "N" ~ "Yes",
+                                  TRUE ~ "No"),
+         behaviourother = "DNC",
+         atlas_breeding_code = "DNC"
   )
 
 ############################
 ##EXPORT
 ############################
-
-
 # Create sub folder in 'toUpload' with the organization name
 dr<- drive_get("toUpload/", shared_drive = "BAM_Core")
 to_upload_contents <- drive_ls(as_id(dr)) # print(to_upload_contents)
