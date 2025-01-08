@@ -75,30 +75,30 @@ if (length(list.files(dataDir)) ==0) {
 BirdCounts_ori <- read.csv(file.path(dataDir, data_db))
 SiteDescription_ori <- read.csv(file.path(dataDir, "AllSiteDescription.csv"))
 
+
 #--------------------------------------------------------------
 #
 #       TRANSLATE
 #
 #--------------------------------------------------------------
-
 ############################
 #### LOCATION TABLE ####
 ############################
 data_flat <- BirdCounts_ori 
 data_flat <- merge(data_flat, SiteDescription_ori, 
-                   by.x = c('Site', 'X_dd', 'Y_dd', 'Age', 'Type', 'Min_Edge_m', 'Date', 'Crew', 'Comments'), 
-                   by.y = c('Site', 'X_dd', 'Y_dd', 'Age', 'Type', 'Min_Edge_m', 'Date', 'Crew', 'Comments'), 
+                   by = c('Site', 'X_dd', 'Y_dd', 'Age', 'Type', 'Min_Edge_m', 'Date', 'Crew', 'Comments'), 
                    all.x = TRUE)
 
 # Find rows in observation_ori that were not joined with data_flat 
 # unmatched_rows <- anti_join(data_flat, SiteDescription_ori, by = "Site")
 # print(unmatched_rows) 
 
-data_flat$organization <- organization
-data_flat$project <- dataset_code
-data_flat$site <- data_flat$'Site'
-data_flat$station <- data_flat$'Site'
-
+data_flat <- data_flat %>%
+  mutate(organization = organization,
+         project = dataset_code,
+         station = NA) %>%
+  rename(site = Site)
+     
 
 # Not exist in source data will be set NA
 data_flat$elevationMeters <- NA
