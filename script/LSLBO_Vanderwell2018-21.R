@@ -255,7 +255,7 @@ print(unique(data_expanded$durationinterval[!(data_expanded$durationinterval %in
 data_expanded <- data_expanded %>%
   mutate(rawObserver  = Crew,
          original_species = Species.Code,
-         scientificname = WT_spTbl$scientific_name[match(data_flat$species, WT_spTbl$species_code)],
+         scientificname = WT_spTbl$scientific_name[match(data_expanded$species, WT_spTbl$species_code)],
          raw_distance_code = variable,
          raw_duration_code = NA,
          originalBehaviourData = Status,
@@ -286,7 +286,7 @@ data_expanded <- data_expanded %>%
                         TRUE ~ "DNC"
          ),
          group = case_when(
-           grepl("FLOCK", data_flat$comments, ignore.case = TRUE) ~ "Flock", 
+           grepl("FLOCK", comments, ignore.case = TRUE) ~ "Flock", 
            comments == "MALE AND FEMALE" ~ "Pair",
            TRUE ~ "DNC"),
          flyover = "DNC",
@@ -306,11 +306,13 @@ data_expanded <- data_expanded %>%
 ##EXPORT
 ############################
 # Create sub folder in 'toUpload' with the organization name
+beh_dr<- drive_get("behavior/", shared_drive = "BAM_Core")
 dr<- drive_get("toUpload/", shared_drive = "BAM_Core")
+
 to_upload_contents <- drive_ls(as_id(dr)) # print(to_upload_contents)
-cws_folder <- to_upload_contents[to_upload_contents$name == organization, ]
-if (nrow(cws_folder) == 0) {
-  cws_folder <- drive_mkdir(organization, path = as_id(dr))
+gg_folder <- to_upload_contents[to_upload_contents$name == organization, ]
+if (nrow(gg_folder) == 0) {
+  gg_folder <- drive_mkdir(organization, path = as_id(dr))
 }
 
 # Create sub folder in 'toUpload/organisation' with the dataset name
@@ -325,20 +327,10 @@ if (nrow(folder_list[folder_list$name == dataset_code, ]) == 0){
 } # print(drive_ls(as_id(dr)))
 
 
-# flyover (flying) data singled out
-no_flyover<- data_flat %>%
-  filter(!flyover == "Yes")
-
-yes_flyover<- data_flat %>%
-  filter(flyover == "Yes")
-print(yes_flyover)
-
-
-
 #---LOCATION
 # Remove duplicated location
 WTlocation <- c("location", "longitude", "latitude")
-location_tbl <- no_flyover[!duplicated(no_flyover[,WTlocation]), WTlocation]
+location_tbl <- data_expanded[!duplicated(data_expanded[,WTlocation]), WTlocation]
 write.csv(location_tbl, file= file.path(out_dir, paste0(dataset_code,"_location.csv")), row.names = FALSE, na = "")
 location_out <- file.path(out_dir, paste0(dataset_code,"_location.csv"))
 drive_upload(media = location_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_location.csv"), overwrite = TRUE) 
@@ -348,16 +340,14 @@ drive_upload(media = location_out, path = as_id(dr_dataset_code), name = paste0(
 # Delete duplicated based on WildtTrax attributes (double observer on the same site, same day).
 WTvisit <- c("location", "visitDate", "snowDepthMeters", "waterDepthMeters", "crew", "bait", "accessMethod", "landFeatures", "comments", 
              "wildtrax_internal_update_ts", "wildtrax_internal_lv_id")
-visit_tbl <- no_flyover[!duplicated(no_flyover[,WTvisit]), WTvisit] # 
+visit_tbl <- data_expanded[!duplicated(data_expanded[,WTvisit]), WTvisit] # 
 write.csv(visit_tbl, file= file.path(out_dir, paste0(dataset_code,"_visit.csv")), row.names = FALSE, na = "")
 visit_out <- file.path(out_dir, paste0(dataset_code,"_visit.csv"))
 drive_upload(media = visit_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_visit.csv"), overwrite = TRUE) 
 
 
 #---SURVEY
-# Delete duplicated in the eye of the survey table *abundance is used
-
-survey_tbl <- no_flyover %>% 
+survey_tbl <- data_expanded %>% 
   group_by(location, surveyDateTime, durationMethod, distanceMethod, observer, species, distanceband, durationinterval, isHeard, isSeen, comments) %>%
   dplyr::summarise(abundance = sum(ind_count), .groups= "keep")
 
@@ -369,21 +359,6 @@ survey_out <- file.path(out_dir, paste0(dataset_code,"_survey.csv"))
 drive_upload(media = survey_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_survey.csv"), overwrite = TRUE) 
 
 
-
-# check NULL result by, colSums(is.na(survey_tbl)) > 0
-# survey_tbl[survey_tbl$abundance ==0, ], should be 0
-
-
-# below lines to highlight the grouped lines, which are not selected in survey_tbl 
-# x <- no_flyover %>%
-#   group_by(surveyDateTime, location, species, distanceband, durationinterval, isHeard, isSeen, comments) %>%
-#   mutate(abundance = ifelse(isDuplicate == TRUE, sum(ind_count), ind_count)) %>%
-#   filter(!duplicated(paste(surveyDateTime, location, species, distanceband, durationinterval))) %>%
-#   ungroup()
-# View(x[x$abundance != x$ind_count, ]) # visualized rows with grouped ind_count
-
-
-
 #---EXTENDED
 # "atlas_breeding_code" still kept
 # the operation of grouping "ind_count" into "abundance" is not done
@@ -393,10 +368,10 @@ Extended <- c("organization", "project", "location", "surveyDateTime", "species"
               "originalBehaviourData", "missingindetections", "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover",
               "displaytype", "nestevidence", "behaviourother", "atlas_breeding_code")
 
-extended_tbl <- data_flat[!duplicated(data_flat[,Extended]), Extended]
+extended_tbl <- data_expanded[!duplicated(data_expanded[,Extended]), Extended]
 write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_behavior.csv")), na = "", row.names = FALSE)
 extended_out <- file.path(out_dir, paste0(dataset_code,"_behavior.csv"))
-drive_upload(media = extended_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_behavior.csv"), overwrite = TRUE)
+drive_upload(media = extended_out, path = as_id(beh_dr), name = paste0(dataset_code,"_behavior.csv"), overwrite = TRUE)
 
 
 
