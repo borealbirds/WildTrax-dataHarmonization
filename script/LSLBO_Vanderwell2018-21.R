@@ -44,8 +44,8 @@ WT_distBandTbl <- read.csv(file.path(lu, "distance_band_codes.csv"), fileEncodin
 
 ## Path
 dataDir <- file.path("./project", dataset_code)
-if (!dir.exists(project)) {
-  dir.create(project, recursive = TRUE)
+if (!dir.exists(dataDir)) {
+  dir.create(dataDir, recursive = TRUE)
 }
 
 out_dir <- file.path("./out", dataset_code)    # where output data frame will be exported
