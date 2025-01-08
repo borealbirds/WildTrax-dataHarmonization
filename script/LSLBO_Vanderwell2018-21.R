@@ -11,6 +11,7 @@
 # 'flyover' is not separated from 'observed' in original record
 
 library(googledrive)
+library(googlesheets4)
 library(tidyr)
 library(readr)
 library(chron)
@@ -22,13 +23,14 @@ library(lubridate)
 library(stringr)
 source("./config.R")
 
-## URL
-url <- "https://drive.google.com/drive/u/1/folders/1qffn7q3C_ugiHofyaEkVBIROYOXJJh-h"
 
 ## Initialize variables
 organization = "LSLBO"
 dataset_code = "Vanderwell2018-21"
 setwd(file.path(wd))
+data_db <- "AllBirdCounts.csv"
+
+WTpj_Tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1fqifS_E5O_IpW1B-UG_xthr9hzY6FIek-nFjCrt1G0w", sheet = "project")
 
 lu <- "./lookupTables"
 WT_spTbl <- read.csv(file.path(lu, "species_codes.csv"))
@@ -38,33 +40,40 @@ WT_distMethTbl <- read.csv(file.path(lu, "distance_method_codes.csv"), fileEncod
 WT_durBandTbl <- read.csv(file.path(lu, "duration_interval_codes.csv"), fileEncoding="UTF-8-BOM")
 WT_distBandTbl <- read.csv(file.path(lu, "distance_band_codes.csv"), fileEncoding="UTF-8-BOM")
 
-project <- file.path("./project", dataset_code)
+## Path
+dataDir <- file.path("./project", dataset_code)
 if (!dir.exists(project)) {
   dir.create(project, recursive = TRUE)
 }
 
-dataDir <- file.path(wd,"project",dataset_code,"data")   # where files would be downloaded
-if (!dir.exists(dataDir)) {
-  dir.create(dataDir, recursive = TRUE)
-}
-
-out_dir <- file.path(wd, "out", dataset_code)    # where output data frame will be exported
+out_dir <- file.path("./out", dataset_code)    # where output data frame will be exported
 if (!dir.exists(out_dir)) {
   dir.create(out_dir, recursive = TRUE) 
 }
 
-
 #--------------------------------------------------------------
 #
-#       EXTARCT FILE 
+#       DOWNLOAD FILE FROM DRIVE
 #
 #--------------------------------------------------------------
+if (length(list.files(dataDir)) ==0) {
+  pid <- WTpj_Tbl %>%
+    filter(dataset_code =="Vanderwell2018-21") %>%
+    select("GSharedDrive location")
+  #Download from GoogleDrive
+  gd.list <- drive_ls(as.character(pid))
+  detection_id <- gd.list %>%
+    filter(name =="AllBirdCounts.csv") %>%
+    select("id")
+  drive_download(as_id(as.character(detection_id)), path = file.path(dataDir, data_db))
+  site_id <- gd.list %>%
+    filter(name =="AllSiteDescription.csv") %>%
+    select("id")
+  drive_download(as_id(as.character(site_id)), path = file.path(dataDir, "AllSiteDescription.csv"))
+}
 
-BirdCounts_path <- paste0(wd, "/project/Vanderwell 2018-21/data/", "AllBirdCounts.csv")
-BirdCounts_ori <- read.csv(BirdCounts_path)
-
-SiteDescription_path <- paste0(wd, "/project/Vanderwell 2018-21/data/", "AllSiteDescription.csv")
-SiteDescription_ori <- read.csv(SiteDescription_path)
+BirdCounts_ori <- read.csv(file.path(dataDir, data_db))
+SiteDescription_ori <- read.csv(file.path(dataDir, "AllSiteDescription.csv"))
 
 #--------------------------------------------------------------
 #
