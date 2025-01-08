@@ -20,13 +20,12 @@ library(dplyr)
 library(sf)
 library(lubridate)
 library(stringr)
-
+source("./config.R")
 
 ## URL
 url <- "https://drive.google.com/drive/u/1/folders/1qffn7q3C_ugiHofyaEkVBIROYOXJJh-h"
 
 ## Initialize variables
-wd <- "C:/Users/asito/Desktop/ModellingProject/#BAM/WildTrax_Integration"
 organization = "LSLBO"
 dataset_code = "Vanderwell2018-21"
 setwd(file.path(wd))
