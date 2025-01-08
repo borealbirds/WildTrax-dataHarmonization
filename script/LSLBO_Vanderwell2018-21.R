@@ -3,10 +3,10 @@
 # author: Siu Chung WU, Diego
 # date: "December 13, 2024"
 # Note on translation:
-# metadata: https://docs.google.com/document/d/1pJQ1qsW_31QMRTCek-6yE72VcKU8dja_/edit
-# Only Site number, No Station number -> apply Station number to Site number
-# dataset_code with "_", should we change it?
-# in original data, 1 row can record more than 1 bird in two distance band, extra operation made to split those rows 
+# --metadata: https://docs.google.com/document/d/1pJQ1qsW_31QMRTCek-6yE72VcKU8dja_/edit
+# --Only Site number, No Station number -> set to NA
+# --88 obs recorded outside time: Delete.
+# --4 species code are different from WildTrax: CAGO, SCJU, WPWA, HOWR. Fix 
 # few rows record 'displaytype' in the column 'Status' with 'D' or 'DD', 'displaytype' of those row become 'Yes'
 # 'flyover' is not separated from 'observed' in original record
 
@@ -21,6 +21,7 @@ library(dplyr)
 library(sf)
 library(lubridate)
 library(stringr)
+library(reshape2) # melt
 source("./config.R")
 
 
@@ -135,7 +136,6 @@ data_flat <- data_flat %>%
          bait = "None",
          accessMethod = NA,
          landFeatures = Site.Description,
-         comments = NA,
          wildtrax_internal_update_ts = NA,
          wildtrax_internal_lv_id = NA,
          time_zone = NA,
@@ -197,151 +197,35 @@ if(nrow(new_rows)>1){
   drive_upload(media = observer_Tbl, path = as_id(dr), name = "master_observer", type = "spreadsheet", overwrite = TRUE)
 }
 
-
 ############################
 #### SURVEY TABLE ####
 ############################
+#pivot table to split protocal band
+data_expanded <- melt(data_flat, measure.vars = c("Within.50","X51.100","Over.100","Outside.Time"), value.name = "ind_count")
+data_expanded$ind_count <- as.numeric(data_expanded$ind_count)
 
-any(is.na(data_flat$Species.Code)) # Should be FALSE
-
-# determine appropriate 'distanceMethod' as stated in 'metadata' sheet
-data_flat$distanceMethod <- "0m-50m-100m-INF"
-
-
-# 451 rows recording birds in more than one distance band
-columns_to_check <- c("Within.50", "X51.100", "Over.100")
-rows_with_multiple_nonzero <- data_flat[rowSums(data_flat[columns_to_check] != 0) > 1, ]
-rows_with_multiple_nonzero
-
-# 13 rows recording birds in all three distance band
-# columns_to_check <- c("Within.50", "X51.100", "Over.100")
-# rows_with_multiple_nonzero <- data_flat[rowSums(data_flat[columns_to_check] != 0) > 2, ]
-# rows_with_multiple_nonzero
-
-################################################################################################################
-# Create a function to split rows with multiple non-zero values
-# original number: 3438, expanded number should be around 3438 + 451 + 13 = 3902
-################################################################################################################
-split_rows <- function(row, columns) {
-  # Identify the non-zero columns
-  non_zero_cols <- which(row[columns] != 0)
-  
-  # Create a list of rows, each with only one non-zero value
-  new_rows <- lapply(non_zero_cols, function(col) {
-    new_row <- row
-    new_row[columns] <- 0          # Set all columns to 0
-    new_row[columns[col]] <- row[columns[col]]  # Retain only the current non-zero value
-    return(new_row)
-  })
-  
-  # Combine the rows into a data frame
-  do.call(rbind, new_rows)
-}
-
-# Apply the function to all problematic rows
-duplicated_rows <- do.call(rbind, apply(rows_with_multiple_nonzero, 1, split_rows, columns = columns_to_check))
-
-# Combine the new rows with the original data, excluding the problematic rows
-final_data <- rbind(
-  data_flat[rowSums(data_flat[columns_to_check] != 0) <= 1, ],  # Rows without issues
-  duplicated_rows  # The modified duplicated rows
-)
-
-# View the resulting data frame
-final_data
-
-# 0 rows recording birds in more than one distance band
-# columns_to_check <- c("Within.50", "X51.100", "Over.100")
-# rows_with_multiple_nonzero <- final_data[rowSums(final_data[columns_to_check] != 0) > 1, ]
-# rows_with_multiple_nonzero
-
-data_flat <- final_data
-################################################################################################################
-
-# Initialize to empty strings if not already existing
-data_flat <- data_flat %>%
-  mutate(distanceband = case_when(
-    Within.50 != 0 ~ "0m-50m",
-    X51.100 != 0 ~ "50m-100m",    
-    Over.100 != 0 ~ "100m-INF",
-    str_detect(Comments, '< 50 M') ~ "0m-50m",
-    str_detect(Comments, '~ 30 M') ~ "0m-50m",
-    str_detect(Comments, '51-100 M') ~ "50m-100m",
-    str_detect(Comments, '~ 80 M') ~ "50m-100m",
-    str_detect(Comments, '> 100 M') ~ "100m-INF",
-    str_detect(Comments, '~ 108 M') ~ "100m-INF",
-    str_detect(Comments, '~170 M') ~ "100m-INF",
-    str_detect(Comments, '~175 M') ~ "100m-INF",
-    Outside.Time != 0 ~ "UNKNOWN",
-    TRUE ~ NA
-  ))
-# check result unique(paste(data_flat$Distance, data_flat$distanceband))
-# print(unique(data_flat$distanceband[(data_flat$distanceband %in% WT_distBandTbl$distance_band_type)]))
-
-
-
-# determine appropriate 'durationMethod' as stated in 'metadata' sheet
-data_flat$durationMethod<- "0-5min"
-
-# Initialize to empty strings if not already existing
-# str(data_flat %>% filter(Quadrant %in% c("7"))) # nrows 140
-data_flat <- data_flat %>%
-  mutate(durationinterval = case_when(
-    Outside.Time != 0 ~ "UNKNOWN",
-    TRUE ~ "0-5min"
-  ))
-# check result unique(paste(data_flat$Outside.Time, data_flat$durationinterval))
-print(unique(data_flat$durationinterval[(data_flat$durationinterval %in% WT_durBandTbl$duration_interval_type)]))
-
-# unique(data_flat$Species.Code[(data_flat$Species.Code %in% WT_spTbl$species_code)]) 
-# unique(data_flat$Species.Code[!(data_flat$Species.Code %in% WT_spTbl$species_code)])  #4 species NOT in WildTrax
-data_flat$species <- WT_spTbl$species_code[match(data_flat$Species.Code, WT_spTbl$species_code)]
-
-# extract abbreviation with no match 
-missABV <- unique(data_flat$Species.Code[!(data_flat$Species.Code %in% WT_spTbl$species_code)])
-
-# extract the common name and scientific name of unmatched species code
-miss_species <- data_flat %>%
-  filter(Species.Code %in% missABV) %>%
-  select(Species.Code, Common.AOU2021, Scientific.AOU2021) %>%
-  distinct()
-print(miss_species)
-
-# search matched common name and scientific name in WildTrax species list
-# print(WT_spTbl %>% filter(species_common_name %in% miss_species$Common.AOU2021)) 
-# print(WT_spTbl %>% filter(scientific_name %in% miss_species$Scientific.AOU2021)) 
-
-# applied correct codes to miss_species
-data_flat <- data_flat %>%
-  mutate(species = case_when(Species.Code == "CAGO"  ~ "CANG", # for 'Canada Goose'
-                             Species.Code == "SCJU"  ~ "JUNHYE", # for 'Junco hyemalis hyemalis'
-                             Species.Code == "WPWA"  ~ "PAWA", # for 'Setophaga palmarum'
-                             Species.Code == "HOWR"  ~ "NHWR", # for 'Troglodytes aedon'
-                             TRUE ~ species)
-  )
-
-
-# Check
-print(length(data_flat$species[is.na(data_flat$species)])) # 0, the newly build column
-# print(length(data_flat$species[is.na(data_flat$Scientific.AOU2021)])) # 0, the original column holding species Scientific Name
-print(length(data_flat$species[is.na(data_flat$Species.Code)]))  # 0, the original column holding species code
-# head(data_flat[!(data_flat$Species.Code %in% WT_spTbl$species_code),]) # visual check rows we changed species code
-
-
-# determine appropriate behaviour by unique(data_flat$Status)
-data_flat <- data_flat %>%
-  mutate(isHeard = case_when(
-    grepl(".*S.*", Status) ~ "Yes",
-    grepl(".*C.*", Status) ~ "Yes",
-    grepl(".*O.*", Status) ~ "No",
-    grepl(".*D.*", Status) ~ "No",
-    grepl(".*N.*", Status) ~ "No",
-    grepl(".*DD.*", Status) ~ "No",
-    grepl(".*F.*", Status) ~ "No",
-    NA ~ "DNC", 
-    TRUE ~ "DNC"
-  ))
-# check result unique(paste(data_flat$Status, data_flat$isHeard))
+data_expanded <- data_expanded %>%
+  filter(ind_count>0 & variable != "Outside.Time") %>%
+  mutate(distanceMethod = "0m-50m-100m-INF",
+         distanceband = case_when(variable == "Within.50" ~ "0m-50m",
+                                  variable == "X51.100" ~ "50m-100m", 
+                                  variable =="Over.100" ~ "100m-INF"),
+         durationMethod = "0-5min",
+         durationinterval = "0-5min",
+         species = case_when(Species.Code =="CAGO" ~ "CANG",
+                             Species.Code =="SCJU" ~ "JUNHYE",
+                             Species.Code =="WPWA" ~ "PAWA",
+                             Species.Code =="HOWR" ~ "NHWR",
+                             TRUE ~ Species.Code),
+         isHeard = case_when(Status == "S" ~ "Yes",
+                             Status == "C" ~ "Yes",
+                             Status == "O" ~ "No",
+                             Status == "D" ~ "No",
+                             Status == "N" ~ "No",
+                             Status == "DD" ~ "No",
+                             Status == "F" ~ "No",
+                             NA ~ "DNC")
+         )
 
 data_flat <- data_flat %>%
   mutate(isSeen = case_when(
