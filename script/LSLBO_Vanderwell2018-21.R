@@ -31,6 +31,7 @@ setwd(file.path(wd))
 data_db <- "AllBirdCounts.csv"
 
 WTpj_Tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1fqifS_E5O_IpW1B-UG_xthr9hzY6FIek-nFjCrt1G0w", sheet = "project")
+observer_Tbl <-  read_sheet("https://docs.google.com/spreadsheets/d/1yp0tjhQC7EJ_WqgP_vUNPfvgwwBhMDeSex4OghoIS3s", sheet = "master_observer")
 
 lu <- "./lookupTables"
 WT_spTbl <- read.csv(file.path(lu, "species_codes.csv"))
@@ -122,60 +123,79 @@ data_flat <- data_flat %>%
 ############################
 #### VISIT TABLE ####
 ############################
-
-#survey attributes
-data_flat$visitDate <- format(as.Date(data_flat$Date, format = "%d-%b-%y"), "%Y-%m-%d") 
-data_flat$snowDepthMeters <- NA
-data_flat$waterDepthMeters <- NA
-data_flat$crew <- NA
-data_flat$bait <- "None"
-data_flat$accessMethod <- NA
-data_flat$landFeatures <- data_flat$'Site.Description'
-data_flat$comments <- NA
-data_flat$wildtrax_internal_update_ts <- NA
-data_flat$wildtrax_internal_lv_id <- NA
-data_flat$time_zone <- NA
-data_flat$data_origin <- dataset_code
-data_flat$missinginvisit <- NA
-data_flat$survey_year <- sub("\\-.*", "", data_flat$visitDate) 
-
-
 # all rows contain 'Time'
 # na_rows <- data_flat[is.na(data_flat$Start.Time), ]
 # print(na_rows)
 
-data_flat$survey_time <- sub(".*\\s", "", data_flat$Start.Time)
-# print(na_rows <- data_flat[is.na(data_flat$survey_time), ])
+data_flat <- data_flat %>%
+  mutate(visitDate = format(as.Date(Date, format = "%Y-%m-%d"), "%Y-%m-%d"),
+         snowDepthMeters = NA,
+         waterDepthMeters = NA,
+         crew = NA,
+         bait = "None",
+         accessMethod = NA,
+         landFeatures = Site.Description,
+         comments = NA,
+         wildtrax_internal_update_ts = NA,
+         wildtrax_internal_lv_id = NA,
+         time_zone = NA,
+         data_origin = dataset_code,
+         missinginvisit = NA,
+         survey_year = sub("\\-.*", "", visitDate),
+         survey_time = sub(".*\\s", "", Start.Time),
+         surveyDateTime = paste(visitDate, survey_time),
+         observer = case_when(Crew == "NDK/RNP"  ~ "obs01",
+                              Crew == "RNP/MMM" ~ "obs02",
+                              Crew == "RGK/NDK" ~ "obs03",
+                              Crew == "NDK/RGK"  ~ "obs04",
+                              Crew == "RNP/NDK" ~ "obs05",
+                              Crew == "BPR/SLS" ~ "obs06",
+                              Crew == "SLS/BPR"  ~ "obs07",
+                              Crew == "RNP/CLC" ~ "obs08",
+                              Crew == "SLS/CLC" ~ "obs09",
+                              Crew == "BPR/RNP" ~ "obs10",
+                              Crew == "RNP/BPR" ~ "obs11",
+                              Crew == "RNP/GBH"  ~ "obs12",
+                              Crew == "BPR/CLC" ~ "obs13",
+                              Crew == "SLS/RNP" ~ "obs14",
+                              Crew == "RNP/SLS" ~ "obs15",
+                              is.na(Crew)   ~ "NA"),
+         pkey_dt= paste(location, paste0(gsub("-", "", as.character(visitDate)),"_", gsub(":", "", survey_time)), observer, sep=":")
+  ) 
 
+################################
+#### Update master_observer ####
+################################
+unique_observers <- data_flat %>%
+  select(Crew, observer) %>% 
+  distinct() %>%
+  filter(!is.na(Crew)) %>% # Exclude rows where Observer is NA
+  mutate(
+    observer_name = Crew,
+    observer_id = observer
+  )
 
-data_flat$surveyDateTime <- paste(data_flat$visitDate, data_flat$survey_time)
-# na_rows <- data_flat %>% filter(is.na(survey_time))
-# print(na_rows)
+# Create the append_obs data frame
+append_obs <- unique_observers %>%
+  select(observer_id, observer_name) %>%
+  mutate(
+    organization = "LSLBO",
+    project = dataset_code
+  ) %>%
+  select(organization, project, observer_id, observer_name)
 
+# Identify rows in append_obs that are not in observer_Tbl
+new_rows <- anti_join(append_obs, observer_Tbl, 
+                      by = c("organization", "project", "observer_id", "observer_name"))
 
-# Observer (internal ID number): unique(data_flat$Crew) 
-data_flat$observer <- case_when(
-  data_flat$Crew == "NDK/RNP"  ~ "obs01",
-  data_flat$Crew == "RNP/MMM" ~ "obs02",
-  data_flat$Crew == "RGK/NDK" ~ "obs03",
-  data_flat$Crew == "NDK/RGK"  ~ "obs04",
-  data_flat$Crew == "RNP/NDK" ~ "obs05",
-  data_flat$Crew == "BPR/SLS" ~ "obs06",
-  data_flat$Crew == "SLS/BPR"  ~ "obs07",
-  data_flat$Crew == "RNP/CLC" ~ "obs08",
-  data_flat$Crew == "SLS/CLC" ~ "obs09",
-  data_flat$Crew == "BPR/RNP" ~ "obs10",
-  data_flat$Crew == "RNP/BPR" ~ "obs11",
-  data_flat$Crew == "RNP/GBH"  ~ "obs12",
-  data_flat$Crew == "BPR/CLC" ~ "obs13",
-  data_flat$Crew == "SLS/RNP" ~ "obs14",
-  data_flat$Crew == "RNP/SLS" ~ "obs15",
-    is.na(data_flat$Crew)   ~ "NA"
-)
-# print(na_rows <- data_flat %>% filter(is.na(observer)))
-
-data_flat$pkey_dt<- paste(data_flat$location, paste0(gsub("-", "", as.character(data_flat$visitDate)),"_", gsub(":", "", data_flat$survey_time)), data_flat$observer, sep=":")
-# print(na_rows <- data_flat %>% filter(is.na(pkey_dt)))
+# Combine new rows with the existing observer_Tbl
+if(nrow(new_rows)>1){
+  updated_observer_Tbl <- bind_rows(observer_Tbl, new_rows)
+  write_csv(updated_observer_Tbl, file.path(wd, "master_observer.csv"), append = FALSE)
+  dr<- drive_get("WildTrax-dataHarmonization", shared_drive = "BAM_Core")
+  observer_Tbl <- file.path(wd, "master_observer.csv")
+  drive_upload(media = observer_Tbl, path = as_id(dr), name = "master_observer", type = "spreadsheet", overwrite = TRUE)
+}
 
 
 ############################

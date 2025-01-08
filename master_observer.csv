@@ -2,3 +2,18 @@ organization,project,observer_id,observer_name
 Gov-NL,Labrador Highlands Research Group Point Counts 2007,obs03,BMS
 Gov-NL,Labrador Highlands Research Group Point Counts 2007,obs01,DF
 Gov-NL,Labrador Highlands Research Group Point Counts 2007,obs02,KPL
+LSLBO,Vanderwell2018-21,obs01,NDK/RNP
+LSLBO,Vanderwell2018-21,obs02,RNP/MMM
+LSLBO,Vanderwell2018-21,obs03,RGK/NDK
+LSLBO,Vanderwell2018-21,obs04,NDK/RGK
+LSLBO,Vanderwell2018-21,obs05,RNP/NDK
+LSLBO,Vanderwell2018-21,obs06,BPR/SLS
+LSLBO,Vanderwell2018-21,obs07,SLS/BPR
+LSLBO,Vanderwell2018-21,obs08,RNP/CLC
+LSLBO,Vanderwell2018-21,obs09,SLS/CLC
+LSLBO,Vanderwell2018-21,obs10,BPR/RNP
+LSLBO,Vanderwell2018-21,obs11,RNP/BPR
+LSLBO,Vanderwell2018-21,obs12,RNP/GBH
+LSLBO,Vanderwell2018-21,obs13,BPR/CLC
+LSLBO,Vanderwell2018-21,obs14,SLS/RNP
+LSLBO,Vanderwell2018-21,obs15,RNP/SLS
