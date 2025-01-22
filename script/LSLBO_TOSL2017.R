@@ -23,15 +23,13 @@ library(lubridate)
 library(stringr)
 library(googlesheets4)
 library(reshape2) # melt
-
-## URL
-url <- "https://drive.google.com/drive/u/1/folders/1zwPL6m9rN0uxRQQNpIJEpwDCccSqS0vW"
+source("./config.R")
 
 ## Initialize variables
-wd <- "C:/Users/asito/Desktop/ModellingProject/#BAM/WildTrax_Integration"
+setwd(file.path(wd))
+
 organization = "LSLBO"
 dataset_code = "TOSL2017"
-setwd(file.path(wd))
 
 drive_auth()
 WTpj_Tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1fqifS_E5O_IpW1B-UG_xthr9hzY6FIek-nFjCrt1G0w", sheet = "project")
@@ -94,15 +92,13 @@ location <- read_excel(file.path(dataDir, "Slave Lake Point Counts 2017.xlsx"), 
 ############################
 data_flat <- observation 
 data_flat <- merge(data_flat, meta, 
-                   by.x = c('Point','Day','Month','Year'), 
-                   by.y = c('Point','Day','Month','Year'), 
+                   by = c('Point','Day','Month','Year'), 
                    all.x = TRUE)
 
-View(data_flat)  # 434 obs. of  40 variables
+#View(data_flat)  # 434 obs. of  40 variables
 
 data_flat <- merge(data_flat, location, 
-                   by.x = c('Point'), 
-                   by.y = c('Point'), 
+                   by = c('Point'), 
                    all.x = TRUE)
 
 print(str(data_flat))  # 434 obs. of  47 variables
@@ -213,21 +209,6 @@ any(is.na(data_flat$Spp)) # Should be FALSE
 missABV <- unique(data_flat$Spp[!(data_flat$Spp %in% WT_spTbl$species_code)])
 print(missABV)
 
-# extract the common name and scientific name of unmatched species code
-miss_species <- data_flat %>%
-  filter(Spp %in% missABV) %>%
-  # select(Spp, Common.AOU2021, Scientific.AOU2021) %>%
-  distinct()
-print(miss_species$Spp)
-
-# search matched common name and scientific name in WildTrax species list
-# print(WT_spTbl %>% filter(species_common_name %in% miss_species$Common.AOU2021)) 
-# print(WT_spTbl %>% filter(scientific_name %in% miss_species$Scientific.AOU2021)) 
-
-
-# determine appropriate behaviour by unique(data_flat$Status)
-View(data_flat)
-
 data_expanded <- melt(data_flat, measure.vars = c("Time1Band1", "Time1Band2", "Time1Band3", "Time1Over",
 "Time2Band1", "Time2Band2", "Time2Band3", "Time2Over",
 "Time3Band1", "Time3Band2", "Time3Band3", "Time3Over",
@@ -255,7 +236,7 @@ data_expanded <- data_expanded %>%
            grepl("^Time3", variable) ~ "4-6min",
            grepl("^Time4", variable) ~ "6-8min",
            grepl("^Time5", variable) ~ "8-10min",
-           TRUE ~ "0-10min"
+           TRUE ~ "UNKNOWN"
          ),
          species = case_when(Spp =="HOWR" ~ "NHWR",
                              TRUE ~ Spp),
@@ -294,10 +275,7 @@ data_expanded <- data_expanded %>%
          pc_vt_detail = NA,
          age = NA,
          fm = NA,
-         group = case_when(
-           ind_count >=5 ~ "Yes",
-           TRUE ~ "No"
-         ),
+         group = NA,
          flyover = case_when(
            grepl("Over$", variable) ~ "Yes",
            TRUE ~ "No"
