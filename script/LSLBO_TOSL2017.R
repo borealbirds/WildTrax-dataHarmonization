@@ -293,9 +293,9 @@ data_expanded <- data_expanded %>%
 # Create sub folder in 'toUpload' with the organization name
 dr<- drive_get("toUpload/", shared_drive = "BAM_Core")
 to_upload_contents <- drive_ls(as_id(dr)) # print(to_upload_contents)
-cws_folder <- to_upload_contents[to_upload_contents$name == organization, ]
-if (nrow(cws_folder) == 0) {
-  cws_folder <- drive_mkdir(organization, path = as_id(dr))
+upload_folder <- to_upload_contents[to_upload_contents$name == organization, ]
+if (nrow(upload_folder) == 0) {
+  upload_folder <- drive_mkdir(organization, path = as_id(dr))
 }
 
 # Create sub folder in 'toUpload/organisation' with the dataset name
@@ -315,10 +315,6 @@ if (nrow(folder_list[folder_list$name == dataset_code, ]) == 0){
 no_flyover<- data_expanded %>%
   filter(!flyover == "Yes")
 View(no_flyover)
-
-yes_flyover<- data_expanded %>%
-  filter(flyover == "Yes")
-View(yes_flyover)
 
 
 #---LOCATION
