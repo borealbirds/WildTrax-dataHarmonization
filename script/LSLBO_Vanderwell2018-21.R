@@ -129,7 +129,7 @@ data_flat <- data_flat %>%
 # print(na_rows)
 
 data_flat <- data_flat %>%
-  mutate(visitDate = format(as.Date(Date, format = "%Y-%m-%d"), "%Y-%m-%d"),
+  mutate(visitDate = format(as.Date(Date, format = "%d-%b-%y"), "%Y-%m-%d"),
          snowDepthMeters = NA,
          waterDepthMeters = NA,
          crew = NA,
