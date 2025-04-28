@@ -18,7 +18,7 @@ library(readxl) #read_excel
 library(reshape2) # melt
 
 ## Initialize variables
-wd <- "E:/MelinaStuff/BAM/WildTrax/WT-Integration"
+source("./config.R")
 setwd(wd)
 
 organization <- "Birds Canada"

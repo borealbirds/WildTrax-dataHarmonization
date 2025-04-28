@@ -8,16 +8,12 @@
 #----------------------------------------------
 #update.packages()
 library(dplyr) # mutate, %>%
-#library(utils) #read.csv
 library(readxl) #read_excel
 library(stringr) #str_replace_all
 library(sf) #st_crs, st_as_sf, st_transform, st_drop_geometry
-library(purrr) #map
-library(plyr) #rbind.fill
 library(googledrive) #drive_get, drive_mkdir, drive_ls, drive_upload
 library(sp)
 library(sf)
-library(reshape2) # melt
 library(readr) #write_lines
 library(googlesheets4)
 
@@ -27,8 +23,12 @@ source("./config.R")
 setwd(file.path(wd))
 
 drive_auth()
+#project_integration
 WTpj_Tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1fqifS_E5O_IpW1B-UG_xthr9hzY6FIek-nFjCrt1G0w", sheet = "project")
-
+#observer
+obs_url <- "https://docs.google.com/spreadsheets/d/1gsm4LSwU31vJQIh5Ahpy70dhYvPr9ftHqaW1gw75IeU"
+observer_Tbl <-  read_sheet(obs_url, sheet = "master_observer.csv")
+#species
 WT_spTbl <- read.csv(file.path("./lookupTables/species_codes.csv"))
 
 WT_durMethTbl <- read.csv(file.path("./lookupTables/duration_method_codes.csv"), fileEncoding="UTF-8-BOM")
@@ -137,6 +137,41 @@ s_visit$latitude <- round(xy_4269[,2], 5)
     #                              proj4string = CRS("+proj=longlat +ellps=GRS80 +towgs84=0.0,0.0,0.0,0.0,0.0,0.0,0.0 +no_defs"))
     #pc <- st_as_sf(spdf, coords = c("longitude", "latitude"), crs = UTM)
     #plot(pc$geometry, col = "red", add= TRUE)
+
+################################
+#### Update master_observer ####
+################################
+unique_observers <- s_visit %>%
+  select(Observer) %>% 
+  distinct() %>%
+  filter(!is.na(Observer)) %>% # Exclude rows where Observer is NA
+  mutate(
+    observer_name = case_when(Observer == "TL"  ~ "Tina Leonard",
+                              Observer == "JG"  ~ "Jeri Graham",
+                              Observer == "PT"  ~ "Paul Taylor",
+                              Observer == "DH"  ~ "Doug Harrison",
+                              Observer == "JG"  ~ "Jason Glode"),
+    observer_id = Observer
+  )
+
+# Create the append_obs data frame
+append_obs <- unique_observers %>%
+  select(observer_id, observer_name) %>%
+  mutate(
+    organization = "CWS-ATL",
+    project = dataset_code
+  ) %>%
+  select(organization, project, observer_id, observer_name)
+
+# Identify rows in append_obs that are not in observer_Tbl
+new_rows <- anti_join(append_obs, observer_Tbl, 
+                      by = c("organization", "project", "observer_id", "observer_name"))
+
+# Combine new rows with the existing observer_Tbl
+# Combine new rows with the existing observer_Tbl
+if (nrow(new_rows) > 0) {
+  sheet_append(obs_url, new_rows)
+}
 
 
 ############################

@@ -2,19 +2,13 @@
 # Source dataset is an excel spreadsheet
 # Author: "Melina Houle"
 # Date: "March 24, 2025"
-#  BUG: 29 visit don't have survey. We assume the site was visited but no obs. 
 #update.packages()
 library(dplyr) # mutate, %>%
-#library(utils) #read.csv
-library(readxl) #read_excel
 library(stringr) #str_replace_all
 library(sf) #st_crs, st_as_sf, st_transform, st_drop_geometry
-library(purrr) #map
-library(plyr) #rbind.fill
 library(googledrive) #drive_get, drive_mkdir, drive_ls, drive_upload
 library(sp)
 library(sf)
-library(reshape2) # melt
 library(readr) #write_lines
 library(googlesheets4)
 
@@ -24,10 +18,16 @@ source("./config.R")
 setwd(file.path(wd))
 
 drive_auth()
+#project_integration
 WTpj_Tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1fqifS_E5O_IpW1B-UG_xthr9hzY6FIek-nFjCrt1G0w", sheet = "project")
-
+#observer
+obs_url <- "https://docs.google.com/spreadsheets/d/1gsm4LSwU31vJQIh5Ahpy70dhYvPr9ftHqaW1gw75IeU"
+observer_Tbl <-  read_sheet(obs_url, sheet = "master_observer.csv")
+#species
 WT_spTbl <- read.csv(file.path("./lookupTables/species_codes.csv"))
 colnames(WT_spTbl) <- c("species_common_name", "species_code", "scientific_name")
+
+
 WT_durMethTbl <- read.csv(file.path("./lookupTables/duration_method_codes.csv"), fileEncoding="UTF-8-BOM")
 WT_distMethTbl <- read.csv(file.path("./lookupTables/distance_method_codes.csv"), fileEncoding="UTF-8-BOM")
 WT_durBandTbl <- read.csv(file.path("./lookupTables/duration_interval_codes.csv"), fileEncoding="UTF-8-BOM")
@@ -35,7 +35,7 @@ WT_distBandTbl <- read.csv(file.path("./lookupTables/distance_band_codes.csv"), 
 
 organization <- "CWS-ATL"
 dataset <- "'Neal Simon Forest Bird Database"
-dataset_code <- "WH_NSFBD"
+dataset_code <- "WH_P6I1C1"
 lu <- "./lookupTables"
 project <- file.path("./project", dataset_code)
 
@@ -123,7 +123,7 @@ s_visit <- raw_visit %>%
          visitDate = ifelse(is.na(Date), "1900-01-01", as.character(Date)),
          missingvisit = NA,
          rawObserver = NA,
-         observer = "NA",
+         observer = "NL",
          #time = as.character(format(as.POSIXct(sprintf("%04.0f", Time), format='%H%M'), format = "%H:%M:%S")),
          survey_time = "00:00:01",
          pkey_dt = paste(location, paste0(gsub("-", "", as.character(visitDate)),"_", gsub(":", "", survey_time)), observer, sep=":"),
@@ -149,6 +149,36 @@ WTvisit <- c("location", "visitDate", "snowDepthMeters", "waterDepthMeters", "cr
 #Delete duplicated based on WildtTrax attributes (double point count on the same site, same day). 
 visit_tbl <- s_visit[!duplicated(s_visit[,WTvisit]), ] # 
 
+################################
+#### Update master_observer ####
+################################
+unique_observers <- s_visit %>%
+  select(observer) %>% 
+  distinct() %>%
+  filter(!is.na(observer)) %>% # Exclude rows where Observer is NA
+  mutate(
+    observer_name = "Neal Simon",
+    observer_id = observer
+  )
+
+# Create the append_obs data frame
+append_obs <- unique_observers %>%
+  select(observer_id, observer_name) %>%
+  mutate(
+    organization = "CWS-ATL",
+    project = dataset_code
+  ) %>%
+  select(organization, project, observer_id, observer_name)
+
+# Identify rows in append_obs that are not in observer_Tbl
+new_rows <- anti_join(append_obs, observer_Tbl, 
+                      by = c("organization", "project", "observer_id", "observer_name"))
+
+# Combine new rows with the existing observer_Tbl
+if (nrow(new_rows) > 0) {
+  sheet_append(obs_url, new_rows)
+}
+
 ############################
 #### SURVEY TABLE ####
 ############################
@@ -170,9 +200,9 @@ pc_survey <- raw_survey %>%
          location = paste(dataset_code, site, sep= ":"),
          surveyDateTime = paste(visitDate, "00:00:01"),
          distanceMethod = "UNKNOWN",
-         distanceband = "UNKNOWN",
-         durationMethod = "UNKNOWN",
-         durationinterval = "UNKNOWN",
+         distanceband = "0m-100m-INF",
+         durationMethod = "0-10min",
+         durationinterval = "0-10min",
          isHeard = "Yes",
          isSeen = "DNC",
          missingindetections = NA,

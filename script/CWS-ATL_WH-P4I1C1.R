@@ -3,18 +3,13 @@
 # Author: "Melina Houle"
 # Date: "March 24, 2025"
 #  BUG: 29 visit don't have survey. We assume the site was visited but no obs. 
+#  Observer is unknown and is marked as AMEC (America Limited cie)
 #update.packages()
 library(dplyr) # mutate, %>%
-#library(utils) #read.csv
-library(readxl) #read_excel
 library(stringr) #str_replace_all
 library(sf) #st_crs, st_as_sf, st_transform, st_drop_geometry
-library(purrr) #map
-library(plyr) #rbind.fill
 library(googledrive) #drive_get, drive_mkdir, drive_ls, drive_upload
 library(sp)
-library(sf)
-library(reshape2) # melt
 library(readr) #write_lines
 library(googlesheets4)
 
@@ -24,8 +19,12 @@ source("./config.R")
 setwd(file.path(wd))
 
 drive_auth()
-WTpj_Tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1fqifS_E5O_IpW1B-UG_xthr9hzY6FIek-nFjCrt1G0w", sheet = "project")
 
+#project_integration
+WTpj_Tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1fqifS_E5O_IpW1B-UG_xthr9hzY6FIek-nFjCrt1G0w", sheet = "project")
+#observer
+observer_Tbl <-  read_sheet("https://docs.google.com/spreadsheets/d/1gsm4LSwU31vJQIh5Ahpy70dhYvPr9ftHqaW1gw75IeU", sheet = "master_observer.csv")
+#species
 WT_spTbl <- read.csv(file.path("./lookupTables/species_codes.csv"))
 
 WT_durMethTbl <- read.csv(file.path("./lookupTables/duration_method_codes.csv"), fileEncoding="UTF-8-BOM")
@@ -147,6 +146,7 @@ s_visit <- raw_visit %>%
          data_origin = NA,
          missinginvisit = NA,
          survey_year = substr(Date, 1, 4))
+
 
 ############################
 #### SURVEY TABLE ####
