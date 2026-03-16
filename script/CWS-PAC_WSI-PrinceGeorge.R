@@ -1,0 +1,347 @@
+# Title: "WSI-PrinceGeorge"
+# Source dataset is an excel spreadsheet
+# Author: "Melina Houle"
+# Date: "December 15, 2025"
+# Note: 
+#     - org kept information on time while dct didn't.
+#     - Only songbird survey were translated. Woodpecker survey used playback methodology. 
+#----------------------------------------------
+#update.packages()
+library(dplyr) # mutate, %>%
+library(readxl) #read_excel, read_xls
+library(stringr) #str_replace_all
+library(googledrive) #drive_get, drive_mkdir, drive_ls, drive_upload
+library(googlesheets4)
+library(terra)
+
+source("./config.R")
+
+## Initialize variables (wd is define in config.R)
+setwd(file.path(wd))
+
+drive_auth()
+#project_integration
+WTpj_Tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1fqifS_E5O_IpW1B-UG_xthr9hzY6FIek-nFjCrt1G0w", sheet = "project")
+#Observer
+obs_url <- "https://docs.google.com/spreadsheets/d/1gsm4LSwU31vJQIh5Ahpy70dhYvPr9ftHqaW1gw75IeU"
+observer_Tbl <-  read_sheet(obs_url, sheet = "master_observer.csv")
+#species
+WT_spTbl <- read.csv(file.path("./lookupTables/species_codes.csv")) %>%
+  dplyr::filter(!species_code %in% c("CORBRA", "PICHUD", "GRAJ", "PSFL"))
+
+BC_spTbl <- "https://docs.google.com/spreadsheets/d/107U-tUtD5rRv3AA0akXh8DYNAEisvFYBbdDh5lfU6fg"
+bird_Tbl <-  read_sheet(BC_spTbl, sheet = "birdlist")
+names(bird_Tbl)<-str_replace_all(names(bird_Tbl), c(" " = "_"))
+
+WT_durMethTbl <- read.csv(file.path("./lookupTables/duration_method_codes.csv"), fileEncoding="UTF-8-BOM")
+WT_distMethTbl <- read.csv(file.path("./lookupTables/distance_method_codes.csv"), fileEncoding="UTF-8-BOM")
+WT_durBandTbl <- read.csv(file.path("./lookupTables/duration_interval_codes.csv"), fileEncoding="UTF-8-BOM")
+WT_distBandTbl <- read.csv(file.path("./lookupTables/distance_band_codes.csv"), fileEncoding="UTF-8-BOM")
+
+organization <- "CWS-PAC"
+dataset <- "WSI-PrinceGeorge"
+dataset_code <- "WSI-PrinceGeorge"
+lu <- "./lookupTables"
+project <- file.path("./project", dataset_code)
+
+out_dir <- file.path("./out", dataset_code)    # where output dataframe will be exported
+if (!dir.exists(out_dir)) {
+  dir.create(out_dir)
+}
+project_dir <- file.path(wd, "project", dataset_code)
+if (!dir.exists(project_dir)) {
+  dir.create(project_dir)
+}
+
+#--------------------------------------------------------------
+#
+#       DOWNLOAD FILE FROM DRIVE 
+#
+#--------------------------------------------------------------
+if (length(list.files(project)) ==0) {
+  pid <- WTpj_Tbl %>%
+    filter(dataset_code =="WSI-PrinceGeorge") %>%
+    select("GSharedDrive location")
+  #Download from GoogleDrive
+  gd.list <- drive_ls(as.character(pid))
+  data1_db <- gd.list %>%
+    filter(name =="wsi_4302_org.xls") %>%
+    select("id")
+  drive_download(as_id(as.character(data1_db)), path = file.path(project_dir, "wsi_4302_org.xls"))
+}
+
+data <- file.path(project_dir, "wsi_4302_org.xls")
+
+#--------------------------------------------------------------
+#       LOAD
+#--------------------------------------------------------------
+survey <- read_xls(data, sheet = "Point observations-Songbird")
+names(survey)<-str_replace_all(names(survey), c(" " = "_"))
+
+#--------------------------------------------------------------
+#
+#       TRANSLATE
+#
+#--------------------------------------------------------------
+# REPROJECT UTM 10N
+spLocation_pj <- vect(survey, geom=c("UTM_Easting", "UTM_Northing"), crs="epsg:3157")
+spLocation_pj <- as.data.frame(project(spLocation_pj,"EPSG:4326"),  geom = "XY") # WILDTRAX
+
+pc_location <- spLocation_pj %>%
+  dplyr::select(x, y, Design_Component_Label) %>%
+  mutate(location = paste0(dataset_code, ":", Design_Component_Label)) %>%
+  group_by(location) %>%
+  dplyr::summarize(
+    latitude = mean(y, na.rm = TRUE),
+    longitude = mean(x, na.rm = TRUE),
+    location_comments = if_else(
+      any(abs(y - mean(y, na.rm = TRUE)) > 1e-6) |
+        any(abs(x - mean(x, na.rm = TRUE)) > 1e-6),
+      "Mean coordinates used due to variation across years",
+      NA_character_
+    ),
+    .groups = "drop"
+  ) %>%
+  mutate(organization = "CWS-PAC",
+         buffer_m = NA,
+         location_visibility = "Visible",
+         true_coordinates = TRUE,
+         internal_wildtrax_id = NA)
+  ####### CHECK MAPPING 
+  #library(sf)
+  #library(sp)
+  #canada <- st_read("E:/MelinaStuff/BAM/GIS_layer/CanadaLAEA.shp")
+  #bnd <- st_transform(canada, crs= st_crs(4326)) %>% filter(NAME == "British Columbia / Colombie-Britannique")
+  #plot(bnd$geometry)
+  #xy <- pc_location[,c("longitude", "latitude")]
+  #spdf <- SpatialPointsDataFrame(coords = xy, data = pc_location,
+  #                             proj4string = CRS("+proj=longlat +ellps=GRS80 +towgs84=0.0,0.0,0.0,0.0,0.0,0.0,0.0 +no_defs"))
+  #pc <- st_as_sf(spdf, coords = c("longitude", "latitude"), crs = UTM)
+  #plot(pc$geometry, col = "red", add= TRUE)
+
+############################
+#### Visit/Location TABLE ####
+############################
+s_visit <- survey %>%
+  dplyr::select(Design_Component_Label, Visit_Date, Visit_Time, Surveyor, Species, Count, UTM_Easting, UTM_Northing, Time_Interval, 
+                Distance_to_Bird, `Fly-overs`, `V/C/S`)  %>%
+  dplyr::mutate(location =  paste0(dataset_code, ":", Design_Component_Label),
+                visitDate = ifelse(is.na(Visit_Date), "1900-01-01", as.character(format(Visit_Date, "%Y-%m-%d"))),
+                missingvisit = NA,
+                rawObserver = Surveyor,
+                observer = case_when(Surveyor == "Russell Cannings"  ~ "RC",
+                                     Surveyor == "Dan Baxter" ~ "DB"),
+                survey_time = ifelse(is.na(Visit_Time), "00:00:01", as.character(format(Visit_Time, "%H:%M:%S"))),
+                pkey_dt = paste(location, paste0(gsub("-", "", as.character(visitDate)),"_", gsub(":", "", survey_time)), observer, sep=":"),
+                snowDepthMeters= NA,
+                waterDepthMeters = NA,
+                crew = NA,
+                bait = "NONE",
+                accessMethod = NA,
+                landFeatures = NA,
+                wildtrax_internal_update_ts = NA,
+                wildtrax_internal_lv_id = NA,
+                comments = NA,
+                easting = UTM_Easting,
+                northing = UTM_Northing,
+                utmZone = "10N",
+                time_zone = NA,       
+                data_origin = NA,
+                missinginvisit = NA,
+                survey_year = substr(Visit_Date, 1, 4),
+                missinginlocations = NA)
+
+
+
+
+################################
+#### Update master_observer ####
+################################
+unique_observers <- s_visit %>%
+  select(Surveyor) %>% 
+  distinct() %>%
+  filter(!is.na(Surveyor)) %>% # Exclude rows where Observer is NA
+  mutate(
+    observer_name = Surveyor,
+    observer_id = case_when(Surveyor == "Russell Cannings" ~ "RC",
+                            Surveyor == "Dan Baxter" ~ "DB")
+  )
+
+# Create the append_obs data frame
+append_obs <- unique_observers %>%
+  select(observer_id, observer_name) %>%
+  mutate(
+    organization = "CWS-PACIFIC",
+    project = dataset_code
+  ) %>%
+  select(organization, project, observer_id, observer_name)
+
+# Identify rows in append_obs that are not in observer_Tbl
+new_rows <- anti_join(append_obs, observer_Tbl, 
+                      by = c("organization", "project", "observer_id", "observer_name"))
+
+# Combine new rows with the existing observer_Tbl
+if (nrow(new_rows) > 0) {
+  sheet_append(obs_url, new_rows)
+}
+
+############################
+#### SURVEY TABLE ####
+############################
+##Explore what's in note
+pc_survey <- s_visit %>% 
+  dplyr::rename(site = Design_Component_Label , 
+                ind_count = Count) %>%
+  mutate(organization = organization,
+         project = dataset,
+         station = NA,
+         original_species = Species,
+         Species = paste0("B-", Species),
+         visitDate = ifelse(is.na(Visit_Date), "1900-01-01", as.character(Visit_Date)),
+         distanceMethod = "0m-50m-100m-150m-200m",
+         distanceband = case_when(Distance_to_Bird == 1 ~ "0m-50m",
+                                  Distance_to_Bird == 2 ~ "50m-100m",
+                                  Distance_to_Bird == 3 ~ "100m-150m",
+                                  Distance_to_Bird == 4 ~ "150m-200m"),
+         durationMethod = "0-3-5-8min",
+         durationinterval = case_when(Time_Interval == 1 ~ "0-3min",
+                                      Time_Interval == 2 ~ "3-5min",
+                                      Time_Interval == 3 ~ "5-8min"),
+         isHeard = case_when(`V/C/S` == "C" ~ "Yes",
+                             `V/C/S` == "S" ~ "Yes",
+                             `V/C/S` == "V, S" ~ "Yes",
+                             `V/C/S` == "V" ~ "No"),
+         isSeen = case_when(`V/C/S` == "C" ~ "No",
+                            `V/C/S` == "S" ~ "No",
+                            `V/C/S` == "V, S" ~ "Yes",
+                            `V/C/S` == "V" ~ "Yes"),
+         missingindetections = NA,
+         raw_distance_code = Distance_to_Bird,
+         raw_duration_code = Time_Interval,
+         #Behaviour
+         originalBehaviourData = `V/C/S`,
+         pc_vt = "DNC",
+         pc_vt_detail ="DNC",
+         age = "DNC",
+         fm = "DNC",
+         group = "DNC",
+         flyover = `Fly-overs`,
+         displaytype = "DNC",
+         nestevidence = "DNC",
+         behaviourother = "DNC") %>% 
+  filter(!Species == "B-NONE")
+
+
+# Test species using scientific name
+species_tbl <- pc_survey %>%
+  select(Species) %>%
+  dplyr::distinct(Species) %>%
+  left_join(bird_Tbl, by=c("Species"="Species_Code")) %>%
+  left_join(WT_spTbl, by=c("Scientific_Name"="scientific_name"))
+
+#list the ones that didn't pass
+species_tbl[is.na(species_tbl$species_code),]
+
+data_flat <- pc_survey %>% 
+  left_join(species_tbl, by="Species")  %>%
+  mutate(species = case_when(Species == "B-WEWP" ~ "UNBI",
+                             Species == "B-BPWA" ~ "UNBI",
+                             Species ==  "B-NOGO" ~ "AGOS",
+                             TRUE ~  species_code),
+         scientificname = Scientific_Name,
+         surveyDateTime = paste(visitDate, survey_time))
+
+## CHECK
+print(unique(data_flat$distanceMethod[!(data_flat$distanceMethod %in% WT_distMethTbl$distance_method_type)]))
+print(unique(data_flat$durationMethod[!(data_flat$durationMethod %in% WT_durMethTbl$duration_method_type)]))
+print(unique(data_flat$species[!(data_flat$species %in% WT_spTbl$species_code)]))
+print(unique(data_flat$durationinterval[!(data_flat$durationinterval %in% WT_durBandTbl$duration_interval_type)]))
+print(unique(data_flat$distanceband[!(data_flat$distanceband %in% WT_distBandTbl$distance_band_type)]))
+print(unique(data_flat$durationinterval[!(data_flat$durationinterval %in% WT_durBandTbl$duration_interval_type)]))
+
+
+#--------------------------------------------------------------
+#
+#       EXPORT
+#
+#--------------------------------------------------------------
+
+# Create sub folder in 'toUpload' with the organization name
+dr<- drive_get("toUpload/", shared_drive = "BAM_AvianData")
+to_upload_contents <- drive_ls(as_id(dr)) # print(to_upload_contents)
+upload_folder <- to_upload_contents[to_upload_contents$name == organization, ]
+if (nrow(upload_folder) == 0) {
+  upload_folder <- drive_mkdir(organization, path = as_id(dr))
+}
+
+#Set GoogleDrive id
+if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
+  dr_dataset_code <-drive_mkdir(dataset_code, path = as_id(dr), overwrite = NA)
+} else {
+  dr_dataset_code <- drive_ls(as_id(dr), pattern = dataset_code)
+}
+dr_ls <- drive_ls(as_id(dr), pattern = dataset_code)
+
+
+#---LOCATION
+WTlocation <- c("organization", "location", "latitude", "longitude", "buffer_m", "location_visibility", "true_coordinates", "location_comments", "internal_wildtrax_id")
+
+# Remove duplicated location
+location_tbl <- pc_location[!duplicated(pc_location[,WTlocation]), WTlocation] 
+write.csv(location_tbl, file= file.path(out_dir, paste0(dataset_code,"_location.csv")), row.names = FALSE, na = "")
+location_out <- file.path(out_dir, paste0(dataset_code,"_location.csv"))
+drive_upload(media = location_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_location.csv"), overwrite = TRUE) 
+
+#---VISIT
+WTvisit <- c("location", "visitDate", "snowDepthMeters", "waterDepthMeters", "crew", "bait", "accessMethod", "landFeatures", "comments", 
+             "wildtrax_internal_update_ts", "wildtrax_internal_lv_id")
+
+no_flyover <- data_flat %>%
+  dplyr::filter(flyover != "Yes")
+
+#Delete duplicated based on WildtTrax attributes (double observer on the same site, same day). 
+visit_tbl <- no_flyover[!duplicated(no_flyover[,WTvisit]), WTvisit] # 
+
+write.csv(visit_tbl, file= file.path(out_dir, paste0(dataset_code,"_visit.csv")), row.names = FALSE, na = "")
+visit_out <- file.path(out_dir, paste0(dataset_code,"_visit.csv"))
+drive_upload(media = visit_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_visit.csv"), overwrite = TRUE) 
+
+#---SURVEY
+survey_tbl <- no_flyover %>% 
+  group_by(location, surveyDateTime, durationMethod, distanceMethod, observer, species, distanceband, durationinterval, isHeard, isSeen, comments) %>%
+  dplyr::summarise(abundance = sum(ind_count), .groups= "keep")
+
+WTsurvey <- c("location", "surveyDateTime", "durationMethod", "distanceMethod", "observer", "species", "distanceband",
+              "durationinterval", "abundance", "isHeard", "isSeen", "comments")
+
+write.csv(survey_tbl, file= file.path(out_dir, paste0(dataset_code,"_survey.csv")), row.names = FALSE, na = "")
+survey_out <- file.path(out_dir, paste0(dataset_code,"_survey.csv"))
+drive_upload(media = survey_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_survey.csv"), overwrite = TRUE) 
+
+#---EXTENDED
+Extended <- c("organization", "project","location", "surveyDateTime", "species", "ind_count", "distanceband", "durationinterval", "site", "station", "utmZone", "easting", 
+              "northing", "missinginlocations", "time_zone", "data_origin", "missinginvisit", "pkey_dt", "survey_time",
+              "survey_year", "rawObserver", "original_species", "scientificname", "raw_distance_code", "raw_duration_code", 
+              "originalBehaviourData", "missingindetections", "pc_vt", "pc_vt_detail", "age", "fm", "group", "flyover", 
+              "displaytype", "nestevidence", "behaviourother")
+
+extended_tbl <- data_flat[!duplicated(data_flat[,Extended]), Extended] 
+write.csv(extended_tbl, file.path(out_dir, paste0(dataset_code, "_behavior.csv")), quote = FALSE, row.names = FALSE, na = "")
+extended_out <- file.path(out_dir, paste0(dataset_code,"_behavior.csv"))
+drive_upload(media = extended_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_behavior.csv"), overwrite = TRUE) 
+
+#---PROCESSING STATS
+#write_lines(paste0("Organization: ", organization), file.path(out_dir, paste0(dataset_code, "_stats.csv")))
+#write_lines(paste0("Project: ", dataset_code), file.path(out_dir, paste0(dataset_code, "_stats.csv")), append= TRUE)
+#nrow_location <- paste0("Number of locations: ", nrow(location_tbl))
+#write_lines(nrow_location, file.path(out_dir, paste0(dataset_code, "_stats.csv")), append= TRUE)
+#nrow_visit <- paste0("Number of visit: ", nrow(visit_tbl))
+#write_lines(nrow_visit, file.path(out_dir, paste0(dataset_code, "_stats.csv")), append= TRUE)
+#nrow_survey <- paste0("Number of survey: ", nrow(survey_tbl))
+#write_lines(nrow_survey, file.path(out_dir, paste0(dataset_code, "_stats.csv")), append= TRUE)
+#nrow_extended <- paste0("Number of extended: ", nrow(extended_tbl))
+#write_lines(nrow_extended, file.path(out_dir, paste0(dataset_code, "_stats.csv")), append= TRUE)
+
+
+
+

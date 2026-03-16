@@ -1,4 +1,5 @@
 ﻿distance_band_type
+200m-INF
 100m-INF
 UNKNOWN
 75m-INF
@@ -48,3 +49,13 @@ UNKNOWN
 300m-350m
 350m-400m
 400m-INF
+100m-110m
+110m-120m
+120m-130m
+140m-150m
+130m-140m
+0m-20m
+20m-40m
+40m-60m
+60m-80m
+80m-100m
