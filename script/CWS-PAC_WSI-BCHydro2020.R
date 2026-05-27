@@ -3,7 +3,7 @@
 # Author: "Melina Houle"
 # Date: "November 26, 2025"
 ## Note on translation:
-#   
+#   - 53 obs are flyover. Delete from survey. Keep them in extended.
 #----------------------------------------------
 #update.packages()
 library(dplyr) # mutate, %>%
@@ -115,8 +115,8 @@ pc_location <- spLocation_pj %>%
 #### Visit/Location TABLE ####
 ############################
 s_visit <- survey %>%
-  dplyr::select(Study_Area_Name, Sample_Station_Label, Date, Time, Surveyor, Species, Count, Easting, Northing, Detect_Type, Detection_Distance_Class,
-                Comments)  %>%
+  dplyr::select(Study_Area_Name, Sample_Station_Label, Date, Time, Surveyor, Species, Count, Easting, Northing, Detect_Type, 
+                Detection_Distance_Class, Flyovers, Comments)  %>%
   dplyr::mutate(location =  paste0(dataset_code, ":", Study_Area_Name, ":", Sample_Station_Label),
                 visitDate = ifelse(is.na(Date), "1900-01-01", as.character(format(Date, "%Y-%m-%d"))),
                 missingvisit = NA,
@@ -183,8 +183,7 @@ if (nrow(new_rows) > 0) {
 ##Explore what's in note
 pc_survey <- s_visit %>% 
   dplyr::rename(site = Study_Area_Name , 
-                station = Sample_Station_Label,
-                ind_count = Count) %>%
+                station = Sample_Station_Label) %>%
   mutate(organization = organization,
          project = dataset,
          original_species = Species,
@@ -204,6 +203,8 @@ pc_survey <- s_visit %>%
                             Detect_Type == "SO" ~ "No",
                             Detect_Type == "VI" ~ "Yes",
                             is.na(Detect_Type) ~ "DNC"),
+    
+         ind_count = ifelse(Count ==0, Flyovers, Count),
          missingindetections = NA,
          raw_distance_code = Detection_Distance_Class,
          raw_duration_code = NA,
@@ -214,7 +215,7 @@ pc_survey <- s_visit %>%
          age = "DNC",
          fm = "DNC",
          group = "DNC",
-         flyover = "DNC",
+         flyover = ifelse(is.na(Flyovers), "No", "Yes"),
          displaytype = "DNC",
          nestevidence = "DNC",
          behaviourother = "DNC") %>% 
@@ -292,6 +293,7 @@ drive_upload(media = visit_out, path = as_id(dr_dataset_code), name = paste0(dat
 
 #---SURVEY
 survey_tbl <- data_flat %>% 
+  dplyr::filter(flyover == "No") %>%
   group_by(location, surveyDateTime, durationMethod, distanceMethod, observer, species, distanceband, durationinterval, isHeard, isSeen, comments) %>%
   dplyr::summarise(abundance = sum(ind_count), .groups= "keep")
 
