@@ -216,7 +216,7 @@ print(unique(data_flat$durationinterval[!(data_flat$durationinterval %in% WT_dur
 #
 #--------------------------------------------------------------
 #Extract GoogleDrive id to store output
-dr<- drive_get(paste0("toUpload/",organization), shared_drive = "BAM_Core")
+dr<- drive_get(paste0("toUpload/",organization), shared_drive = "BAM_AvianData")
 
 if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
   dr_dataset_code <-drive_mkdir(dataset_code, path = as_id(dr), overwrite = NA)
