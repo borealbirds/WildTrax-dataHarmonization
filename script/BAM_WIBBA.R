@@ -103,6 +103,11 @@ data_flat <- data_flat %>%
          utmZone = NA,
          easting = NA,
          northing = NA,
+         buffer_m = NA,
+         location_visibility = NA,
+         true_coordinates = NA, 
+         internal_wildtrax_id = NA, 
+         location_comments = NA,
          missinginlocations = NA) %>% 
   dplyr::rename(visitDate = surveydate)
 
@@ -214,7 +219,7 @@ print(survey_pc[is.na(survey_pc$species),])
 #
 #--------------------------------------------------------------
 #Extract GoogleDrive id to store output
-dr<- drive_get(paste0("DataTransfered/",organization), shared_drive= "BAM_Core")
+dr<- drive_get(paste0("DataTransfered/",organization), shared_drive= "BAM_AvianData")
 
 if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
   dr_dataset_code <-drive_mkdir(dataset_code, path = as_id(dr), overwrite = NA)
@@ -247,7 +252,7 @@ visit_out <- file.path(out_dir, paste0(dataset_code,"_visit.csv"))
 drive_upload(media = visit_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_visit.csv"), overwrite = TRUE) 
 
 #---LOCATION
-WTlocation <- c("location", "latitude", "longitude")
+WTlocation <- c("organization", "location", "latitude", "longitude", "buffer_m", "location_visibility", "true_coordinates", "location_comments", "internal_wildtrax_id")
 location_tbl <- survey_pc[!duplicated(survey_pc[,WTlocation]), WTlocation] # 
 
 write.csv(location_tbl, file= file.path(out_dir, paste0(dataset_code,"_location.csv")), quote = FALSE, row.names = FALSE)
