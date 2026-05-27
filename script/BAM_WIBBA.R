@@ -6,6 +6,7 @@
 # --- Source data are stored in a .xlsx format
 # --- Metadata are found in sheet 2
 # --- Tbl tblSurveyConditions INFO stores info on visit
+# --  Filter out count==0 (drop 7 obs. Don't know why species, dustance band and duration interval associated to those but can't derived count)
 #
 # --- FIX DETAILS
 # --- Fix species lookuptable. Survey data uses GRAJ while lookuptable provided uses CAJA
@@ -92,6 +93,7 @@ lu_beh <- read_xlsx(file.path(project_dir, "breedingcode.xlsx"), sheet=1)
   #survey_pc[is.na(survey_pc$latitude),]
 
 data_flat <- data_flat %>% 
+  dplyr::filter(count>0) %>%
   mutate(organization = organization ,
          project = project_name,
          location = paste(dataset_code, pointid, sep= "_"),
@@ -142,24 +144,24 @@ lu_crosswalk <- merge(WT_spTbl, lu_species[,c("SPEC", "COMMONNAME")], by.x = "sp
 survey_pc <- pc_visit %>% 
   mutate(original_species = speciescode,
          species = lu_crosswalk$species_code[match(speciescode, lu_crosswalk$species_code)],
-        scientificname = WT_spTbl$scientific_name[match(species, WT_spTbl$species_code)],
-        isHeard = case_when(detectioncode == "S" ~ "Yes",
+         scientificname = WT_spTbl$scientific_name[match(species, WT_spTbl$species_code)],
+         isHeard = case_when(detectioncode == "S" ~ "Yes",
                             detectioncode == "V" ~ "No",
                             detectioncode == "C" ~ "Yes",
                             detectioncode == "J" ~ "DNC",
                             detectioncode == "F" ~ "DNC"),
-        isSeen = case_when(detectioncode == "S" ~ "No",
+         isSeen = case_when(detectioncode == "S" ~ "No",
                            detectioncode == "V" ~ "Yes",
                            detectioncode == "C" ~ "No",
                            detectioncode == "J" ~ "DNC",
                            detectioncode == "F" ~ "DNC"),
-        distanceMethod = "0m-50m-100m-INF",
-        distanceband = case_when(distance == "1" ~ "0m-50m",
+         distanceMethod = "0m-50m-100m-INF",
+         distanceband = case_when(distance == "1" ~ "0m-50m",
                                      distance == "2" ~ "50m-100m",
                                      distance == "3" ~ "100m-INF",
                                  is.na(distance) ~ "UNKNOWN"),
-        durationMethod = "0-1-2-3-4-5-6-7-8-9-10min",
-        durationinterval = case_when(minute == "0" ~ "0-1min",
+         durationMethod = "0-1-2-3-4-5-6-7-8-9-10min",
+         durationinterval = case_when(minute == "0" ~ "0-1min",
                                      minute ==  "1" ~ "1-2min",
                                      minute == "2" ~ "2-3min",
                                      minute == "3" ~ "3-4min",
@@ -170,20 +172,20 @@ survey_pc <- pc_visit %>%
                                      minute == "8" ~ "8-9min",
                                      minute == "9" ~ "9-10min",
                                      is.na(minute) ~ "UNKNOWN"),
-        comments = noteso,
-        missingindetections = NA,
-        originalBehaviourData = breedingcode,
-        raw_duration_code = minute,
-        raw_distance_code = distance,
-        pc_vt = lu_beh$pc_vt[match(breedingcode, lu_beh$breedingcode)],
-        pc_vt_detail = lu_beh$pc_vt_detail[match(breedingcode, lu_beh$breedingcode)],
-        age = lu_beh$age[match(breedingcode, lu_beh$breedingcode)],
-        fm =  lu_beh$fm[match(breedingcode, lu_beh$breedingcode)],
-        group =  lu_beh$group[match(breedingcode, lu_beh$breedingcode)],
-        flyover = lu_beh$flyover[match(breedingcode, lu_beh$breedingcode)],
-        displaytype = lu_beh$displaytype[match(breedingcode, lu_beh$breedingcode)],
-        nestevidence = lu_beh$nestevidence[match(breedingcode, lu_beh$breedingcode)],
-        behaviourother = "DNC"
+         comments = noteso,
+         missingindetections = NA,
+         originalBehaviourData = breedingcode,
+         raw_duration_code = minute,
+         raw_distance_code = distance,
+         pc_vt = lu_beh$pc_vt[match(breedingcode, lu_beh$breedingcode)],
+         pc_vt_detail = lu_beh$pc_vt_detail[match(breedingcode, lu_beh$breedingcode)],
+         age = lu_beh$age[match(breedingcode, lu_beh$breedingcode)],
+         fm =  lu_beh$fm[match(breedingcode, lu_beh$breedingcode)],
+         group =  lu_beh$group[match(breedingcode, lu_beh$breedingcode)],
+         flyover = lu_beh$flyover[match(breedingcode, lu_beh$breedingcode)],
+         displaytype = lu_beh$displaytype[match(breedingcode, lu_beh$breedingcode)],
+         nestevidence = lu_beh$nestevidence[match(breedingcode, lu_beh$breedingcode)],
+         behaviourother = "DNC"
   )
 
 
@@ -191,8 +193,11 @@ survey_pc <- pc_visit %>%
 print(unique(survey_pc$distanceMethod[!(survey_pc$distanceMethod %in% WT_distMethTbl$distance_method_type)]))
 print(unique(survey_pc$durationMethod[!(survey_pc$durationMethod %in% WT_durMethTbl$duration_method_type)]))
 print(unique(survey_pc$species[!(survey_pc$species %in% WT_spTbl$species_code)]))
-# Fix Gray Jay
+# Fix missing species
 survey_pc$species[survey_pc$speciescode == "GRAJ"] <-"GRAJ"
+survey_pc$species[survey_pc$speciescode == "BADO"] <-"BAOW"
+survey_pc$species[survey_pc$speciescode == "HOWR"] <-"NHWR"
+survey_pc$species[survey_pc$speciescode == "HERG"] <-"AHGU"
 print(unique(survey_pc$species[!(survey_pc$species %in% WT_spTbl$species_code)]))
 
 print(unique(survey_pc$distanceband[!(survey_pc$distanceband %in% WT_distBandTbl$distance_band_type)]))

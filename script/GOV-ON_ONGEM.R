@@ -8,6 +8,7 @@
 # -- X, Y coordinates using different name. 
 # -- We had to resolve the location name in order to make sure uniqueness. source plotID and IDENt2 were
 # --  kept in the comments attributes to allow the user to retrieve the original value. 
+# --  Filter out MaxCount==0 (drop 44000 obs)
 
 library(tidyverse)
 library(readxl)
@@ -97,6 +98,7 @@ location <- merge(location, loc.freqPlot, by="plotID", all.x = TRUE)
 ############################
 #Read in template
 locations <- location  %>%
+  dplyr::filter(MaxCount > 0) %>%
   dplyr::mutate(organization = organization,
                 project = project_name,
                 location = case_when(FreqXY ==1 & FreqPlotID ==1 ~ paste("ONGEM", plotID, sep = ":"), 
@@ -106,18 +108,18 @@ locations <- location  %>%
                 northing = LATITUDE,
                 easting = LONGITUDE,
                 elevationMeters = NA,
-                bufferRadiusMeters = NA,
-                isHidden = NA,
-                trueCoordinates = NA,
+                buffer_m = NA,
+                location_visibility = NA,
+                true_coordinates = NA,
                 internal_wildtrax_id = NA,
                 internal_update_ts = NA,
                 site = NA,
                 station = NA, 
                 utmZone = NA, 
-                missinginlocations = NA) %>%
+                missinginlocations = NA,
+                location_comments = NA) %>%
   dplyr::rename(latitude = LATITUDE,
                 longitude = LONGITUDE) 
-
 
 ############################
 #### VISIT TABLE ####
@@ -131,8 +133,6 @@ visit_flat <- locations %>%
          bait = "None",
          accessMethod = NA,  #ARUs attributes
          comments = paste0("original plotID: ", plotID),
-         wildtrax_internal_update_ts = NA,  #created during the upload
-         wildtrax_internal_lv_id = NA, #created during the upload
          time_zone = NA,
          data_origin = NA,
          missinginvisit = NA,
@@ -196,7 +196,7 @@ print(survey[is.na(survey$species),])
 ## EXPORT ####
 ############################
 #Extract GoogleDrive id to store output
-dr<- drive_get(paste0("DataTransfered/",organization), shared_drive = "BAM_Core")
+dr<- drive_get(paste0("DataTransfered/",organization), shared_drive = "BAM_AvianData")
 
 if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
   dr_dataset_code <-drive_mkdir(dataset_code, path = as_id(dr), overwrite = NA)
@@ -205,18 +205,17 @@ if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
 }
 
 #---LOCATION
-WTlocation <- c("location", "latitude", "longitude")
+WTlocation <- c("organization", "location", "latitude", "longitude", "buffer_m", "location_visibility", "true_coordinates", "location_comments", "internal_wildtrax_id")
 
 # Remove duplicated location
-location_tbl <- locations[!duplicated(locations[,WTlocation]), WTlocation] 
+location_tbl <- survey[!duplicated(survey[,WTlocation]), WTlocation] 
 write.csv(location_tbl, file= file.path(out_dir, paste0(dataset_code,"_location.csv")), row.names = FALSE, na = "")
 location_out <- file.path(out_dir, paste0(dataset_code,"_location.csv"))
 drive_upload(media = location_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_location.csv"), overwrite = TRUE) 
 
 
 #---VISIT
-WTvisit <- c("location", "visitDate", "snowDepthMeters", "waterDepthMeters", "crew", "bait", "accessMethod", "landFeatures", "comments", 
-             "wildtrax_internal_update_ts", "wildtrax_internal_lv_id")
+WTvisit <- c("location", "visitDate", "snowDepthMeters", "waterDepthMeters", "crew", "bait", "accessMethod", "landFeatures", "comments")
 
 #Delete duplicated based on WildtTrax attributes (double observer on the same site, same day). 
 visit_tbl <- visit_flat[!duplicated(visit_flat[,WTvisit]), WTvisit] 
