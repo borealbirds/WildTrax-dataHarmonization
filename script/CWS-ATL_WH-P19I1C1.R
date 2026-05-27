@@ -26,7 +26,8 @@ WTpj_Tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1fqifS_E5O_IpW1B-
 obs_url <- "https://docs.google.com/spreadsheets/d/1gsm4LSwU31vJQIh5Ahpy70dhYvPr9ftHqaW1gw75IeU"
 observer_Tbl <-  read_sheet(obs_url, sheet = "master_observer.csv")
 #species
-WT_spTbl <- read.csv(file.path("./lookupTables/species_codes.csv"))
+WT_spTbl <- read.csv(file.path("./lookupTables/species_codes.csv"))  %>%
+  dplyr::filter(!species_code %in% c("CORBRA", "PICHUD", "GRAJ", "PSFL"))
 
 WT_durMethTbl <- read.csv(file.path("./lookupTables/duration_method_codes.csv"), fileEncoding="UTF-8-BOM")
 WT_distMethTbl <- read.csv(file.path("./lookupTables/distance_method_codes.csv"), fileEncoding="UTF-8-BOM")
@@ -104,16 +105,20 @@ s_visit <- raw_visit %>%
          bait = "NONE",
          accessMethod = NA,
          landFeatures = NA,
-         wildtrax_internal_update_ts = NA,
-         wildtrax_internal_lv_id = NA,
          comments = NA,
          utmZone = NA,
          time_zone = NA,       
          data_origin = NA,
          missinginvisit = NA,
          survey_year = substr(Date, 1, 4),
-         missinginlocations = NA)
-
+         missinginlocations = NA,
+         buffer_m = NA,
+         location_visibility = "Visible",	
+         true_coordinates = TRUE,
+         location_comments = NA,
+         internal_wildtrax_id = NA,
+         easting = NA, 
+         northing = NA)	
     ####### CHECK MAPPING 
     #canada <- st_read("E:/MelinaStuff/BAM/GIS_layer/CanadaLAEA.shp")
     #bnd <- st_transform(canada, crs= st_crs(4269)) %>% filter(NAME == "Newfoundland and Labrador / Terre-Neuve-et-Labrador")
@@ -161,11 +166,13 @@ if (nrow(new_rows) > 0) {
 ##Explore what's in note
 ##unique(raw_survey$Note)
 
-# Only keep first obsevration of a bird.
+# Only keep first observation of a bird.
 raw_survey_filter <- raw_survey %>% 
-  dplyr::filter(!grepl("même que", Note, ignore.case = TRUE))
+  dplyr::filter(!grepl("même que", Note, ignore.case = TRUE),
+                !is.na(Count))
   
-pc_survey <- raw_survey %>% 
+  
+pc_survey <- raw_survey_filter %>% 
   dplyr::filter (Period < 5) %>% #delete playback period (5-6-7)
   dplyr::select(-Sample_ID, -Visit_ID, -Species_Group, -`Semi-circle`, -No._Young) %>%
   dplyr::rename(site = Site_ID, 
@@ -182,7 +189,7 @@ pc_survey <- raw_survey %>%
          distanceband = case_when(`DRL/IPA` == "DRL" ~ "0m-50m",
                                    `DRL/IPA` == "IPA" ~ "50m-INF",
                                   TRUE ~ "UNKNOWN"),
-         durationMethod = "0-20min",
+         durationMethod = "0-5-10-15-20min",
          durationinterval = case_when(Period == 1  ~ "0-5min",
                                       Period == 2 ~ "5-10min",
                                       Period == 3 ~ "10-15min",
@@ -260,7 +267,7 @@ lu_species_fix <- lu_species %>%
                                      Scientific_Name == "Picoides villosus" ~ "Dryobates villosus",
                                      Scientific_Name == "Dendroica magnolia" ~ "Setophaga magnolia",
                                      Scientific_Name == "Oporornis philadelphia" ~ "Geothlypis philadelphia",
-                                     Scientific_Name == "Vermivora ruficapilla" ~ "Leiothylpis ruficapilla",
+                                     Scientific_Name == "Vermivora ruficapilla" ~ "Leiothlypis ruficapilla",
                                      Scientific_Name == "Seiurus noveboracensis" ~ "Parkesia noveboracensis",
                                      Scientific_Name == "Vermivora celata" ~ "Leiothlypis celata",
                                      Scientific_Name == "Seiurus aurocapillus" ~ "Seiurus aurocapilla",
@@ -279,10 +286,6 @@ lu_species_fix <- lu_species %>%
 #WT_spTbl <- WT_spTbl %>%
 #  inner_join(lu_species_fix, by=c("scientific_name"="Scientific_Name"))
 #dup <- WT_spTbl_fix[duplicated(WT_spTbl_fix[,"scientific_name"]),] 
-WT_spTbl <- WT_spTbl %>%
-  filter(species_code != "CORBRA",
-         species_code != "CAJA")
-
 data_flat <- pc_survey %>% 
   left_join(s_visit, by=c("location", "visitDate")) %>%
   left_join(lu_species_fix, by=c("original_species"="SpeciesID"))  %>%
@@ -290,6 +293,7 @@ data_flat <- pc_survey %>%
   mutate(species = case_when(Species  == "UNWO" ~ "UNWO", 
                              Species  == "UNWA" ~ "UNWA",
                              Species  == "BHVI" ~ "BHVI", 
+                             Species  == "HERG" ~ "AHGU",
                              TRUE ~ WT_spTbl$species_code[match(Scientific_Name, WT_spTbl$scientific_name)]),
          scientificname = Scientific_Name,
          surveyDateTime = paste(visitDate, starttime))
@@ -310,12 +314,7 @@ print(unique(data_flat$durationinterval[!(data_flat$durationinterval %in% WT_dur
 #--------------------------------------------------------------
 
 # Create sub folder in 'toUpload' with the organization name
-dr<- drive_get("toUpload/", shared_drive = "BAM_Core")
-to_upload_contents <- drive_ls(as_id(dr)) # print(to_upload_contents)
-upload_folder <- to_upload_contents[to_upload_contents$name == organization, ]
-if (nrow(upload_folder) == 0) {
-  upload_folder <- drive_mkdir(organization, path = as_id(dr))
-}
+dr<- drive_get("DataTransfered/", shared_drive = "BAM_AvianData")
 
 #Set GoogleDrive id
 if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
@@ -325,9 +324,8 @@ if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
 }
 dr_ls <- drive_ls(as_id(dr), pattern = dataset_code)
 
-
 #---LOCATION
-WTlocation <- c("location", "latitude", "longitude")
+WTlocation <- c("organization", "location", "latitude", "longitude", "buffer_m", "location_visibility", "true_coordinates", "location_comments", "internal_wildtrax_id")
 
 # Remove duplicated location
 location_tbl <- data_flat[!duplicated(data_flat[,WTlocation]), WTlocation] 
@@ -336,8 +334,7 @@ location_out <- file.path(out_dir, paste0(dataset_code,"_location.csv"))
 drive_upload(media = location_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_location.csv"), overwrite = TRUE) 
 
 #---VISIT
-WTvisit <- c("location", "visitDate", "snowDepthMeters", "waterDepthMeters", "crew", "bait", "accessMethod", "landFeatures", "comments", 
-             "wildtrax_internal_update_ts", "wildtrax_internal_lv_id")
+WTvisit <- c("location", "visitDate", "snowDepthMeters", "waterDepthMeters", "crew", "bait", "accessMethod", "landFeatures", "comments")
 
 #Delete duplicated based on WildtTrax attributes (double observer on the same site, same day). 
 visit_tbl <- data_flat[!duplicated(data_flat[,WTvisit]), WTvisit] # 
@@ -348,7 +345,7 @@ drive_upload(media = visit_out, path = as_id(dr_dataset_code), name = paste0(dat
 
 #---SURVEY
 survey_tbl <- data_flat %>% 
-  group_by(location, surveyDateTime, durationMethod, distanceMethod, observer, species, distanceband, durationinterval, isHeard, isSeen, comments) %>%
+  group_by(location, latitude, longitude, surveyDateTime, durationMethod, distanceMethod, observer, species, distanceband, durationinterval, isHeard, isSeen, comments) %>%
   dplyr::summarise(abundance = sum(ind_count), .groups= "keep")
 
 WTsurvey <- c("location", "surveyDateTime", "durationMethod", "distanceMethod", "observer", "species", "distanceband",

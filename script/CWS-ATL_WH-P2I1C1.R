@@ -29,7 +29,8 @@ WTpj_Tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1fqifS_E5O_IpW1B-
 obs_url <- "https://docs.google.com/spreadsheets/d/1gsm4LSwU31vJQIh5Ahpy70dhYvPr9ftHqaW1gw75IeU"
 observer_Tbl <-  read_sheet(obs_url, sheet = "master_observer.csv")
 #species
-WT_spTbl <- read.csv(file.path("./lookupTables/species_codes.csv"))
+WT_spTbl <- read.csv(file.path("./lookupTables/species_codes.csv")) %>%
+  dplyr::filter(!species_code %in% c("CORBRA", "PICHUD", "GRAJ", "PSFL"))
 
 WT_durMethTbl <- read.csv(file.path("./lookupTables/duration_method_codes.csv"), fileEncoding="UTF-8-BOM")
 WT_distMethTbl <- read.csv(file.path("./lookupTables/distance_method_codes.csv"), fileEncoding="UTF-8-BOM")
@@ -99,7 +100,7 @@ s_visit <- raw_visit %>%
   mutate(location = paste(dataset_code, Station_ID, sep= ":"),
          visitDate = ifelse(is.na(Date), "1900-01-01", as.character(Date)),
          missingvisit = NA,
-         rawObserver = NA,
+         rawObserver = Observer,
          observer = Observer,
          #time = as.character(format(as.POSIXct(sprintf("%04.0f", Time), format='%H%M'), format = "%H:%M:%S")),
          survey_time = "00:00:01",
@@ -110,15 +111,18 @@ s_visit <- raw_visit %>%
          bait = "NONE",
          accessMethod = NA,
          landFeatures = NA,
-         wildtrax_internal_update_ts = NA,
-         wildtrax_internal_lv_id = NA,
          comments = NA,
          utmZone = "utm21N",
          time_zone = NA,       
          data_origin = NA,
          missinginvisit = NA,
          survey_year = substr(Date, 1, 4),
-         missinginlocations = NA)
+         missinginlocations = NA,
+         buffer_m = NA,
+         location_visibility = "Visible",	
+         true_coordinates = TRUE,
+         location_comments = NA,
+         internal_wildtrax_id = NA)
 
 # correct projection from EPSG:2961 to EPSG 4269, and save them back to the original dataframe (data_flat)
 xy_sf <- st_as_sf(s_visit, coords = c("easting", "northing"))
@@ -267,12 +271,7 @@ print(unique(data_flat$durationinterval[!(data_flat$durationinterval %in% WT_dur
 #--------------------------------------------------------------
 
 # Create sub folder in 'toUpload' with the organization name
-dr<- drive_get("toUpload/", shared_drive = "BAM_Core")
-to_upload_contents <- drive_ls(as_id(dr)) # print(to_upload_contents)
-upload_folder <- to_upload_contents[to_upload_contents$name == organization, ]
-if (nrow(upload_folder) == 0) {
-  upload_folder <- drive_mkdir(organization, path = as_id(dr))
-}
+dr<- drive_get("DataTransfered/", shared_drive = "BAM_AvianData")
 
 #Set GoogleDrive id
 if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
@@ -284,7 +283,7 @@ dr_ls <- drive_ls(as_id(dr), pattern = dataset_code)
 
 
 #---LOCATION
-WTlocation <- c("location", "latitude", "longitude")
+WTlocation <- c("organization", "location", "latitude", "longitude", "buffer_m", "location_visibility", "true_coordinates", "location_comments", "internal_wildtrax_id")
 
 # Remove duplicated location
 location_tbl <- data_flat[!duplicated(data_flat[,WTlocation]), WTlocation] 
@@ -305,10 +304,10 @@ drive_upload(media = visit_out, path = as_id(dr_dataset_code), name = paste0(dat
 
 #---SURVEY
 survey_tbl <- data_flat %>% 
-  group_by(location, surveyDateTime, durationMethod, distanceMethod, observer, species, distanceband, durationinterval, isHeard, isSeen, comments) %>%
+  group_by(location, latitude, longitude, surveyDateTime, durationMethod, distanceMethod, observer, species, distanceband, durationinterval, isHeard, isSeen, comments) %>%
   dplyr::summarise(abundance = sum(ind_count), .groups= "keep")
 
-WTsurvey <- c("location", "surveyDateTime", "durationMethod", "distanceMethod", "observer", "species", "distanceband",
+WTsurvey <- c("location", "latitude", "longitude", "surveyDateTime", "durationMethod", "distanceMethod", "observer", "species", "distanceband",
               "durationinterval", "abundance", "isHeard", "isSeen", "comments")
 
 write.csv(survey_tbl, file= file.path(out_dir, paste0(dataset_code,"_survey.csv")), row.names = FALSE, na = "")

@@ -1,7 +1,7 @@
-# Title: "Translate Newfounland Wildsape historical data - IRMR River Valley"
+# Title: "Translate Newfounland Wildscape historical data - Neal Simon Forest Bird Database"
 # Source dataset is an excel spreadsheet
 # Author: "Melina Houle"
-# Date: "March 24, 2025"
+# Date: "April 27, 2026"
 #update.packages()
 library(dplyr) # mutate, %>%
 library(stringr) #str_replace_all
@@ -24,7 +24,8 @@ WTpj_Tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1fqifS_E5O_IpW1B-
 obs_url <- "https://docs.google.com/spreadsheets/d/1gsm4LSwU31vJQIh5Ahpy70dhYvPr9ftHqaW1gw75IeU"
 observer_Tbl <-  read_sheet(obs_url, sheet = "master_observer.csv")
 #species
-WT_spTbl <- read.csv(file.path("./lookupTables/species_codes.csv"))
+WT_spTbl <- read.csv(file.path("./lookupTables/species_codes.csv")) %>%
+  dplyr::filter(!species_code %in% c("CORBRA", "PICHUD", "GRAJ", "PSFL"))
 colnames(WT_spTbl) <- c("species_common_name", "species_code", "scientific_name")
 
 
@@ -97,10 +98,14 @@ pc_location <- raw_location %>%
   dplyr::rename(longitude = Longitude,
                 latitude = Latitude,
                 northing = Northing,
-                easting = Easting,
-                site = Site_ID) %>%
-  mutate(location = paste(dataset_code, site, sep= ":"),
-         missinginlocations = NA)
+                easting = Easting) %>%
+  mutate(location = paste(dataset_code, Site_ID, sep= ":"),
+         missinginlocations = NA,
+         buffer_m = NA,
+         location_visibility = "Visible",
+         true_coordinates = TRUE,
+         internal_wildtrax_id = NA,
+         location_comments = NA)
 
     ####### CHECK MAPPING 
     #canada <- st_read("E:/MelinaStuff/BAM/GIS_layer/CanadaLAEA.shp")
@@ -117,9 +122,8 @@ pc_location <- raw_location %>%
 ############################
 s_visit <- raw_visit %>%
   select(Site_ID, Station_ID, `Date_________(yyyy-mm-dd)`, Observer)  %>%
-  dplyr::rename(site = Site_ID, 
-                Date = `Date_________(yyyy-mm-dd)`) %>%
-  mutate(location = paste(dataset_code, site, sep= ":"),
+  dplyr::rename(Date = `Date_________(yyyy-mm-dd)`) %>%
+  mutate(location = paste(dataset_code, Site_ID, sep= ":"),
          visitDate = ifelse(is.na(Date), "1900-01-01", as.character(Date)),
          missingvisit = NA,
          rawObserver = NA,
@@ -141,13 +145,6 @@ s_visit <- raw_visit %>%
          data_origin = NA,
          missinginvisit = NA,
          survey_year = substr(Date, 1, 4))
-
-#---VISIT
-WTvisit <- c("location", "visitDate", "snowDepthMeters", "waterDepthMeters", "crew", "bait", "accessMethod", "landFeatures", "comments", 
-             "wildtrax_internal_update_ts", "wildtrax_internal_lv_id")
-
-#Delete duplicated based on WildtTrax attributes (double point count on the same site, same day). 
-visit_tbl <- s_visit[!duplicated(s_visit[,WTvisit]), ] # 
 
 ################################
 #### Update master_observer ####
@@ -199,8 +196,8 @@ pc_survey <- raw_survey %>%
          visitDate = ifelse(is.na(Date), "1900-01-01", as.character(Date)),
          location = paste(dataset_code, site, sep= ":"),
          surveyDateTime = paste(visitDate, "00:00:01"),
-         distanceMethod = "UNKNOWN",
-         distanceband = "0m-100m-INF",
+         distanceMethod = "0m-100m-INF",
+         distanceband = "UNKNOWN",
          durationMethod = "0-10min",
          durationinterval = "0-10min",
          isHeard = "Yes",
@@ -221,8 +218,8 @@ pc_survey <- raw_survey %>%
          behaviourother = NA)
 
 data_flat <- pc_survey %>% 
-  left_join(visit_tbl, by=c("location", "visitDate")) %>%
-  left_join(pc_location, by=c("location")) %>%
+  left_join(s_visit, by=c("location", "visitDate")) %>%
+  inner_join(pc_location, by=c("location")) %>%
   left_join(lu_species, by=c("original_species"="SpeciesID"))  %>%
   left_join(WT_spTbl, by=c("Species"="species_code")) %>%
   mutate(species = WT_spTbl$species_code[match(Species, WT_spTbl$species_code)])
@@ -238,6 +235,8 @@ data_flat <- data_flat  %>%
                              original_species == "TTWO" ~ "ATTW",
                              original_species == "UNRA" ~ "URPT",
                              original_species == "CAGO" ~ "CANG",
+                             original_species == "GRAJ" ~ "CAJA",
+                             original_species == "CORE" ~ "REDP",
                              TRUE ~ species),                                      
          scientificname = WT_spTbl$scientific_name[match(species, WT_spTbl$species_code)])
 
@@ -257,12 +256,7 @@ print(unique(data_flat$durationinterval[!(data_flat$durationinterval %in% WT_dur
 #--------------------------------------------------------------
 
 # Create sub folder in 'toUpload' with the organization name
-dr<- drive_get("toUpload/", shared_drive = "BAM_Core")
-to_upload_contents <- drive_ls(as_id(dr)) # print(to_upload_contents)
-upload_folder <- to_upload_contents[to_upload_contents$name == organization, ]
-if (nrow(upload_folder) == 0) {
-  upload_folder <- drive_mkdir(organization, path = as_id(dr))
-}
+dr<- drive_get("DataTransfered/", shared_drive = "BAM_AvianData")
 
 #Set GoogleDrive id
 if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
@@ -273,10 +267,10 @@ if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
 dr_ls <- drive_ls(as_id(dr), pattern = dataset_code)
 
 #---LOCATION
-WTlocation <- c("location", "latitude", "longitude")
+WTlocation <- c("organization", "location", "latitude", "longitude", "buffer_m", "location_visibility", "true_coordinates", "location_comments", "internal_wildtrax_id")
 
 # Remove duplicated location
-location_tbl <- pc_location[!duplicated(pc_location[,WTlocation]), WTlocation] 
+location_tbl <- data_flat[!duplicated(data_flat[,WTlocation]), WTlocation] 
 write.csv(location_tbl, file= file.path(out_dir, paste0(dataset_code,"_location.csv")), row.names = FALSE, na = "")
 location_out <- file.path(out_dir, paste0(dataset_code,"_location.csv"))
 drive_upload(media = location_out, path = as_id(dr_dataset_code), name = paste0(dataset_code,"_location.csv"), overwrite = TRUE) 
@@ -288,10 +282,10 @@ drive_upload(media = visit_out, path = as_id(dr_dataset_code), name = paste0(dat
 
 #---SURVEY
 survey_tbl <- data_flat %>% 
-  group_by(location, surveyDateTime, durationMethod, distanceMethod, observer, species, distanceband, durationinterval, isHeard, isSeen, comments) %>%
+  group_by(location, latitude, longitude, surveyDateTime, durationMethod, distanceMethod, observer, species, distanceband, durationinterval, isHeard, isSeen, comments) %>%
   dplyr::summarise(abundance = sum(ind_count), .groups= "keep")
 
-WTsurvey <- c("location", "surveyDateTime", "durationMethod", "distanceMethod", "observer", "species", "distanceband",
+WTsurvey <- c("location", "latitude", "longitude", "surveyDateTime", "durationMethod", "distanceMethod", "observer", "species", "distanceband",
               "durationinterval", "abundance", "isHeard", "isSeen", "comments")
 
 write.csv(survey_tbl, file= file.path(out_dir, paste0(dataset_code,"_survey.csv")), row.names = FALSE, na = "")

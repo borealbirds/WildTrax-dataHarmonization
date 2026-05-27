@@ -1,11 +1,12 @@
-# Title: "Translate Alaska Landbird Monitoring Survey 2002-2022"
+# Title: "Ontariuo Forest Birds at Risk (southwest Ontario) 2020-2023"
 # Source dataset is an excel spreadsheet
 # Author: "Melina Houle"
-# Date: "January 9, 2024"
+# Date: "April 8, 2026"
 # Note on translation:
 # --- 30 rows have empty coordinates. Delete 
 # --- In source file, column "Sing/call/visual" has information on how the bird was detected and behavioral details. 
-# --- A translation table was vuilt and save with source file to facilitate translation.  
+# --- A translation table was built and save with source file to facilitate translation.  
+# --- Some sites used means coordinates due to position variation
 
 #update.packages()
 library(googlesheets4)
@@ -82,21 +83,36 @@ coords <- geom(data_tbl_wgs)[, c("x", "y")]
 data_tbl<- cbind(as.data.frame(data_tbl_wgs), coords, coords_origin)
 
 s_location <- data_tbl %>%
-  rename(latitude = y,
-         longitude = x) %>%
-  mutate(bufferRadiusMeters = 100,
-         isHidden = TRUE,	
-         trueCoordinates = FALSE)	
+  dplyr::select(x, y, point_id, site_id) %>%
+  mutate(organization = organization,
+         site = sub(" .*", "", site_id),,
+         location = paste(dataset_code, site, point_id, sep= "_")) %>%
+  group_by(location) %>%
+  dplyr::summarize(
+    latitude = mean(y, na.rm = TRUE),
+    longitude = mean(x, na.rm = TRUE),
+    location_comments = if_else(
+      any(abs(y - mean(y, na.rm = TRUE)) > 1e-6) |
+        any(abs(x - mean(x, na.rm = TRUE)) > 1e-6),
+      "Mean coordinates used due to variation across years",
+      NA_character_
+    ),
+    .groups = "drop"
+  ) %>%
+  mutate(buffer_m = 100,
+         location_visibility = "Visible",
+         true_coordinates = FALSE,
+         internal_wildtrax_id = NA)
 
 ############################
 #### VISIT TABLE ####
 ############################
-s_data <- s_location %>% 
-  rename(rawObserver = observer,
-         site = site_id,
-         station = point_id)  %>%
-  mutate(location = paste(dataset_code, site, station, sep= "_"),
+s_data <- data_tbl %>% 
+  rename(station = point_id)  %>%
+  mutate(site = sub(" .*", "", site_id),
+         location = paste(dataset_code, site, station, sep= "_"),
          visitDate = paste(year, month, day, sep = "-"),
+         rawObserver = sub("/", "_", observer),
          observer = paste0("obs", rawObserver),
          utmZone = zone,
          snowDepthMeters= NA,
@@ -109,6 +125,7 @@ s_data <- s_location %>%
          wildtrax_internal_lv_id = NA,
          time_zone = NA,       
          data_origin = NA,
+         survey_year = sub("\\-.*", "", visitDate),
          missinginlocations = NA,
          missinginvisit = NA)
 
@@ -116,11 +133,12 @@ s_data <- s_location %>%
 #### SURVEY TABLE ####
 ############################
 pc_survey <- s_data %>% 
+  left_join(s_location, by="location")  %>%
   melt(measure.vars = c("less_than_50","50_to_100", "more_than_100", "flyovers" ), value.name = "ind_count") %>%
   filter(!is.na(ind_count)) %>%
   mutate(organization = organization,
          project = dataset_code,
-         survey_time = format(start_time, format = "%H:%M:%S"),
+         survey_time = ifelse(is.na(start_time), "00:00:01", as.character(format(start_time, "%H:%M:%S"))),
          surveyDateTime = paste(visitDate, survey_time),
          pkey_dt = paste(location, paste0(gsub("-", "", as.character(visitDate)),"_", gsub(":", "", survey_time)), observer, sep=":"),
          raw_distance_code = variable,
@@ -135,6 +153,7 @@ pc_survey <- s_data %>%
                                   variable == "flyovers" ~ "Flyover"),
          species= case_when(species == "BWWA/GWWA" ~ "UNWA",
                             species == "RBWL" ~ "RWBL",
+                            species == "HOWR" ~ "NHWR",
                             TRUE ~ species),
          scientificname = WT_spTbl$scientific_name[match(species, WT_spTbl$species_code)],
          isHeard = case_when(detection == "S" ~ "Yes",
@@ -168,7 +187,7 @@ pc_behavior <- pc_survey %>%
                 age = "DNC",
                 fm = "DNC",
                 group = "DNC",
-                flyover = ifelse(variable=="Flyover", "Yes", "No"),
+                flyover = ifelse(variable=="flyovers", "Yes", "No"),
                 nestevidence = "DNC",
                 displaytype = "DNC",
                 pc_vt = behavior$pc_vt[match(detection, behavior$detection_code)],
@@ -192,7 +211,7 @@ print(unique(pc_survey$distanceband[!(pc_survey$distanceband %in% WT_distBandTbl
 #       EXPORT
 #
 #--------------------------------------------------------------
-dr<- drive_get(paste0("DataTransfered/",organization), shared_drive= "BAM_Core")
+dr<- drive_get(paste0("DataTransfered/",organization), shared_drive= "BAM_AvianData")
 
 #Set GoogleDrive id
 if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
@@ -206,7 +225,7 @@ dr_ls <- drive_ls(as_id(dr), pattern = dataset_code)
 no_flyover<- pc_behavior %>%
   filter(!flyover == "Yes")
 
-WTlocation <- c("location", "latitude", "longitude")
+WTlocation <- c("organization", "location", "latitude", "longitude", "buffer_m", "location_visibility", "true_coordinates", "location_comments", "internal_wildtrax_id")
 
 # Remove duplicated location
 location_tbl <- no_flyover[!duplicated(no_flyover[,WTlocation]), WTlocation] 

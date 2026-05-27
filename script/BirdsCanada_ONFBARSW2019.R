@@ -1,9 +1,8 @@
-# Title: "Translate Alaska Landbird Monitoring Survey 2002-2022"
+# Title: "Translate Ontario forest bird at risk southwestern Ontario 2019"
 # Source dataset is an excel spreadsheet
 # Author: "Melina Houle"
-# Date: "January 9, 2024"
+# Date: "April 9, 2026"
 # Note on translation:
-# --- 30 rows have empty coordinates. Delete 
 # --- 
 # ---  
 
@@ -86,22 +85,24 @@ data_tbl<- cbind(as.data.frame(data_tbl_wgs), coords, coords_origin)
 s_location <- data_tbl %>%
   rename(latitude = y,
          longitude = x) %>%
-  mutate(bufferRadiusMeters = 100,
-         isHidden = TRUE,	
-         trueCoordinates = FALSE)	
+  mutate(buffer_m = 100,
+         location_visibility = "Visible",	
+         true_coordinates = FALSE,
+         location_comments = NA,
+         internal_wildtrax_id = NA)	
 
 ############################
 #### VISIT TABLE ####
 ############################
 s_data <- s_location %>% 
-  rename(rawObserver = Observer,
-         comments = Comments,
+  rename(comments = Comments,
          visitDate = Date,
-         site = Site_ID,
          station = Point_ID,
          easting = Easting, 
          northing = Northing)  %>%
-  mutate(location = paste(dataset_code, site, station, sep= "_"),
+  mutate(site = sub(" .*", "", Site_ID),
+         rawObserver = sub("/", "_", Observer),
+         location = paste(dataset_code, site, station, sep= "_"),
          observer = paste0("obs", rawObserver),
          utmZone = Zone,
          snowDepthMeters= NA,
@@ -127,7 +128,9 @@ pc_survey <- s_data %>%
   rename(detection_cd = 'Sing/call/visual') %>%
   mutate(organization = organization,
          project = dataset_code,
-         survey_time = format(Start_Time, format = "%H:%M:%S"),
+         survey_time = str_pad(Start_Time, 4, pad = "0"),
+         survey_time = strptime(survey_time, "%H%M"),
+         survey_time = ifelse(is.na(Start_Time), "00:00:01", as.character(format(survey_time, "%H:%M:%S"))),
          surveyDateTime = paste(visitDate, survey_time),
          pkey_dt = paste(location, paste0(gsub("-", "", as.character(visitDate)),"_", gsub(":", "", survey_time)), observer, sep=":"),
          raw_distance_code = variable,
@@ -146,6 +149,7 @@ pc_survey <- s_data %>%
                             Bird_Species == "WPWA" ~ "PAWA",
                             Bird_Species == "CUCKOO SP" ~ "UNCU",
                             Bird_Species == "SPARROW SP" ~ "UNSP",
+                            Bird_Species == "HOWR" ~ "NHWR",
                             TRUE ~ Bird_Species),
          scientificname = WT_spTbl$scientific_name[match(species, WT_spTbl$species_code)],
          isHeard = behavior$heard[match(detection_cd, behavior$detection_code)],
@@ -198,7 +202,7 @@ print(unique(pc_survey$distanceband[!(pc_survey$distanceband %in% WT_distBandTbl
 #       EXPORT
 #
 #--------------------------------------------------------------
-dr<- drive_get(paste0("DataTransfered/",organization), shared_drive= "BAM_Core")
+dr<- drive_get(paste0("DataTransfered/",organization), shared_drive= "BAM_AvianData")
 
 #Set GoogleDrive id
 if (nrow(drive_ls(as_id(dr), pattern = dataset_code)) == 0){
@@ -212,7 +216,7 @@ dr_ls <- drive_ls(as_id(dr), pattern = dataset_code)
 no_flyover<- pc_behavior %>%
   filter(!flyover == "Yes")
 
-WTlocation <- c("location", "latitude", "longitude")
+WTlocation <- c("organization", "location", "latitude", "longitude", "buffer_m", "location_visibility", "true_coordinates", "location_comments", "internal_wildtrax_id")
 
 # Remove duplicated location
 location_tbl <- no_flyover[!duplicated(no_flyover[,WTlocation]), WTlocation] 
