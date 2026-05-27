@@ -9,7 +9,7 @@
 # --- Tbl DATA_SPECIES COUNTS FROM ARUs for survey
 # --- FIX DETAILS
 # --- 6 locations didn't have XY coordinates. Delete
-# --- 
+# --- 4 obs had count ==0 and species ==NONE. Delete
 # --- 
 
 library(tidyverse)
@@ -111,10 +111,15 @@ pc_location <- pc_location %>%
          utmZone = NA,
          easting = NA, 
          northing = NA,
+         buffer_m = NA, 
+         location_visibility = NA, 
+         true_coordinates = NA, 
+         location_comments = NA, 
+         internal_wildtrax_id = NA,
          missinginlocations = NA)
 
 #---LOCATION
-WTlocation <- c("location", "latitude", "longitude")
+WTlocation <- c("organization", "location", "latitude", "longitude", "buffer_m", "location_visibility", "true_coordinates", "location_comments", "internal_wildtrax_id")
 location_tbl <- pc_location[!duplicated(pc_location[,WTlocation]), WTlocation] # 
 
 ############################
@@ -160,6 +165,7 @@ names(pc_survey)<-str_replace_all(names(pc_survey), c(" " = "_"))
 s_data <- merge(pc_survey, visit_flat, by.x ="CountNumber", by.y = "SurveyNumber")
 
 data_flat <- s_data %>% 
+  dplyr::filter(Count>0)  %>% 
   mutate(surveyDateTime = paste(as.character(visitDate), survey_time),
          ## Distance and duration Methods
          distanceMethod = "0m-25m-50m-100m-INF",
@@ -167,8 +173,9 @@ data_flat <- s_data %>%
          ## Species, species_old, comments, scientificname
          original_species = SPECIES,
          species = case_when(SPECIES =="UNKN" ~ "UNBI",
-                             !SPECIES =="UNKN" ~ SPECIES,
-                             is.na(SPECIES) ~ "NONE"),
+                             is.na(SPECIES) ~ "UNBI",
+                             SPECIES =="HERG"~"AHGU",
+                             TRUE  ~ SPECIES),
          scientificname = WT_spTbl$scientific_name[match(species, WT_spTbl$species_code)],
          isHeard = ifelse(DISTANCE == "ARU" | DETECTION_TYPE %in% c("Call", "Song"), "Yes", "No"),
          isSeen = ifelse(DETECTION_TYPE == "Visual","Yes", "No"),
