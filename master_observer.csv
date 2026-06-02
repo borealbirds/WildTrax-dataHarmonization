@@ -1,21 +1,289 @@
-organization,project,observer_id,observer_name
-Gov-NL,Labrador Highlands Research Group Point Counts 2007,obs03,BMS
-Gov-NL,Labrador Highlands Research Group Point Counts 2007,obs01,DF
-Gov-NL,Labrador Highlands Research Group Point Counts 2007,obs02,KPL
-LSLBO,Vanderwell2018-21,obs01,NDK/RNP
-LSLBO,Vanderwell2018-21,obs02,RNP/MMM
-LSLBO,Vanderwell2018-21,obs03,RGK/NDK
-LSLBO,Vanderwell2018-21,obs04,NDK/RGK
-LSLBO,Vanderwell2018-21,obs05,RNP/NDK
-LSLBO,Vanderwell2018-21,obs06,BPR/SLS
-LSLBO,Vanderwell2018-21,obs07,SLS/BPR
-LSLBO,Vanderwell2018-21,obs08,RNP/CLC
-LSLBO,Vanderwell2018-21,obs09,SLS/CLC
-LSLBO,Vanderwell2018-21,obs10,BPR/RNP
-LSLBO,Vanderwell2018-21,obs11,RNP/BPR
-LSLBO,Vanderwell2018-21,obs12,RNP/GBH
-LSLBO,Vanderwell2018-21,obs13,BPR/CLC
-LSLBO,Vanderwell2018-21,obs14,SLS/RNP
-LSLBO,Vanderwell2018-21,obs15,RNP/SLS
-LSLBO,TOSL2017,obs01,RNP
-LSLBO,TOSL2017,obs02,NDK
+organization,project,observer_id,observer_name,observer
+Gov-NL,Labrador Highlands Research Group Point Counts 2007,obs03,BMS,NA
+Gov-NL,Labrador Highlands Research Group Point Counts 2007,obs01,DF,NA
+Gov-NL,Labrador Highlands Research Group Point Counts 2007,obs02,KPL,NA
+BU,Alberta CAWA Project 2012 West,rjl,rjl,rjl
+BU,Alberta CAWA Project 2012 West,lmm,lmm,lmm
+BU,Alberta CAWA Project 2012 West,LMM,LMM,LMM
+BU,Alberta CAWA Project 2012 West,mdk,mdk,mdk
+BU,Alberta CAWA Project 2012 West,jrb,jrb,jrb
+BU,Alberta CAWA Project 2012 West,JRB,JRB,JRB
+BU,Alberta CAWA Project 2012 West,dss,dss,dss
+BU,Alberta CAWA Project 2012 West,dis,dis,dis
+BU,Alberta CAWA Project 2012 West,agm,agm,agm
+BU,Alberta CAWA Project 2012 West,DSS,DSS,DSS
+BU,Alberta CAWA Project 2012 West,MDK,MDK,MDK
+BU,Alberta CAWA Project 2012 West,AGM,AGM,AGM
+BU,Alberta CAWA Project 2012 West,RJL,RJL,RJL
+BU,Alberta CAWA Project 2012 West,sah,sah,sah
+BU,Alberta CAWA Project 2012 West,SAH,SAH,SAH
+BU,Alberta CAWA Project 2012 West,ljm,ljm,ljm
+BU,Alberta CAWA Project 2012 West,Ljm,Ljm,Ljm
+BAM,Yukon-Charley Rivers National Preserve Point Counts 1999,TAR,TAR,TAR
+BAM,Yukon-Charley Rivers National Preserve Point Counts 1999,NXG,NXG,NXG
+BAM,Yukon-Charley Rivers National Preserve Point Counts 1999,SJC,SJC,SJC
+BAM,Yukon-Charley Rivers National Preserve Point Counts 1999,SC,SC,SC
+BAM,Yukon-Charley Rivers National Preserve Point Counts 1999,SEA,SEA,SEA
+BAM,Yukon-Charley Rivers National Preserve Point Counts 1999,SAS,SAS,SAS
+BAM,Yukon-Charley Rivers National Preserve Point Counts 1999,JRP,JRP,JRP
+BAM,Yukon-Charley Rivers National Preserve Point Counts 1999,DAN,DAN,DAN
+BAM,Yukon-Charley Rivers National Preserve Point Counts 1999,RGD,RGD,RGD
+BAM,Yukon-Charley Rivers National Preserve Point Counts 1999,GVF,GVF,GVF
+BAM,Yukon-Charley Rivers National Preserve Point Counts 1999,sas,sas,sas
+BAM,Yukon-Charley Rivers National Preserve Point Counts 1999,CM,CM,CM
+BAM,Yukon-Charley Rivers National Preserve Point Counts 1999,JVF,JVF,JVF
+BAM,Yukon-Charley Rivers National Preserve Point Counts 1999,TRW,TRW,TRW
+USGS Alaska,Alaska Landbird Monitoring Survey - Denali,RD,RD,RD
+USGS Alaska,Alaska Landbird Monitoring Survey - Denali,SA,SA,SA
+USGS Alaska,Alaska Landbird Monitoring Survey - Denali,PE,PE,PE
+USGS Alaska,Alaska Landbird Monitoring Survey - Denali,TW,TW,TW
+USGS Alaska,Alaska Landbird Monitoring Survey - Denali,LMT,LMT,LMT
+USGS Alaska,Alaska Landbird Monitoring Survey - Denali,JDM,JDM,JDM
+USGS Alaska,Alaska Landbird Monitoring Survey - Denali,MDP,MDP,MDP
+USGS Alaska,Alaska Landbird Monitoring Survey - Denali,ETM,ETM,ETM
+USGS Alaska,Alaska Landbird Monitoring Survey - Denali,KH,KH,KH
+USGS Alaska,Alaska Landbird Monitoring Survey - Denali,MS,MS,MS
+USGS Alaska,Alaska Landbird Monitoring Survey - Denali,CE,CE,CE
+USGS Alaska,Alaska Landbird Monitoring Survey - Denali,JJW,JJW,JJW
+USGS Alaska,Alaska Landbird Monitoring Survey - Denali,KES,KES,KES
+USGS Alaska,Alaska Landbird Monitoring Survey - Denali,ALJ,ALJ,ALJ
+USGS Alaska,Alaska Landbird Monitoring Survey - Denali,MJK,MJK,MJK
+USGS Alaska,Alaska Landbird Monitoring Survey - Denali,CLM,CLM,CLM
+BU,Calling Lake Fragmentation Experiment Private,58,58,58
+BU,Calling Lake Fragmentation Experiment Private,68,68,68
+BU,Calling Lake Fragmentation Experiment Private,67,67,67
+BU,Calling Lake Fragmentation Experiment Private,LJM,LJM,LJM
+BU,Calling Lake Fragmentation Experiment Private,CG,CG,CG
+BU,Calling Lake Fragmentation Experiment Private,FAP,FAP,FAP
+BU,Calling Lake Fragmentation Experiment Private,NPB,NPB,NPB
+BU,Calling Lake Fragmentation Experiment Private,RJL,RJL,RJL
+BU,Calling Lake Fragmentation Experiment Private,DS,DS,DS
+BU,Calling Lake Fragmentation Experiment Private,JRB,JRB,JRB
+BU,Calling Lake Fragmentation Experiment Private,cg,cg,cg
+BU,Calling Lake Fragmentation Experiment Private,AGM,AGM,AGM
+BU,Calling Lake Fragmentation Experiment Private,"RJL
+RJL","RJL
+RJL","RJL
+RJL"
+CWS-PRA,JOSM Resampling ECCC Cause and Effect Monitoring for Landbirds 2014,AGM,AGM,AGM
+CWS-PRA,JOSM Resampling ECCC Cause and Effect Monitoring for Landbirds 2014,MML,MML,MML
+CWS-PRA,JOSM Resampling ECCC Cause and Effect Monitoring for Landbirds 2014,MMM,MMM,MMM
+CWS-PRA,JOSM Resampling ECCC Cause and Effect Monitoring for Landbirds 2014,JRB,JRB,JRB
+CWS-PRA,JOSM Resampling ECCC Cause and Effect Monitoring for Landbirds 2014,JJS,JJS,JJS
+CWS-PRA,JOSM Resampling ECCC Cause and Effect Monitoring for Landbirds 2014,JKL,JKL,JKL
+CWS-PRA,JOSM Resampling ECCC Cause and Effect Monitoring for Landbirds 2014,MDK,MDK,MDK
+CWS-PRA,JOSM Resampling ECCC Cause and Effect Monitoring for Landbirds 2014,DRB,DRB,DRB
+CWS-NOR,Fort Liard Road Surveys for BAM 2011,AE,AE,AE
+CWS-NOR,Fort Liard Road Surveys for BAM 2011,KK,KK,KK
+BU,NWT Seismic Line Recovery Project 2010,KJP,KJP,KJP
+BU,NWT Seismic Line Recovery Project 2010,AMA,AMA,AMA
+BU,NWT Seismic Line Recovery Project 2010,HEL,HEL,HEL
+BU,NWT Seismic Line Recovery Project 2010,JAA,JAA,JAA
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10176,10176,10176
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10776,10776,10776
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10092,10092,10092
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10094,10094,10094
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11043,11043,11043
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10991,10991,10991
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10565,10565,10565
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10876,10876,10876
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10088,10088,10088
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10414,10414,10414
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10714,10714,10714
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10684,10684,10684
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10309,10309,10309
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10588,10588,10588
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11782,11782,11782
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10245,10245,10245
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10283,10283,10283
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10093,10093,10093
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10078,10078,10078
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10958,10958,10958
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11255,11255,11255
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10944,10944,10944
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11674,11674,11674
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10650,10650,10650
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10688,10688,10688
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10335,10335,10335
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10198,10198,10198
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10957,10957,10957
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10908,10908,10908
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10525,10525,10525
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10956,10956,10956
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10081,10081,10081
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11471,11471,11471
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10221,10221,10221
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11683,11683,11683
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10607,10607,10607
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10303,10303,10303
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10105,10105,10105
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11172,11172,11172
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10091,10091,10091
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10770,10770,10770
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10222,10222,10222
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10939,10939,10939
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10402,10402,10402
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10100,10100,10100
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10359,10359,10359
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10099,10099,10099
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10276,10276,10276
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10552,10552,10552
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10370,10370,10370
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10106,10106,10106
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11665,11665,11665
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10228,10228,10228
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10237,10237,10237
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10528,10528,10528
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11214,11214,11214
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11699,11699,11699
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10488,10488,10488
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10422,10422,10422
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11191,11191,11191
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11579,11579,11579
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10289,10289,10289
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10187,10187,10187
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10243,10243,10243
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10323,10323,10323
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10255,10255,10255
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10815,10815,10815
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10865,10865,10865
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10212,10212,10212
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10077,10077,10077
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10761,10761,10761
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10103,10103,10103
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10097,10097,10097
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10665,10665,10665
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10333,10333,10333
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10740,10740,10740
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10841,10841,10841
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10253,10253,10253
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10990,10990,10990
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10391,10391,10391
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10964,10964,10964
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10080,10080,10080
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10454,10454,10454
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10229,10229,10229
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10505,10505,10505
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10254,10254,10254
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10315,10315,10315
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10266,10266,10266
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10361,10361,10361
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10961,10961,10961
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10508,10508,10508
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10107,10107,10107
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10273,10273,10273
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11101,11101,11101
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11210,11210,11210
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10458,10458,10458
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10409,10409,10409
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11730,11730,11730
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10554,10554,10554
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10716,10716,10716
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10707,10707,10707
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10331,10331,10331
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10329,10329,10329
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10189,10189,10189
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11141,11141,11141
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10983,10983,10983
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11312,11312,11312
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10833,10833,10833
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10425,10425,10425
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10818,10818,10818
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10086,10086,10086
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10188,10188,10188
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10606,10606,10606
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10603,10603,10603
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10294,10294,10294
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10319,10319,10319
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10365,10365,10365
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10388,10388,10388
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10214,10214,10214
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10084,10084,10084
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10642,10642,10642
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10429,10429,10429
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10355,10355,10355
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10484,10484,10484
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10839,10839,10839
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10621,10621,10621
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10513,10513,10513
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10536,10536,10536
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10605,10605,10605
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10112,10112,10112
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10416,10416,10416
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10415,10415,10415
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10338,10338,10338
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10706,10706,10706
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10087,10087,10087
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10799,10799,10799
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10730,10730,10730
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10472,10472,10472
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10586,10586,10586
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10278,10278,10278
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10743,10743,10743
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10440,10440,10440
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10752,10752,10752
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10538,10538,10538
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10282,10282,10282
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11149,11149,11149
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10580,10580,10580
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10413,10413,10413
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10104,10104,10104
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10113,10113,10113
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10574,10574,10574
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10381,10381,10381
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10299,10299,10299
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10383,10383,10383
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10332,10332,10332
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11942,11942,11942
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10272,10272,10272
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10382,10382,10382
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10089,10089,10089
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10110,10110,10110
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11052,11052,11052
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10095,10095,10095
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10219,10219,10219
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10227,10227,10227
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10778,10778,10778
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10232,10232,10232
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10874,10874,10874
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,12003,12003,12003
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11994,11994,11994
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10934,10934,10934
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10308,10308,10308
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10794,10794,10794
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10772,10772,10772
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10764,10764,10764
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10317,10317,10317
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11534,11534,11534
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10101,10101,10101
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10888,10888,10888
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10870,10870,10870
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10203,10203,10203
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10261,10261,10261
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10090,10090,10090
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10321,10321,10321
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10079,10079,10079
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10750,10750,10750
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11682,11682,11682
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10734,10734,10734
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10615,10615,10615
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10748,10748,10748
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,11240,11240,11240
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10948,10948,10948
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10549,10549,10549
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10567,10567,10567
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10596,10596,10596
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10576,10576,10576
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10582,10582,10582
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10566,10566,10566
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10636,10636,10636
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10686,10686,10686
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10326,10326,10326
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10327,10327,10327
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10102,10102,10102
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10886,10886,10886
+QC-ATLAS (BAM),Quebec Atlas BAM Version 2010,10083,10083,10083
+MILL-WEST,Whitecourt Thinning Point Counts 2001,1,1,1
+MILL-WEST,Whitecourt Thinning Point Counts 2001,2,2,2
+CWS-NOR,High Elevation Targeted Bird Surveys 2014 YT,2,2,2
+CWS-NOR,High Elevation Targeted Bird Surveys 2014 YT,1,1,1
