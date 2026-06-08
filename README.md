@@ -159,13 +159,11 @@ Once verification has taken place, the WT-status of the data can be changed from
 <a name=Reformatting></a>
 ## Harmonization of the data into WildTrax format
 
-Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing of code under the [script section](https://github.com/borealbirds/WT-Integration/tree/main/script). 
+Reformating is unique per project. Some projects use rules that are similar. All scripts are available to allow reusing of code under the [script section](https://github.com/borealbirds/WT-Integration/tree/main/script). Please note that the target platform used to upload the data is maintained independently of this project and its data requirements have evolved over time. As a result, some scripts related to data upload or validation may no longer run without modification. For example, field names, required attributes, or schema requirements used by the platform may have changed since the data were originally processed and uploaded.
 
 For data to be uploaded to WildTrax, two hierarchical files are needed:
 - <a href="#Location">Location table</a>
 - <a href="#Survey">Survey table</a>
-
-Please note that the target platform used to upload the data is maintained independently of this project and its data requirements have evolved over time. As a result, some scripts related to data upload or validation may no longer run without modification. For example, field names, required attributes, or schema requirements used by the platform may have changed since the data were originally processed and uploaded.
 
 Reformatting data for WildTrax can be challenging when data files are missing required fields, the fields are not filled in properly or are incomplete (according to WildTrax requirements), or the data was collected using a different documentation scheme. If data is being reformatted by BAM, team members communicate with the original data partner to acquire project metadata (e.g., documentation that can clarify how data was collected). 
 
@@ -173,7 +171,7 @@ Below, we describe what WildTrax is expecting in each of the two required files,
 
 <a name=Location></a>
 ### 1. LOCATION TABLE
-The location table is the highest level in the hierarchy at the organization level. The location file comes first because it allows the organization to use the location for multiple projects without duplication. Each line in the location file will be the unique, and precise location for each point count station in TEXT format.
+The location table represents the highest level of the organizational hierarchy. It is defined first because it allows locations to be reused across multiple projects without duplication. Each row in the location file must be unique and represent a single point count station with precise coordinates. Locations are stored in NAD83 and must be provided in text format. A location must not contain multiple sets of coordinates. This will generate an error in WildTrax, which requires each location to be associated with a single, consistent coordinate pair. This issue commonly occurs when a survey includes multiple visits and coordinates are recorded separately for each visit, resulting in slight differences between waypoint positions. In practice, repeated waypoint recordings for the same station will rarely be exactly identical, so coordinates must be standardized to a single reference location per station.
 
 The **LOCATION** attributes identify the geographic extent of the site: 
 
@@ -192,7 +190,7 @@ Common **location** field errors:
 * A location may fail validation if it contains unsupported characters, including special symbols (e.g., "*", "%"), whitespace, punctuation marks, or accented characters (e.g., French diacritics such as é, à, ç).
 
 Common **coordinate** fields errors:
-* This will not load if the fields are empty or NULL. Do not load any locations with missing coordinates. Before uploading,C validte that the coordinates are numeric and fall within expected geographic bounds.
+* This will not load if the fields are empty or NULL. Do not load any locations with missing coordinates. Before uploading, validate that the coordinates are numeric and fall within expected geographic bounds.
 
 <a name=Survey></a>
 ### 2. SURVEY TABLE
@@ -206,7 +204,7 @@ The **SURVEY** attributes identify protocols, species, abundance, and time of th
 | surveyDateTime     | Text | YYYY-MM-DD HH:MM:SS, Concatenation of  Date  and time of survey; separated by space | 
 | durationMethod     | Text | The duration protocol used during the survey. Refer to [duration_method_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/duration_method_codes.csv)  | 
 | distanceMethod     | Text | The distance protocol used during the survey. Refer to [distance_method_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/distance_method_codes.csv)  | 
-| observer     | Text | The observer code who conducted the survey. When observer name are provided in the source data, we create a lookup table where observer name get a serial number assigned using this format:  [Dataset Code]_[serial number] | 
+| observer     | Text | The observer code who conducted the survey. When observer name are provided in the source data, we convert it to an anonymous code [Dataset Code]_[serial number] and save it to the observer lookup table  | 
 | species     | Text | AOU code developed by WildTrax. See [species_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/species_codes.csv)   | 
 | distanceband     | Text | Distance interval from observer to detected bird. Refer to [distance_band_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/distance_band_codes.csv) Use "UNKNOWN" when the information is not available or cannot be determined from the survey.   | 
 | durationinterval     | Text | Time interval in which the bird was first detected (in minutes from start of point count). Refer to [duration_interval_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/duration_interval_codes.csv) . Use "UNKNOWN" when the information is not available or cannot be determined from the survey. | 
@@ -245,7 +243,7 @@ Common **abundance** field errors:
 
 <a name=Visit></a>
 ### 3. EXTENDED TABLE
-Behavior data collected in the field is not retained in the final WildTrax upload. Although BAM identifies a potential use for this information, only derived or standardized fields required by the BAM workflow are preserved. During the translation process, additional columns are generated and saved to support harmonization and compatibility with the BAM data structure.
+Behavior data collected in the field is not retained in the final WildTrax upload. Although BAM identifies a potential use for this information, only derived or standardized fields required by the BAM workflow are preserved. During the translation process, additional columns are generated and saved to support harmonization and compatibility with the BAM data structure. 
 
 | Field   | Format   | Description   |
 | :------- | :-------------- | :-------------- |
@@ -273,8 +271,7 @@ Behavior data collected in the field is not retained in the final WildTrax uploa
 | behaviourother | Text | Anything that cannot be put in the previous categories.     | 
 | atlas_breeding_code | Text | If the data used the Atlas Breeding Code, carry the codes AS IS the source data.     | 
 
-
-This is the second level in the hierarchy at the project level. Visits occur at the date scale (YYYY-MM-DD). The location file has to come before the Visit file so that the visit can occur at the location. You cannot load to a location that has not previously been loaded to WildTrax. Each line in the visit file will have the location, written exactly as it appears in the location file, and the date in YYYY-MM-DD format.
+Extended table can be uploaded as supplementary material inside the project in the WildTrax plateform. It is also saved in the Google Shared Drive using the WildTrax project_id used at the upload. 
 
 Templates for each file can be found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
 Examples for each file can be found under [examples](https://github.com/MelinaHoule/WT-Integration/tree/main/examples).
