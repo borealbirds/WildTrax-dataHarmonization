@@ -138,10 +138,13 @@ The project should also be logged in the [project_Integration table](https://doc
 
 In the project_Integration table: 
 * Make sure the Organization exists. If not, create an entry.
-* Create a new project entry. Marked it as NS (Not Started). 
+* Create a new project entry in the project sheet:
+       - Fill a new line with all known information (Organization, project full name, status, Google SD location)
+       - Create a dataset_code. This field will be used as name for folder output, scripts, 
+       - Marked it as NS (Not Started). 
 * Create a new PartnerContactInfo entry for the project
 
-If you don't intend to process the data straight away, make sure you overview the data to document some attributes, have all tables that define attributes and values used. Some information will be answered by emails. Make sure you keep a copy by converting the email as a PDF and make it available in the respective project folder under "communication". 
+If you don't intend to process the data straight away, make sure you overview the data to document some attributes, have all tables that define attributes and values used saved inside the identified Google Shared Drive. Some information will be answered by emails. Make sure you keep a copy by converting the email as a PDF and make it available in the respective project folder under "communication". 
 
 Overviewing the data includes verifying that:
 * Observations have XY coordinates.
@@ -158,17 +161,15 @@ Once verification has taken place, the WT-status of the data can be changed from
 
 Reformating will be unique per project. Some projects will use rules that are similar. All scripts are available to allow reusing of code under the [script section](https://github.com/borealbirds/WT-Integration/tree/main/script). 
 
-For data to be uploaded to WildTrax, three hierarchical files are needed:
+For data to be uploaded to WildTrax, two hierarchical files are needed:
 - <a href="#Location">Location table</a>
-- <a href="#Visit">Visit table</a>
 - <a href="#Survey">Survey table</a>
 
+Please note that the target platform used to upload the data is maintained independently of this project and its data requirements have evolved over time. As a result, some scripts related to data upload or validation may no longer run without modification. For example, field names, required attributes, or schema requirements used by the platform may have changed since the data were originally processed and uploaded.
 
 Reformatting data for WildTrax can be challenging when data files are missing required fields, the fields are not filled in properly or are incomplete (according to WildTrax requirements), or the data was collected using a different documentation scheme. If data is being reformatted by BAM, team members communicate with the original data partner to acquire project metadata (e.g., documentation that can clarify how data was collected). 
 
-NOTE: WildTrax does not yet provide space for the storage of project metadata. Here we use the term **metadata** could include important information found in literature published using data from a project, explicit conditions for permission of use (e.g., what the data can be used for or not used for), or instructions on how to cite the data.
-
-Below, we describe what WildTrax is expecting in each of the three required files, the constraints that can cause upload errors and how to resolve them. 
+Below, we describe what WildTrax is expecting in each of the two required files, the constraints that can cause upload errors and how to resolve them. 
 
 <a name=Location></a>
 ### 1. LOCATION TABLE
@@ -179,7 +180,7 @@ The **LOCATION** attributes identify the geographic extent of the site.
 The **location** field:
 | Field   | Format   | Description   | Required     |
 | :------- | :-------------- | :-------------- | :------------------|
-| location     | Text | Name of the physical place on the landscape where the data was collected. If not present in source data, create it using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
+| location     | Text | Name of the physical place on the landscape where the data was collected. If not present in source data, create it using the concatenation of  [dataset_code]:[site]:[station], unless otherwise specified | YES |
 
 Common **location** field errors:
 * A location might not be accepted because it includes characters that are not allowed (e.g., "*****", or "%").
