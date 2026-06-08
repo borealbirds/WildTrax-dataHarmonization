@@ -139,9 +139,9 @@ The project should also be logged in the [project_Integration table](https://doc
 In the project_Integration table: 
 * Make sure the Organization exists. If not, create an entry.
 * Create a new project entry in the project sheet:
-       - Fill a new line with all known information (Organization, project full name, status, Google SD location)
-       - Create a dataset_code. This field will be used as name for folder output, scripts, 
-       - Marked it as NS (Not Started). 
+    - Fill a new line with all known information (Organization, project full name, status, Google SD location)
+    - Create a dataset_code. This field will be used as name for folder output, scripts, 
+    - Marked it as NS (Not Started). 
 * Create a new PartnerContactInfo entry for the project
 
 If you don't intend to process the data straight away, make sure you overview the data to document some attributes, have all tables that define attributes and values used saved inside the identified Google Shared Drive. Some information will be answered by emails. Make sure you keep a copy by converting the email as a PDF and make it available in the respective project folder under "communication". 
