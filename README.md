@@ -271,7 +271,9 @@ Behavior data collected in the field is not retained in the final WildTrax uploa
 | displaytype | Text | Original behavior code used in source data     | 
 | nestevidence | Text | Nest evidence: Yes / No / dnc    | 
 | behaviourother | Text | Anything that cannot be put in the previous categories.     | 
-|atlas_breeding_code | Text | If the data used the Atlas Breeding Code, carry the codes AS IS the source data.     | 
+| atlas_breeding_code | Text | If the data used the Atlas Breeding Code, carry the codes AS IS the source data.     | 
+
+
 This is the second level in the hierarchy at the project level. Visits occur at the date scale (YYYY-MM-DD). The location file has to come before the Visit file so that the visit can occur at the location. You cannot load to a location that has not previously been loaded to WildTrax. Each line in the visit file will have the location, written exactly as it appears in the location file, and the date in YYYY-MM-DD format.
 
 Templates for each file can be found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
