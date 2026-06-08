@@ -249,29 +249,29 @@ Behavior data collected in the field is not retained in the final WildTrax uploa
 
 | Field   | Format   | Description   |
 | :------- | :-------------- | :-------------- |
-| organization     | Text | Name of the organization who owns the data |
-| project     | Text | dataset_code |
-| location     | Text | Concatenation of  [dataset_code]:[site]:[station], unless otherwise specified |
-| rawObserver     | Text | The original observer id or name found in the source data | 
-| surveyDateTime     | Text | YYYY-MM-DD HH:MM:SS, Concatenation of  Date  and time of survey; separated by space | 
-| original_species     | Text | Species code used in the source data.  |
-| species     | Text | AOU code developed by WildTrax. See [species_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/species_codes.csv)   |
-| ind_count     | Numeric | Number of individual of a species with the same date, time, observer, distanceband and durationinterval and behavior information | 
-| distanceband     | Text | Distance interval from observer to detected bird. Refer to [distance_band_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/distance_band_codes.csv) Use "UNKNOWN" when the information is not available or cannot be determined from the survey.   | 
-| durationinterval     | Text | Time interval in which the bird was first detected (in minutes from start of point count). Refer to [duration_interval_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/duration_interval_codes.csv) . Use "UNKNOWN" when the information is not available or cannot be determined from the survey. | 
-| raw_distance_code     | Numeric | Distance interval used in the source data | 
-| raw_duration_code     | Numeric | Time interval used in the source data | 
-| originalBehaviourData     | Text | Original behavior code used in source data |
-| pc_vt     | Text | Vocalization type: Song / Calls / Flight calls / Non-vocal / dnc | 
-| pc_vt_detail     | Text | Vocalization details; e.g. drumming, counter-singing / dnc| 
-| age     | Text | Age: Adult / Juvenile / Fledging / Immature / dnc| 
-| fm     | Text | Sex: Male / Female / dnc| 
-| group     | Text | Group size: Flock /Pair / Family group / dnc | 
-| flyover     | Text | Flyover: Yes / No / dnc | 
-| displaytype     | Text | Original behavior code used in source data | 
-| nestevidence     | Text | Nest evidence: Yes / No / dnc| 
-| behaviourother     | Text | Anything that cannot be put in the previous categories. | 
-|atlas_breeding_code | Text | If the data used the Atlas Breeding Code, carry the codes AS IS the source data. | 
+| organization | Text | Name of the organization who owns the data     |
+| project | Text | dataset_code     |
+| location | Text | Concatenation of  [dataset_code]:[site]:[station], unless otherwise specified     |
+| rawObserver | Text | The original observer id or name found in the source data     | 
+| surveyDateTime | Text | YYYY-MM-DD HH:MM:SS, Concatenation of  Date  and time of survey; separated by space     | 
+| original_species | Text | Species code used in the source data.      |
+| species | Text | AOU code developed by WildTrax. See [species_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/species_codes.csv)       |
+| ind_count | Numeric | Number of individual of a species with the same date, time, observer, distanceband and durationinterval and behavior information     | 
+| distanceband  | Text | Distance interval from observer to detected bird. Refer to [distance_band_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/distance_band_codes.csv) Use "UNKNOWN" when the information is not available or cannot be determined from the survey.      | 
+| durationinterval | Text | Time interval in which the bird was first detected (in minutes from start of point count). Refer to [duration_interval_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/duration_interval_codes.csv) . Use "UNKNOWN" when the information is not available or cannot be determined from the survey.     | 
+| raw_distance_code | Numeric | Distance interval used in the source data     | 
+| raw_duration_code | Numeric | Time interval used in the source data     | 
+| originalBehaviourData | Text | Original behavior code used in source data     |
+| pc_vt | Text | Vocalization type: Song / Calls / Flight calls / Non-vocal / dnc     | 
+| pc_vt_detail | Text | Vocalization details; e.g. drumming, counter-singing / dnc    | 
+| age | Text | Age: Adult / Juvenile / Fledging / Immature / dnc    | 
+| fm | Text | Sex: Male / Female / dnc    | 
+| group | Text | Group size: Flock /Pair / Family group / dnc     | 
+| flyover | Text | Flyover: Yes / No / dnc     | 
+| displaytype | Text | Original behavior code used in source data     | 
+| nestevidence | Text | Nest evidence: Yes / No / dnc    | 
+| behaviourother | Text | Anything that cannot be put in the previous categories.     | 
+|atlas_breeding_code | Text | If the data used the Atlas Breeding Code, carry the codes AS IS the source data.     | 
 This is the second level in the hierarchy at the project level. Visits occur at the date scale (YYYY-MM-DD). The location file has to come before the Visit file so that the visit can occur at the location. You cannot load to a location that has not previously been loaded to WildTrax. Each line in the visit file will have the location, written exactly as it appears in the location file, and the date in YYYY-MM-DD format.
 
 Templates for each file can be found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
