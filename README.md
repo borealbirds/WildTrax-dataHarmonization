@@ -4,7 +4,7 @@
 ## Citation
 When referencing any information from this repository or using data that was processed using this protocol, please cite this document.
 
-Citation: Mélina Houle, Maggie MacPherson, Ana Raymundo, Teegan Docherty. *The Boreal Avian Modelling Project's WildTrax Inegration Instructions for Processing Avian Count Data*. Version Number Scheme.
+Citation: Mélina Houle, Elly Knight, Maggie MacPherson, Ana Raymundo. *The Boreal Avian Modelling Project's WildTrax Inegration Instructions for Processing Avian Count Data*. Version Number Scheme.
 
 IMPORTANT NOTE: If any authors are asked to give additional assistance, they should be invited to be listed co-authors on the product.
 
