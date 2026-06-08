@@ -180,37 +180,70 @@ The **LOCATION** attributes identify the geographic extent of the site.
 The **location** field:
 | Field   | Format   | Description   | Required     |
 | :------- | :-------------- | :-------------- | :------------------|
+| organization     | Text | Name of the organization who owns the data | YES |
 | location     | Text | Concatenation of  [dataset_code]:[site]:[station], unless otherwise specified | YES |
-
-Common **location** field errors:
-* A location might not be accepted because it includes characters that are not allowed (e.g., "*****", or "%").
-
-
-
-The **latitude** and **longitude** fields:
-| Field   | Format   | Description   | Required     |
-| :------- | :-------------- | :-------------- | :---------------- |
 | latitude     | Decimal degrees | NAD83, convert if otherwise | YES |
 | longitude     | Decimal degrees | NAD83, convert if otherwise | YES |
+| buffer_m     | Numeric | Radius of the buffer around the location (in meters). Use only if points need to be masked. NA otherwise | YES |
+| location_visibility     | Text | Controls how exact geographical coordinates and associated species data are displayed to the publict. Choices are  "Visible" (with or without buffering), "Hidden Location", or "Hidden Location and Data"   | YES |
+| trueCoordinates     | Logical | t if coordinates are not buffered | YES |
+| location_comments     | Text | Any comments related to locations. As needed | Yes |
+
+Common **location** field errors:
+* A location may fail validation if it contains unsupported characters, including special symbols (e.g., "*", "%"), whitespace, punctuation marks, or accented characters (e.g., French diacritics such as é, à, ç).
 
 Common **coordinate** fields errors:
 * This will not load if the fields are empty or NULL. Do not load any locations with missing coordinates. Before uploading,C validte that the coordinates are numeric and fall within expected geographic bounds.
 
+<a name=Survey></a>
+### 2. SURVEY TABLE
+Observation should include at least one bird observed. No fly-over data should be included in the data upload. 
 
-
-Location table unrequired fields:
-| Field   | Format   | Description   | Required     |
+The **SURVEY** attributes identify protocols, species, abundance, and time of the observations.  
+"", "", "", "", "", "", "distanceband",
+              "durationinterval", "abundance", "isHeard", "isSeen", "comments"
+The **location** field:
+| Field   | Format   | Description   | Required |
 | :------- | :-------------- | :-------------- | :---------------- |
-| elevationMeters     | Numeric | Elevation in meters. NULL if not collected. The upload will fill it  | NO |
-| bufferRadiusMeters     | Numeric | Radius of the buffer around the location (in meters). Use only if points need to be masked. NULL otherwise | NO |
-| isHidden     | Logical | t if points need to be masked  | NO |
-| trueCoordinates     | Logical | t if coordinates are not buffered | NO |
-| comments     | Text | Any comments related to locations. As needed | NO |
-| internal_wildtrax_id     | Numeric | Generated during the upload. Leave it blank | NO |
-| internal_update_ts     | Text | Generated during the upload. Leave it blank | NO |
+| location     | Text | Concatenation of  [dataset_code]:[site]:[station], unless otherwise specified | YES |
+| surveyDateTime     | Text | YYYY-MM-DD HH:MM:SS, Concatenation of  visitDate  and time of survey; separated by space | YES |
+| durationMethod     | Text | The duration method used the count-remove species from the survey. Refer to [duration_method_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/duration_method_codes.csv)  | YES |
+| distanceMethod     | Text | The distance band separation method used. Refer to [distance_method_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/distance_method_codes.csv)  | YES |
+| observer     | Text | The observer code who conducted the survey. When observer name are provided in the source data, we create a lookup table where observer name get a serial number assigned using this format:  [Dataset Code]_[serial number] | YES |
+| species     | Text | AOU code used by WildTrax. See [species_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/species_codes.csv)   | YES |
+| distanceband     | Text | The distance band the species was detected in. Refer to [distance_band_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/duration_interval_codes.csv)   | YES |
+| durationinterval     | Text | The duration interval the species was detected in. Refer to duration_interval_codes table  | YES |
+| abundance     | Numeric | Number of individual of a species with the same date, time, observer, isHeard, isSeen, distanceband and durationinterval information | YES |
+| isHeard     | Text | Was / were the bird(s) detected using a visual method (Yes, No or DNC). If no behaviour data, fill in as DNC except for NONE = null | YES |
+| isSeen     | Text | Was / were the bird(s) detected using an auditory method (Yes, No or DNC). If no behaviour data, fill in as DNC except for NONE = null | YES |
+| comments     | Text | Any comments related to survey. As needed | NO |
 
-Common Location Table Errors for Unrequired Fields"
 
+Common **surveyDateTime** field errors:
+* When there is no time listed, fill time with 00:00:01.
+
+Common **durationMethod** field errors:
+* NOTE: You can request to add a new duration method if the one that was used for the project is not already in WildTrax. Locations within a project can't use different **durationMethod** for the same surveyDateTime. For example, a specie observed on a specific location/surveyDateTime need to have the same **durationMethod** across all species observed at that location/surveyDateTime. 
+
+Common **distanceMethod** field errors:
+* NOTE: You can request to add a new distance method if the one that was used for the project is not already in WildTrax. Locations within a project can't use different **distanceMethod** for the same surveyDateTime. For example, a specie observed on a specific location/surveyDateTime need to have the same **distanceMethod** across all species observed at that location/surveyDateTime.
+
+Common **observer** field errors:
+* Can't be NULL. Must me of type TEXT. Default value is NA if information is not provided in the source data.
+* To anonymize the identities of individuals, BAM writes the name of the project and an integer for observer (e.g., [Dataset Code]_[serial number]).
+
+Common **species** field errors:
+* NOTE: Individuals from the same species observed at the same location, same day, same distance band and duration interval MUST HAVE THEIR ABUNDANCE SUMMED in the same line. Duplicate entries based on location, species, surveyDateTime, distanceband and durationinterval are not allowed. 
+
+Common **distanceband** field errors:
+* NOTE: **distanceband** must follow the protocol given in **distanceMethod**. For example, if **distanceMethod** = 0m-50m-100m-INF can't have **distanceband** of 0m-100m. It needs to be either 0m-50m, 50m-100m, 100m-INF or UNKNOWN otherwise. 
+
+Common **durationinterval** field errors:
+* NOTE: **durationinterval** must follow the protocol given in **durationMethod**. For example, if **durationMethod** = 0-3-5-10min can't have **durationinterval** of 0-5min. It needs to be either 0-3min, 0-5min, 5-10min or UNKNOWN otherwise. 
+
+Common **abundance** field errors:
+* This must be an number. When the cell reads "too many to count" or UNKNOWN, change it to 999.
+* You can't have duplicates of species at the same date, time, distanceband, durationinterval and location because there must be a single line for every species. If data is organized as every individual that was seen/heard per line, these must be summed (e.g., the total number of Black-capped Chickadees during that point count).
 
 
 <a name=Visit></a>
@@ -240,129 +273,7 @@ Common **visitDate** field errors:
 * When date doesn't exist (2014-06-31), change these to January 1st 1900 (e.g., 1900-01-01).
 
 
-<a name=Survey></a>
-### 3. SURVEY TABLE
-This is the third file that includes the point count data. No fly-over data should be included in the data upload. 
 
-The **SURVEY** attributes identify protocols, species, abundance, and time of the observations.  
-
-The **location** field:
-| Field   | Format   | Description   | Required |
-| :------- | :-------------- | :-------------- | :---------------- |
-| location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
-
-Common **location** field errors:
-* The **location** is not written exactly as it appears in the location file.
-
-
-
-The **surveyDateTime** field:
-| Field   | Format   | Description   | Required |
-| :------- | :-------------- | :-------------- | :---------------- |
-| surveyDateTime     | Text | YYYY-MM-DD HH:MM:SS, Concatenation of  visitDate  and time of survey; separated by space | YES |
-
-Common **surveyDateTime** field errors:
-* When there is no time listed, fill time with 00:00:01.
-
-
-
-The **durationMethod** field:
-| Field   | Format   | Description   | Required |
-| :------- | :-------------- | :-------------- | :---------------- |
-| durationMethod     | Text | The duration method used the count-remove species from the survey. Refer to [duration_method_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/duration_method_codes.csv)  | YES |
-
-Common **durationMethod** field errors:
-* NOTE: You can request to add a new duration method if the one that was used for the project is not already in WildTrax. Locations within a project can't use different **durationMethod** for the same surveyDateTime. For example, a specie observed on a specific location/surveyDateTime need to have the same **durationMethod** across all species observed at that location/surveyDateTime. 
-
-
-
-The **distanceMethod** field:
-| Field   | Format   | Description   | Required |
-| :------- | :-------------- | :-------------- | :---------------- |
-| distanceMethod     | Text | The distance band separation method used. Refer to [distance_method_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/distance_method_codes.csv)  | YES |
-
-Common **distanceMethod** field errors:
-* NOTE: You can request to add a new distance method if the one that was used for the project is not already in WildTrax. Locations within a project can't use different **distanceMethod** for the same surveyDateTime. For example, a specie observed on a specific location/surveyDateTime need to have the same **distanceMethod** across all species observed at that location/surveyDateTime.
-
-
-
-The **observer** field:
-| Field   | Format   | Description   | Required |
-| :------- | :-------------- | :-------------- | :---------------- |
-| observer     | Text | The observer code who conducted the survey. When observer name are provided in the source data, we create a lookup table where observer name get a serial number assigned using this format:  [Dataset Code]_[serial number] | YES |
-
-Common **observer** field errors:
-* Can't be NULL. Must me of type TEXT. Default value is NA if information is not provided in the source data.
-* To anonymize the identities of individuals, BAM writes the name of the project and an integer for observer (e.g., [Dataset Code]_[serial number]).
-
-
-The **species** field:
-| Field   | Format   | Description   | Required |
-| :------- | :-------------- | :-------------- | :---------------- |
-| species     | Text | AOU code used by WildTrax. See [species_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/species_codes.csv)   | YES |
-
-Common **species** field errors:
-* NOTE: Individuals from the same species observed at the same location, same day, same distance band and duration interval MUST HAVE THEIR ABUNDANCE SUMMED in the same line. Duplicate entries based on location, species, surveyDateTime, distanceband and durationinterval are not allowed. 
-*  A visit without observation should have an entry created in the survey table with species = NONE, abundance = 0, durationinterval = UNKNOWN, distanceband = UNKNOWN.
-
-
-The **distanceband** field:
-| Field   | Format   | Description   | Required |
-| :------- | :-------------- | :-------------- | :---------------- |
-| distanceband     | Text | The distance band the species was detected in. Refer to [distance_band_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/duration_interval_codes.csv)   | YES |
-
-Common **distanceband** field errors:
-* NOTE: **distanceband** must follow the protocol given in **distanceMethod**. For example, if **distanceMethod** = 0m-50m-100m-INF can't have **distanceband** of 0m-100m. It needs to be either 0m-50m, 50m-100m, 100m-INF or UNKNOWN otherwise. 
-
-
-
-The **durationinterval** field:
-| Field   | Format   | Description   | Required |
-| :------- | :-------------- | :-------------- | :---------------- |
-| durationinterval     | Text | The duration interval the species was detected in. Refer to duration_interval_codes table  | YES |
-
-Common **durationinterval** field errors:
-* NOTE: **durationinterval** must follow the protocol given in **durationMethod**. For example, if **durationMethod** = 0-3-5-10min can't have **durationinterval** of 0-5min. It needs to be either 0-3min, 0-5min, 5-10min or UNKNOWN otherwise. 
-
-
-
-The **abundance** field:
-| Field   | Format   | Description   | Required |
-| :------- | :-------------- | :-------------- | :---------------- |
-| abundance     | Numeric | Number of individual of a species with the same date, time, observer, isHeard, isSeen, distanceband and durationinterval information | YES |
-
-Common **abundance** field errors:
-* This must be an number. When the cell reads "too many to count" or UNKNOWN, change it to 999.
-* You can't have duplicates of species at the same date, time, distanceband, durationinterval and location because there must be a single line for every species. If data is organized as every individual that was seen/heard per line, these must be summed (e.g., the total number of Black-capped Chickadees during that point count).
-
-
-
-The **isHeard** field:
-| Field   | Format   | Description   | Required |
-| :------- | :-------------- | :-------------- | :---------------- |
-| isHeard     | Text | Was / were the bird(s) detected using a visual method (Yes, No or DNC). If no behaviour data, fill in as DNC except for NONE = null | YES |
-
-Common **isHeard** field errors:
-
-
-
-
-The **isSeen** field:
-| Field   | Format   | Description   | Required |
-| :------- | :-------------- | :-------------- | :---------------- |
-| isSeen     | Text | Was / were the bird(s) detected using an auditory method (Yes, No or DNC). If no behaviour data, fill in as DNC except for NONE = null | YES |
-
-Common **isSeen** field errors:
-
-
-
-
-Survey table unrequired fields:
-| Field   | Format   | Description   | Required |
-| :------- | :-------------- | :-------------- | :---------------- |
-| comments     | Text | Any comments related to survey. As needed | NO |
-
-Common Survey Table Errors for Unrequired Fields:
 
 
 
