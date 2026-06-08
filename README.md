@@ -175,19 +175,18 @@ Below, we describe what WildTrax is expecting in each of the two required files,
 ### 1. LOCATION TABLE
 The location table is the highest level in the hierarchy at the organization level. The location file comes first because it allows the organization to use the location for multiple projects without duplication. Each line in the location file will be the unique, and precise location for each point count station in TEXT format.
 
-The **LOCATION** attributes identify the geographic extent of the site. 
+The **LOCATION** attributes identify the geographic extent of the site: 
 
-The **location** field:
-| Field   | Format   | Description   | Required     |
-| :------- | :-------------- | :-------------- | :------------------|
-| organization     | Text | Name of the organization who owns the data | YES |
-| location     | Text | Concatenation of  [dataset_code]:[site]:[station], unless otherwise specified | YES |
-| latitude     | Decimal degrees | NAD83, convert if otherwise | YES |
-| longitude     | Decimal degrees | NAD83, convert if otherwise | YES |
-| buffer_m     | Numeric | Radius of the buffer around the location (in meters). Use only if points need to be masked. NA otherwise | YES |
-| location_visibility     | Text | Controls how exact geographical coordinates and associated species data are displayed to the publict. Choices are  "Visible" (with or without buffering), "Hidden Location", or "Hidden Location and Data"   | YES |
-| trueCoordinates     | Logical | t if coordinates are not buffered | YES |
-| location_comments     | Text | Any comments related to locations. As needed | Yes |
+| Field   | Format   | Description   |
+| :------- | :-------------- | :-------------- |
+| organization     | Text | Name of the organization who owns the data |
+| location     | Text | Concatenation of  [dataset_code]:[site]:[station], unless otherwise specified |
+| latitude     | Decimal degrees | NAD83, convert if otherwise |
+| longitude     | Decimal degrees | NAD83, convert if otherwise |
+| buffer_m     | Numeric | Radius of the buffer around the location (in meters). Use only if points need to be masked. NA otherwise |
+| location_visibility     | Text | Controls how exact geographical coordinates and associated species data are displayed to the publict. Choices are  "Visible" (with or without buffering), "Hidden Location", or "Hidden Location and Data"   |
+| trueCoordinates     | Logical | t if coordinates are not buffered |
+| location_comments     | Text | Any comments related to locations. As needed |
 
 Common **location** field errors:
 * A location may fail validation if it contains unsupported characters, including special symbols (e.g., "*", "%"), whitespace, punctuation marks, or accented characters (e.g., French diacritics such as é, à, ç).
@@ -199,24 +198,22 @@ Common **coordinate** fields errors:
 ### 2. SURVEY TABLE
 Observation should include at least one bird observed. No fly-over data should be included in the data upload. 
 
-The **SURVEY** attributes identify protocols, species, abundance, and time of the observations.  
-"", "", "", "", "", "", "distanceband",
-              "durationinterval", "abundance", "isHeard", "isSeen", "comments"
-The **location** field:
-| Field   | Format   | Description   | Required |
-| :------- | :-------------- | :-------------- | :---------------- |
-| location     | Text | Concatenation of  [dataset_code]:[site]:[station], unless otherwise specified | YES |
-| surveyDateTime     | Text | YYYY-MM-DD HH:MM:SS, Concatenation of  visitDate  and time of survey; separated by space | YES |
-| durationMethod     | Text | The duration method used the count-remove species from the survey. Refer to [duration_method_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/duration_method_codes.csv)  | YES |
-| distanceMethod     | Text | The distance band separation method used. Refer to [distance_method_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/distance_method_codes.csv)  | YES |
-| observer     | Text | The observer code who conducted the survey. When observer name are provided in the source data, we create a lookup table where observer name get a serial number assigned using this format:  [Dataset Code]_[serial number] | YES |
-| species     | Text | AOU code used by WildTrax. See [species_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/species_codes.csv)   | YES |
-| distanceband     | Text | The distance band the species was detected in. Refer to [distance_band_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/duration_interval_codes.csv)   | YES |
-| durationinterval     | Text | The duration interval the species was detected in. Refer to duration_interval_codes table  | YES |
-| abundance     | Numeric | Number of individual of a species with the same date, time, observer, isHeard, isSeen, distanceband and durationinterval information | YES |
-| isHeard     | Text | Was / were the bird(s) detected using a visual method (Yes, No or DNC). If no behaviour data, fill in as DNC except for NONE = null | YES |
-| isSeen     | Text | Was / were the bird(s) detected using an auditory method (Yes, No or DNC). If no behaviour data, fill in as DNC except for NONE = null | YES |
-| comments     | Text | Any comments related to survey. As needed | NO |
+The **SURVEY** attributes identify protocols, species, abundance, and time of the observations:  
+
+| Field   | Format   | Description   |
+| :------- | :-------------- | :-------------- |
+| location     | Text | Concatenation of  [dataset_code]:[site]:[station], unless otherwise specified | 
+| surveyDateTime     | Text | YYYY-MM-DD HH:MM:SS, Concatenation of  Date  and time of survey; separated by space | 
+| durationMethod     | Text | The duration protocol used during the survey. Refer to [duration_method_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/duration_method_codes.csv)  | 
+| distanceMethod     | Text | The distance protocol used during the survey. Refer to [distance_method_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/distance_method_codes.csv)  | 
+| observer     | Text | The observer code who conducted the survey. When observer name are provided in the source data, we create a lookup table where observer name get a serial number assigned using this format:  [Dataset Code]_[serial number] | 
+| species     | Text | AOU code developed by WildTrax. See [species_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/species_codes.csv)   | 
+| distanceband     | Text | Distance interval from observer to detected bird. Refer to [distance_band_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/distance_band_codes.csv) Use "UNKNOWN" when the information is not available or cannot be determined from the survey.   | 
+| durationinterval     | Text | Time interval in which the bird was first detected (in minutes from start of point count). Refer to [duration_interval_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/duration_interval_codes.csv) . Use "UNKNOWN" when the information is not available or cannot be determined from the survey. | 
+| abundance     | Numeric | Number of individual of a species with the same date, time, observer, isHeard, isSeen, distanceband and durationinterval information | 
+| isHeard     | Text | Was / were the bird(s) detected using a visual method (Yes, No or DNC). If no behaviour data, fill in as DNC | 
+| isSeen     | Text | Was / were the bird(s) detected using an auditory method (Yes, No or DNC). If no behaviour data, fill in as DNC | 
+| comments     | Text | Any comments related to survey. As needed | 
 
 
 Common **surveyDateTime** field errors:
@@ -229,7 +226,7 @@ Common **distanceMethod** field errors:
 * NOTE: You can request to add a new distance method if the one that was used for the project is not already in WildTrax. Locations within a project can't use different **distanceMethod** for the same surveyDateTime. For example, a specie observed on a specific location/surveyDateTime need to have the same **distanceMethod** across all species observed at that location/surveyDateTime.
 
 Common **observer** field errors:
-* Can't be NULL. Must me of type TEXT. Default value is NA if information is not provided in the source data.
+* Can't be NULL. Must me of type TEXT. Default value is obsNA if information is not provided in the source data.
 * To anonymize the identities of individuals, BAM writes the name of the project and an integer for observer (e.g., [Dataset Code]_[serial number]).
 
 Common **species** field errors:
@@ -247,37 +244,35 @@ Common **abundance** field errors:
 
 
 <a name=Visit></a>
-### 2. VISIT TABLE
+### 3. EXTENDED TABLE
+Behavior data collected in the field is not retained in the final WildTrax upload. Although BAM identifies a potential use for this information, only derived or standardized fields required by the BAM workflow are preserved. During the translation process, additional columns are generated and saved to support harmonization and compatibility with the BAM data structure.
+
+| Field   | Format   | Description   |
+| :------- | :-------------- | :-------------- |
+| organization     | Text | Name of the organization who owns the data |
+| project     | Text | dataset_code |
+| location     | Text | Concatenation of  [dataset_code]:[site]:[station], unless otherwise specified |
+| rawObserver     | Text | The original observer id or name found in the source data | 
+| surveyDateTime     | Text | YYYY-MM-DD HH:MM:SS, Concatenation of  Date  and time of survey; separated by space | 
+| original_species     | Text | Species code used in the source data.  |
+| species     | Text | AOU code developed by WildTrax. See [species_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/species_codes.csv)   |
+| ind_count     | Numeric | Number of individual of a species with the same date, time, observer, distanceband and durationinterval and behavior information | 
+| distanceband     | Text | Distance interval from observer to detected bird. Refer to [distance_band_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/distance_band_codes.csv) Use "UNKNOWN" when the information is not available or cannot be determined from the survey.   | 
+| durationinterval     | Text | Time interval in which the bird was first detected (in minutes from start of point count). Refer to [duration_interval_codes table](https://github.com/borealbirds/WT-Integration/blob/main/lookupTables/duration_interval_codes.csv) . Use "UNKNOWN" when the information is not available or cannot be determined from the survey. | 
+| raw_distance_code     | Numeric | Distance interval used in the source data | 
+| raw_duration_code     | Numeric | Time interval used in the source data | 
+| originalBehaviourData     | Text | Original behavior code used in source data |
+| pc_vt     | Text | Vocalization type: Song / Calls / Flight calls / Non-vocal / dnc | 
+| pc_vt_detail     | Text | Vocalization details; e.g. drumming, counter-singing / dnc| 
+| age     | Text | Age: Adult / Juvenile / Fledging / Immature / dnc| 
+| fm     | Text | Sex: Male / Female / dnc| 
+| group     | Text | Group size: Flock /Pair / Family group / dnc | 
+| flyover     | Text | Flyover: Yes / No / dnc | 
+| displaytype     | Text | Original behavior code used in source data | 
+| nestevidence     | Text | Nest evidence: Yes / No / dnc| 
+| behaviourother     | Text | Anything that cannot be put in the previous categories. | 
+|atlas_breeding_code | Text | If the data used the Atlas Breeding Code, carry the codes AS IS the source data. | 
 This is the second level in the hierarchy at the project level. Visits occur at the date scale (YYYY-MM-DD). The location file has to come before the Visit file so that the visit can occur at the location. You cannot load to a location that has not previously been loaded to WildTrax. Each line in the visit file will have the location, written exactly as it appears in the location file, and the date in YYYY-MM-DD format.
-
-The **VISIT** attributes identify the date the survey was performed.
-| Field   | Format   | Description   | Required |
-| :------- | :-------------- | :-------------- | :---------------- |
-| location     | Text | The physical place on the landscape where the data was collected. Created using the concatenation of  [datasetCode]:[site]:[station], unless otherwise specified | YES |
-| visitDate     | Text | The date of the survey (YYYY-MM-DD) | YES |
-| snowDepthMeters     | Numeric | Generated during the upload. Leave it blank | NO |
-| waterDepthMeters     | Numeric | Generated during the upload. Leave it blank  | NO |
-| crew     | Text | Leave blank. ARUs field | NO |
-| bait     | Text | Use "None" for point count data  | NO |
-| accessMethod     | Text | Leave blank. ARUs field | NO |
-| landFeatures     | Text | Leave blank. ARUs field | NO |
-| comments     | Text | Any comments related to visit. As needed | NO |
-| wildtrax_internal_update_ts     | Text | Generated during the upload. Leave it blank | NO |
-| wildtrax_internal_lv_id     | Text | Generated during the upload. Leave it blank | NO |
-
-Common **location** field errors:
-* The location does not match any previously loaded locations. In this case, check that the location file was loaded first. If it was, check that the spelling of the location is correct in the visit table.
-  
-Common **visitDate** field errors:
-* When there is no year, day or month listed, change these to January 1st 1900 (e.g., 1900-01-01).
-* When date doesn't exist (2014-06-31), change these to January 1st 1900 (e.g., 1900-01-01).
-
-
-
-
-
-
-
 
 Templates for each file can be found under [template](https://github.com/MelinaHoule/WT-Integration/tree/main/template).
 Examples for each file can be found under [examples](https://github.com/MelinaHoule/WT-Integration/tree/main/examples).
