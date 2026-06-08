@@ -180,7 +180,7 @@ The **LOCATION** attributes identify the geographic extent of the site.
 The **location** field:
 | Field   | Format   | Description   | Required     |
 | :------- | :-------------- | :-------------- | :------------------|
-| location     | Text | Name of the physical place on the landscape where the data was collected. If not present in source data, create it using the concatenation of  [dataset_code]:[site]:[station], unless otherwise specified | YES |
+| location     | Text | Concatenation of  [dataset_code]:[site]:[station], unless otherwise specified | YES |
 
 Common **location** field errors:
 * A location might not be accepted because it includes characters that are not allowed (e.g., "*****", or "%").
@@ -194,7 +194,7 @@ The **latitude** and **longitude** fields:
 | longitude     | Decimal degrees | NAD83, convert if otherwise | YES |
 
 Common **coordinate** fields errors:
-* This will not load if the fields are empty or NULL. Do not load any locations with missing coordinates.
+* This will not load if the fields are empty or NULL. Do not load any locations with missing coordinates. Before uploading,C validte that the coordinates are numeric and fall within expected geographic bounds.
 
 
 
