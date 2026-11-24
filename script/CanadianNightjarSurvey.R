@@ -1,6 +1,6 @@
 # ---
 # title: "Harmonize Canadian Nightjar Survey data for BAMDataset"
-# author: "Elly Knight"
+# author: "Elly Knight & Codex"
 # date: "November 23, 2026"
 # ---
 # Source data are downloaded from NatureCounts by download/NatureCounts.R.
@@ -10,14 +10,38 @@
 # repository. Do not add a WildTrax upload step until the required WildTrax
 # functionality has been revised.
 #
-# Interpretation decisions still to confirm:
-# - Explicit no-observation sampling events are retained as species = "NONE".
-# - Nightjars and owls are retained; other incidentally reported taxa are not.
-# - Minute codes are C = call, V = visual, N = not detected,
-#   W = wing-generated sound (wingboom for nighthawks), and U = unknown.
-# - SiteCode is retained as the stable route-level site ID for random effects.
-# - Locality is retained as the station ID. Visit-specific coordinates are
-#   preserved as recorded and are not averaged across repeat visits.
+# Harmonization decisions:
+# - Retain every source survey event. If an event has no nightjar or owl after
+#   taxon filtering and duplicate removal, represent it with species = "NONE"
+#   and abundance = 0. This includes events containing only incidental taxa.
+# - Retain nightjars (Caprimulgiformes) and owls (Strigiformes); discard other
+#   incidentally reported taxa. Map unidentified owl (Strigiformes sp.) to UNOW.
+# - Remove every individual marked Duplicate = Y. Inspection showed that the
+#   flag is not consistently limited to only the second record in a pair.
+# - NatureCounts minute codes mean C = call, V = visual, N = not detected,
+#   W = wingboom/wing-generated sound, and U = unknown detection type.
+# - Retain only the first detection of each individual for aggregation: use the
+#   earliest minute whose code is not N, then sum individuals by event, species,
+#   first-detection minute/type, and distance band. If no usable detection code
+#   exists, use first_detection_type = "UNKNOWN".
+# - Translate first detections to the established BAM behavior fields:
+#     C: isHeard Yes, isSeen No,  pc_vt Call,      pc_vt_detail DNC
+#     V: isHeard No,  isSeen Yes, pc_vt Non-Vocal, pc_vt_detail DNC
+#     W: isHeard Yes, isSeen No,  pc_vt Song,      pc_vt_detail Wing boom
+#     U/UNKNOWN/NONE: DNC for all four behavior fields.
+# - If W occurs in any of the six minutes, retain "Wingboom detected" in
+#   comments even when W was not the individual's first detection.
+# - Translate Near to 0m-100m and Far to 100m-INF. Missing or ambiguous
+#   near/far values become UNKNOWN; the distance method is 0m-100m-INF.
+# - SiteCode is the stable route-level site ID for random effects; Locality is
+#   the station ID. Preserve visit-specific coordinates without averaging so
+#   downstream geospatial extraction uses the recorded survey coordinates.
+# - Retain the NatureCounts Collector value as observer_id.
+# - Leave missing survey times and datetimes as NA; do not use a WildTrax time
+#   placeholder because this output is staged directly for BAMDataset.
+# - The source has only one generic stationary Nightjars protocol identifier
+#   and no playback/broadcast field. Do not infer call-playback use without an
+#   external year/site protocol rule.
 
 library(dplyr)
 library(readr)
@@ -177,12 +201,14 @@ harmonized <- njars %>%
       survey_month,
       survey_day
     ),
+    # Missing source times remain NA rather than receiving a WildTrax sentinel.
     survey_time = decimal_hour_to_time(TimeObservationsStarted),
     survey_datetime = if_else(
       is.na(survey_time),
       NA_character_,
       paste(survey_date, survey_time)
     ),
+    # NatureCounts Collector IDs are complete and stable within survey events.
     observer_id = as.character(Collector),
     source_no_observations = coalesce(NoObservations == "NoObs", FALSE),
     is_no_observation = source_no_observations,
@@ -205,6 +231,8 @@ harmonized <- njars %>%
       str_to_upper(str_trim(ObservationCount8)) == "Y",
       FALSE
     ),
+    # Distance is stored by NatureCounts in ObservationCount9 rather than the
+    # standard DistanceFromObserver fields, which are empty in this download.
     distance_band = case_when(
       is_no_observation ~ "UNKNOWN",
       is.na(ObservationCount9) ~ "UNKNOWN",
@@ -220,8 +248,9 @@ harmonized <- njars %>%
     by = c("scientific_name" = "scientific_name_lookup")
   )
 
-# Retain the full survey-event universe before filtering taxa and duplicates.
-# Events without a remaining nightjar or owl detection receive one NONE row.
+# Capture the complete event universe before taxon and duplicate filtering.
+# This allows focal-group absences to remain represented even when a survey
+# contains only incidental taxa or only detections flagged as duplicates.
 survey_events <- harmonized %>%
   group_by(sampling_event_id) %>%
   slice(1) %>%
@@ -232,6 +261,8 @@ duplicate_records_removed <- harmonized %>%
   nrow()
 
 retained_detections <- harmonized %>%
+  # Duplicate is a source observation flag. Remove all flagged individuals;
+  # do not try to infer which member of an apparent pair should be discarded.
   filter(is_retained_taxon, !source_duplicate_flag) %>%
   mutate(
     is_no_observation = FALSE,
@@ -303,6 +334,8 @@ if (nrow(unmatched_species) > 0) {
 }
 
 # Derive first detection --------------------------------------------------
+# Each source row represents one individual (ObservationCount is always 1 for
+# retained detections). C, V, W, and U count as detections; N does not.
 
 minute_columns <- paste0("minute_", 1:6)
 minute_matrix <- as.matrix(harmonized[minute_columns])
@@ -326,6 +359,8 @@ harmonized <- harmonized %>%
       is.na(first_detection_type) ~ "UNKNOWN",
       TRUE ~ first_detection_type
     ),
+    # Follow the behavior-field conventions used by other scripts in this
+    # repository. A wingboom is treated as Song with detail "Wing boom".
     isHeard = case_when(
       first_detection_type %in% c("C", "W") ~ "Yes",
       first_detection_type == "V" ~ "No",
@@ -357,6 +392,7 @@ harmonized <- harmonized %>%
       TRUE ~ "UNKNOWN"
     ),
     distance_method = "0m-100m-INF",
+    # This flag examines all minutes, independently of first detection.
     wingboom_detected = rowSums(minute_matrix == "W", na.rm = TRUE) > 0,
     protocol_type = ProtocolType,
     protocol_code = ProtocolCode,
@@ -365,6 +401,7 @@ harmonized <- harmonized %>%
   )
 
 # Aggregate individual detections ----------------------------------------
+# Preserve the first-detection stratum while summing individual records.
 
 harmonized <- harmonized %>%
   group_by(
